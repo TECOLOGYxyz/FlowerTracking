@@ -4,12 +4,6 @@
 *** or simply open an issue with the tag "enhancement".
 *** Thanks again! Now go create something AMAZING! :D
 ***
-***
-***
-*** To avoid retyping too much info. Do a search and replace for the following:
-*** TECOLOGYxyz, TrackingFlowers, @HjalteMann, mann@bios.au.dk, Track Individual Flowers in Images, Get flowering phenology for individual flowers using an automatic tracking algorithm..
--->
-
 
 
 <!-- PROJECT SHIELDS -->
@@ -86,17 +80,6 @@
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`TECOLOGYxyz`, `TrackingFlowers`, `@HjalteMann`, `mann@bios.au.dk`, `Track Individual Flowers in Images`, `Get flowering phenology for individual flowers using an automatic tracking algorithm..`
-
-
-### Built With
-
-* []()
-* []()
-* []()
 
 
 
