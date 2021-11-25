@@ -1,0 +1,174 @@
+---
+title: "Analysis"
+author: "Hjalte Mann"
+date: "25/11/2021"
+output: html_document
+---
+---
+title: "IndividualPhenology"
+author: "Hjalte Mann"
+date: "2/2/2021"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(stringr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Import ground truth tracked data
+
+```{r}
+thul01 = read.csv("../../data/annotations/2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN.csv", header = F)
+
+colnames(thul01) = c("FileName", "x_min", "y_min", "x_max", "y_max", "Class")
+
+thul01 = thul01 %>%
+  mutate(FileName = str_extract(FileName, regex("[A-Z]{4,5}-\\d{0,3}_\\d{6}.JPG")))
+
+
+nars04 = read.csv("../../data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN.csv", header = F)
+
+colnames(nars04) = c("FileName", "x_min", "y_min", "x_max", "y_max", "Class")
+
+nars04 = nars04 %>%
+  mutate(FileName = str_extract(FileName, regex("[A-Z]{4,5}-\\d{0,3}_\\d{6}.JPG")))
+
+
+nars13 = read.csv("../../data/annotations/2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN.csv", header = F)
+
+colnames(nars13) = c("FileName", "x_min", "y_min", "x_max", "y_max", "Class")
+
+nars13 = nars13 %>%
+  mutate(FileName = str_extract(FileName, regex("[A-Z]{4,5}-\\d{0,3}_\\d{6}.JPG")))
+
+
+
+nyaa04 = read.csv("../../data/annotations/2020_05_23_NorwayAnnotations_Nyaa-04_IndividualAnnotations_FRCNN.csv", header = F)
+
+colnames(nyaa04) = c("FileName", "x_min", "y_min", "x_max", "y_max", "Class")
+
+nyaa04 = nyaa04 %>%
+  mutate(FileName = str_extract(FileName, regex("[A-Z]{4,5}-\\d{0,3}_\\d{6}.JPG")))
+
+```
+
+Import metadata for the 1-h subsets
+
+```{r}
+
+meta_2018 = read.csv("../../data/annotations/DetectionPhenology_2018_Meta_Clean_Prepped.csv")
+
+thul01_meta = merge(thul01, meta_2018, by.x = "FileName")
+
+thul01_meta$time = thul01_meta$DOY + (thul01_meta$Hour/24)
+
+thul01_meta %>% 
+ggplot()+
+  geom_point(aes(x = time, y = Class))
+  
+  
+thul01_meta = thul01_meta %>%
+  group_by(Class) %>% 
+  mutate(flower_start = min(time),
+    flower_length = max(time) - min(time))
+
+
+thul01_meta %>% 
+ggplot()+
+  geom_point(aes(x = flower_start, y = flower_length))
+  
+
+nars04_meta = merge(nars04, meta_2018, by.x = "FileName")
+
+nars04_meta$time = nars04_meta$DOY + (nars04_meta$Hour/24)
+
+nars04_meta %>% 
+ggplot()+
+  geom_point(aes(x = time, y = Class))
+  
+  
+nars04_meta = nars04_meta %>%
+  group_by(Class) %>% 
+  mutate(flower_start = min(time),
+    flower_length = max(time) - min(time))
+
+
+nars04_meta %>% 
+ggplot()+
+  geom_point(aes(x = flower_start, y = flower_length))
+  
+
+
+meta_2019 = read.csv("../../data/annotations/DetectionPhenology_2019_Meta_Clean_Prepped.csv")
+
+
+nars13_meta = merge(nars13, meta_2019, by.x = "FileName")
+
+nars13_meta$time = nars13_meta$DOY + (nars13_meta$Hour/24)
+
+nars13_meta %>% 
+ggplot()+
+  geom_point(aes(x = time, y = Class))
+  
+  
+nars13_meta = nars13_meta %>%
+  group_by(Class) %>% 
+  mutate(flower_start = min(time),
+    flower_length = max(time) - min(time))
+
+
+nars13_meta %>% 
+ggplot()+
+  geom_point(aes(x = flower_start, y = flower_length))
+  
+
+```
+
+```{r}
+
+nyaa04_meta = merge(nyaa04, meta_2019, by.x = "FileName")
+
+nyaa04_meta$time = nyaa04_meta$DOY + (nyaa04_meta$Hour/24)
+
+nyaa04_meta %>% 
+ggplot()+
+  geom_point(aes(x = time, y = Class))
+  
+  
+nyaa04_meta = nyaa04_meta %>%
+  group_by(Class) %>% 
+  mutate(flower_start = min(time),
+    flower_length = max(time) - min(time))
+
+
+nyaa04_meta %>% 
+ggplot()+
+  geom_point(aes(x = flower_start, y = flower_length))
+  
+
+```
+
+```{r}
+
+all = bind_rows(thul01_meta[,c("flower_start","flower_length", "CameraID")], nars04_meta[,c("flower_start","flower_length", "CameraID")], nars13_meta[,c("flower_start","flower_length", "CameraID")], nyaa04_meta[,c("flower_start","flower_length", "CameraID")])
+
+all %>% 
+ggplot()+
+  geom_point(aes(x = flower_start, y = flower_length, colour = CameraID)) +
+geom_smooth(aes(x = flower_start, y = flower_length), method=lm)
+ 
+t.test(nyaa04_meta$flower_length, nars13_meta$flower_length)
+
+```
+
+```{r}
+all %>% 
+ggplot()+
+  geom_point(aes(x = flower_start, y = flower_length, colour = CameraID))
+```
+

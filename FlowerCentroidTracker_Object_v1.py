@@ -66,9 +66,11 @@ class tracker():
         self.disappeared[self.nextObjectID] = 0 # Set number of times the new object has disappeared to zero. 
         self.nextObjectID += 1 # Add 1 to the objectID counter so it's ready for the next point
 
+        self.length_dict = {key: len(value) for key, value in self.objects.items()}
+
     def update(self, frame):
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
-        print("FRAME: ", frame)
+        print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
         """
         If a frame has no detections, we +1 to disappeared of all objects being tracked. 
         If this takes any objects above the max_disappeared threshold, we remove them from the objects.
@@ -93,16 +95,19 @@ class tracker():
         
         inputCentroids = frame_detections.to_numpy()
 
-
         if not self.objects: # if Objects is empty, we are currently not tracking any objects and take the input centroids and register each of them
             print("Not tracking objects. Initiating tracking on current detections.")
             for i in range(0, len(inputCentroids)):
                 print("Added detection ", i)
                 self.register(inputCentroids[i])
+
             print("Current objects: ", self.objects)
-        
+            print("Object 0: ",self.objects[0])
+            print("Current lengths: ", self.length_dict)
+            
+            
         else: # We are already tracking objects, so let's see if we can associate any frame detections with objects that are being tracked.
-            print("Hello")    
+            print(br,"We are tracking existing objects.")    
             objectIDs = list(self.objects.keys()) # grab the set of object IDs and corresponding centroids
             objectCentroids = list(self.objects.values())
             
@@ -114,7 +119,11 @@ class tracker():
 
             print("Distance matrix: \n", D)
             
-            # D_passed = D[D.distance <= max_distance]
+            rows = D.min(axis=1).argsort()
+            print(rows)
+            # For 
+            
+            #D_passed = D[D.distance <= max_distance]
             # print(D_passed)
 #             D_passed = D_passed.loc[D_passed.groupby('id').distance.idxmin()] # If the there are more than one frame point that is close to an object point, use the one closest. TO-DO: What happens if two frame points have the same distance to the object point?
 #             print("Frame points and closest object point, below threshold: \n:", D_passed)
@@ -172,8 +181,8 @@ class tracker():
 #         return self.objects # return the set of trackable objects
 
 
-t = tracker(max_disappeared, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
 
+t = tracker(max_disappeared, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
 
 for f in frames:
     t.update(f)
@@ -182,6 +191,10 @@ for f in frames:
 ### PLOT STUFF ###
 plt.scatter(detections['x_c'],detections['y_c'], c = detections['frame'])
 
+
+plt.plot(detections['x_c'],detections['y_c'])
+
+#detections.groupby('').plot(kind='kde', ax=plt.gca())
 
 
 """

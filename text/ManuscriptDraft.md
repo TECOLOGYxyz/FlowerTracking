@@ -1,0 +1,105 @@
+---
+new_session: FALSE
+title: |
+  **Monitoring the phenology of individual flowers using deep learning and automatic tracking**
+author:
+- Hjalte M. R. Mann
+- Alexandros Iosifidis
+- Toke T. Høye
+date: "november 25, 2021"
+output:
+  word_document: default
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+    latex_engine: pdflatex
+  html_document:
+    df_print: paged
+fontfamily: mathpazo
+fontsize: 12pt
+geometry: margin = 1in
+header-includes:
+- \usepackage{setspace}\doublespacing
+- \usepackage[left]{lineno}
+- \linenumbers
+- \usepackage{dcolumn}
+- \usepackage{caption}
+- \usepackage{float}
+- \usepackage{afterpage}
+- \usepackage{siunitx}
+- \usepackage{amsmath}
+keywords: Citizen science, Arctic, insects
+bibliography: ./library.bib
+csl: ./journal-of-ecology.csl
+abstract: ABSTRACT | Often simple variables will be used to describe the flowering phenology of a population of plants, e.g. onset or peak of flowering and to infer respones to climate change. Here we show that image-based monitoring of field plots at very high temporal resolution can return information on flowering phenology at the level of indiviuals. Further, we present an automatic flower tracking algorithm.
+---
+
+
+
+
+
+
+\newpage
+**NOTES**
+
+What questions do we want to answer?
+
+*Flower information*
+
+
+
+\pagebreak
+
+
+
+# Introduction
+
+The flowering phenology of a population may mask responses at the individual level. For example, 
+
+Does flower visitation rates and/or reproductive success depend on the timing of flowering for the indiviual flower?
+
+
+
+
+# Material and methods
+
+## Study site
+
+
+
+## The image series
+
+## Flower annotations
+
+
+
+
+
+# Results
+
+
+
+
+**Figure 1:** Figure text....
+
+
+
+# Discussion
+
+## Flower phenology
+
+
+
+# Acknowledgements
+
+
+
+# Data availability
+
+The code that supports the results in this paper will be made openly available at https://github.com/TECOLOGYxyz. Raw data as well as the trained flower detection model will be archived on https://zenodo.org/.
+
+
+
+
+
+
