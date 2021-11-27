@@ -41,8 +41,10 @@ TO-DO
 
 #### SETTINGS ####
 
+resultFilename = "trackResults.csv"
+
 max_disappeared = 4 # Maximum number of frames the algorithm should continue to look for an object
-max_distance = 20 # Maximum distance to a point before it is forced to be registered as a new ID instead of associated with the closest point
+max_distance = 200 # Maximum distance to a point before it is forced to be registered as a new ID instead of associated with the closest point
 running_mean_threshold = 5 # Number of frames for calculating the running mean of the position of an object
 
 ######
@@ -58,6 +60,11 @@ frames = list(set(detections['frame'].tolist()))
 print("Here are the detections",br,detections,br)
 
 
+with open(resultFilename, 'a') as resultFile:
+    header = 'frame,filename,x_c,y_c,objectID\n'
+    resultFile.write(header)  
+
+
 class tracker():
     def __init__(self, max_disappeared, frames):
         self.nextObjectID = 0 # Counter for object ids
@@ -66,27 +73,49 @@ class tracker():
 
         self.max_disappeared = max_disappeared # store max_disappeared number of frames
         self.frames = frames
+        
+        self.tracks = []
+        
+    def store_tracking_results(self, frame, centroid, objectID):
+        #print(br, f'Object ID {objectID} with centroid {centroid} in frame {frame} stored.', br)
+        self.tracks.append([frame, centroid[0], centroid[1], objectID])
 
-    def store_tracking_results(self, frame, objectIDs):
-        pass
+    def write_tracks_file(self):
+        starttime = time.time()
+        #line = detections.loc[(detections['frame'] == frame) & (detections['x_c'] == centroid[0])]
+    
+        with open(resultFilename, 'a') as resultFile:
+            for t in self.tracks:
+                frame = t[0]
+                x_c = t[1]
+                y_c = t[2]
+                objectID = t[3]
+                filename = detections.loc[detections['frame'] == 1, 'filename'].iloc[0]
+                resultFile.write(f'{frame},{filename},{x_c},{y_c},{objectID}{br}')
+        endtime = time.time()
+        print(f'Writing done. That took {round(endtime-starttime, 4)} seconds.')
 
-    def get_frame_detections(self,frame):
+    def get_frame_detections(self, frame):
         block = detections.loc[detections['frame'] == frame]
         frame_detections = block[["x_c", "y_c"]] # We just need the centroid, so we'll grab that and return it
         return frame_detections
 
-    def register(self, centroid): # For registering a point
+    def register(self, frame, centroid): # For registering a point
         self.objects[self.nextObjectID] = centroid # Set the new centroid as content for the new objectID in the Objects dictionary
         self.disappeared[self.nextObjectID] = 0 # Set number of times the new object has disappeared to zero. 
-        self.nextObjectID += 1 # Add 1 to the objectID counter so it's ready for the next point
 
         self.length_dict = {key: len(value) for key, value in self.objects.items()}
-
+        
+        self.store_tracking_results(frame, centroid, self.nextObjectID)
+        
+        self.nextObjectID += 1 # Add 1 to the objectID counter so it's ready for the next point
+        
     def deregister(self, objectID): # deregister object by deleting it from the objects dict and removing the associated counter from the disappeared dict.
         del self.objects[objectID]
         del self.disappeared[objectID]
 
     def update(self, frame):
+        starttime = time.time()
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
         print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
         """
@@ -117,7 +146,7 @@ class tracker():
             print("Not tracking objects. Initiating tracking on current detections.")
             for i in range(0, len(inputCentroids)):
                 print("Added detection ", i)
-                self.register(inputCentroids[i])
+                self.register(frame, inputCentroids[i])
 
             print("Current objects: ", self.objects)
             print("Object 0: ",self.objects[0])
@@ -154,6 +183,8 @@ class tracker():
                     # Here we need to update the centroid coordinates of the objects.
                     print("Setting the centroid for object ", objectIDs[result[0]], "to ", inputCentroids[result[1]])
                     self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
+                    self.store_tracking_results(frame, inputCentroids[result[1]], objectIDs[result[0]]) # And store the tracking information
+                    
                 else:
                     print("Association based on distance done. Now dealing with points that were not associated.")
                     pass
@@ -173,20 +204,18 @@ class tracker():
             
             for i in inputIndexes: # Start tracking new objects
                 print("Registering point: ", i, "With the centroid: ", inputCentroids[i])
-                self.register(inputCentroids[i])
-            
-
+                self.register(frame, inputCentroids[i])
+        
+        endtime = time.time()
+        print(f'Tracking done. That took {round(endtime-starttime, 4)} seconds.')
 
 ### RUN ###
 t = tracker(max_disappeared, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
 
-starttime = time.time()
-
 for f in frames:
     t.update(f)
-    
-endtime = time.time()
-print(f'Tracking done. That took {round(endtime-starttime, 4)} seconds.')
+t.write_tracks_file()
+
 
 ### PLOT STUFF ###
 plt.scatter(detections['x_c'],detections['y_c'], c = detections['frame'])
