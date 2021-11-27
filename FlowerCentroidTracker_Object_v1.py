@@ -6,7 +6,10 @@ Created on Thu Feb  4 16:36:42 2021
 
 Custom flower tracker
 
-Simple centroid tracker that 
+Multiobject tracker tracker
+
+Max distance, max dissapeared, running mean
+
 
 Detections are in the format: 
 
@@ -15,14 +18,25 @@ Hjalte Mann
 TECOLOGY.xyz
 
 """
-
 import pandas as pd # Replace with cudf if performance is too slow?
 from collections import OrderedDict
 import numpy as np
 from scipy.spatial import distance as dist
-from scipy.ndimage.filters import uniform_filter1d
+#from scipy.ndimage.filters import uniform_filter1d
 import matplotlib.pyplot as plt
+import time
+
 br = "\n"
+
+"""
+TO-DO
+
+- Record tracks and output a result file
+- Create running mean solution
+- Plot results
+- Create option to disregard max_distance (to use on non-fixed objects)
+
+"""
 
 
 #### SETTINGS ####
@@ -138,7 +152,7 @@ class tracker():
                     inputIndexes.remove(result[1])
                     
                     # Here we need to update the centroid coordinates of the objects.
-                    print("Setting the centroid for object ", objectIDs[result[0]], "to ", inputCentroids[result[1]]  )
+                    print("Setting the centroid for object ", objectIDs[result[0]], "to ", inputCentroids[result[1]])
                     self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
                 else:
                     print("Association based on distance done. Now dealing with points that were not associated.")
@@ -163,17 +177,19 @@ class tracker():
             
 
 
-
+### RUN ###
 t = tracker(max_disappeared, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
+
+starttime = time.time()
 
 for f in frames:
     t.update(f)
-
+    
+endtime = time.time()
+print(f'Tracking done. That took {round(endtime-starttime, 4)} seconds.')
 
 ### PLOT STUFF ###
 plt.scatter(detections['x_c'],detections['y_c'], c = detections['frame'])
-
-
 plt.plot(detections['x_c'],detections['y_c'])
 
 #detections.groupby('').plot(kind='kde', ax=plt.gca())
