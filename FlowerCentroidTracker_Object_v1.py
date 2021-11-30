@@ -44,14 +44,18 @@ TO-DO
 resultFilename = "trackResults.csv"
 
 max_disappeared = 4 # Maximum number of frames the algorithm should continue to look for an object
-max_distance = 200 # Maximum distance to a point before it is forced to be registered as a new ID instead of associated with the closest point
+max_distance = 1500 # Maximum distance to a point before it is forced to be registered as a new ID instead of associated with the closest point
 running_mean_threshold = 5 # Number of frames for calculating the running mean of the position of an object
 
 ######
 
 
 #### PATH TO DETECTIONS ####
-detections = pd.read_csv('Dummy_fortracking2.csv')
+#detections = pd.read_csv('Dummy_fortracking2.csv')
+detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
+
+detections['frame'] = detections['filename'].str.extract('(\d{6})')
+
 detections['x_c'] = (detections['x_min'] + detections['x_max']) / 2
 detections['y_c'] = (detections['y_min'] + detections['y_max']) / 2
 
@@ -90,7 +94,7 @@ class tracker():
                 x_c = t[1]
                 y_c = t[2]
                 objectID = t[3]
-                filename = detections.loc[detections['frame'] == 1, 'filename'].iloc[0]
+                filename = detections.loc[detections['frame'] == frame, 'filename'].iloc[0]
                 resultFile.write(f'{frame},{filename},{x_c},{y_c},{objectID}{br}')
         endtime = time.time()
         print(f'Writing done. That took {round(endtime-starttime, 4)} seconds.')
@@ -209,6 +213,12 @@ class tracker():
         endtime = time.time()
         print(f'Tracking done. That took {round(endtime-starttime, 4)} seconds.')
 
+
+
+
+
+
+
 ### RUN ###
 t = tracker(max_disappeared, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
 
@@ -218,9 +228,14 @@ t.write_tracks_file()
 
 
 ### PLOT STUFF ###
-plt.scatter(detections['x_c'],detections['y_c'], c = detections['frame'])
-plt.plot(detections['x_c'],detections['y_c'])
+#plt.scatter(detections['x_c'], detections['y_c'], c = detections['frame'])
+#plt.plot(detections['x_c'],detections['y_c'])
 
+tracks = pd.read_csv(resultFilename)
+print(tracks)
+
+#tracks['hello'] = tracks['objectID'].astype(float).astype(int)
+#plt.scatter(tracks['x_c'], tracks['y_c'], c = tracks['objectID'])
 #detections.groupby('').plot(kind='kde', ax=plt.gca())
 
 
