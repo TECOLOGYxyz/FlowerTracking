@@ -6,7 +6,11 @@ author:
 - Hjalte M. R. Mann
 - Alexandros Iosifidis
 - Toke T. Høye
+<<<<<<< HEAD
 date: "november 30, 2021"
+=======
+date: "november 25, 2021"
+>>>>>>> 59eef0417b985bb6f86b574e1425a5c3eff6e494
 output:
   word_document: default
   pdf_document:
@@ -74,6 +78,7 @@ Does flower visitation rates and/or reproductive success depend on the timing of
 
 
 
+<<<<<<< HEAD
 We built a framework for tracking, filtering, and evaluating tracking of objects in time-lapse image series.
 
 # Automatic tracking
@@ -128,12 +133,18 @@ Second, we check for overlap between all pairs of polygons made from the vertice
 
 
 
+=======
+>>>>>>> 59eef0417b985bb6f86b574e1425a5c3eff6e494
 
 # Results
 
 
 
+<<<<<<< HEAD
 ![](../figures/figure_1.png){ width=100% }
+=======
+
+>>>>>>> 59eef0417b985bb6f86b574e1425a5c3eff6e494
 **Figure 1:** Figure text....
 
 
