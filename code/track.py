@@ -31,17 +31,17 @@ br = "\n"
 """
 TO-DO
 
-- Record tracks and output a result file
+- Done: Record tracks and output a result file
 - Create running mean solution
 - Plot results
 - Create option to disregard max_distance (to use on non-fixed objects)
-
+S
 """
 
 
 #### SETTINGS ####
 
-resultFilename = "testResults/trackResults7.csv"
+resultFilename = "testResults/trackResults8.csv"
 
 max_disappeared = 4 # Maximum number of frames the algorithm should continue to look for an object
 max_distance = 500 # Maximum distance to a point before it is forced to be registered as a new ID instead of associated with the closest point
