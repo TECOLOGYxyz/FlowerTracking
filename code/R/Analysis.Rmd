@@ -129,6 +129,45 @@ ggplot()+
 
 ```
 
+
+```{r}
+thul01$x_c = (thul01$x_min + thul01$x_max) / 2
+thul01$y_c = (thul01$y_min + thul01$y_max) / 2
+
+thul01 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = Class)) + 
+  xlim(0,6080) +
+  ylim(0,3420)
+
+
+nyaa04$x_c = (nyaa04$x_min + nyaa04$x_max) / 2
+nyaa04$y_c = (nyaa04$y_min + nyaa04$y_max) / 2
+
+nyaa04 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = Class), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  theme(legend.position = "none")
+
+
+```
+
+
+```{r}
+tracksThul01 = read.csv('../../trackResults4.csv',stringsAsFactors = FALSE)
+
+tracksThul01$x_c = as.numeric(tracksThul01$x_C)
+
+tracksThul01 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(objectID))) + 
+  xlim(0,6080) +
+  ylim(0,3420)
+```
+
+
 ```{r}
 
 nyaa04_meta = merge(nyaa04, meta_2019, by.x = "FileName")
