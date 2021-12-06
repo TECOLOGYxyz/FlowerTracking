@@ -110,6 +110,8 @@ Similarly, this deals with potential false negatives. If a given flower has not 
 
 Setting **max disappeared** to 0 tracks objects based on the coordinates of the points in the previous frame.
 
+The counter for number of disappeared frames is reset when a new point is associated with the track within the threshold.
+
 
 
 # Evaluating tracking perfomance

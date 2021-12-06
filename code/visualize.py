@@ -539,9 +539,10 @@ def animate(i):
     #scat2.set_offsets(np.c_[x_i_pre, y_i_pre])
     #line.set_data(x_i[:i][0], y_i[:i][1])
     #line.set_data(300, 500)
+    time_text.set_text(f'Frame {t[i]}')
     for i,c in enumerate(x_i):
         line.set_data = ax.plot(x_i[i],y_i[i])
-    time_text.set_text(f'Frame {t[i]}')
+    
 
 
 # ----------------------------------------------------------------------------
