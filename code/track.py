@@ -74,10 +74,12 @@ running_mean_threshold = 5 # Number of frames for calculating the running mean o
 
 
 #### PATH TO DETECTIONS ####
-#detections = pd.read_csv('Dummy_fortracking2.csv')
-detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
+detections = pd.read_csv(r'../Dummy_fortracking2.csv')
+#detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
 
-detections['frame'] = detections['filename'].str.extract('(\d{6})')
+
+
+#detections['frame'] = detections['filename'].str.extract('(\d{6})')
 
 detections['x_c'] = (detections['x_min'] + detections['x_max']) / 2
 detections['y_c'] = (detections['y_min'] + detections['y_max']) / 2
@@ -86,7 +88,7 @@ detections['frame'] = detections['frame'].astype('int')
 
 frames = list(set(detections['frame'].tolist()))
 frames = sorted([int(i) for i in frames])
-#print(frames)
+print(frames)
 
 
 #print("Here are the detections",br,detections,br)
@@ -95,44 +97,6 @@ frames = sorted([int(i) for i in frames])
 with open(resultFilename, 'a') as resultFile:
     header = 'frame,filename,x_c,y_c,objectID\n'
     resultFile.write(header)  
-
-
-d = OrderedDict()
-d[1] = [[2,3]]
-#print(d)
-#print(len(d[1]))
-
-#d[1].append([5,6])
-
-#print(len(d[1]))
-
-#print(d)
-
-objects = OrderedDict()
-objects[0] = [[2,3]]
-objects[1] = [[4,5]]
-objects[1].append([6,7])
-
-means = OrderedDict()
-
-def runningMean(dic):
-    for key, value in dic.items():
-        print(key, value)
-        print(len(value))
-        if len(value) == 1:
-            means[key] = value
-        if len(value) > 1:
-            c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
-            means[key] = c_m
-            
-       
-runningMean(objects)
-
-print("Objects: ", br, objects)
-print("Means: ", br, means)
-
-
-#print(d[1][0])
 
 class tracker():
     def __init__(self, max_disappeared, frames):
@@ -172,7 +136,9 @@ class tracker():
         return frame_detections
 
     def register(self, frame, centroid): # For registering a point
-        self.objects[self.nextObjectID] = centroid # Set the new centroid as content for the new objectID in the Objects dictionary
+        self.objects[self.nextObjectID] = [centroid] # Set the new centroid as content for the new objectID in the Objects dictionary
+        self.means[self.nextObjectID] = centroid
+        
         self.disappeared[self.nextObjectID] = 0 # Set number of times the new object has disappeared to zero. 
 
         self.length_dict = {key: len(value) for key, value in self.objects.items()}
@@ -188,18 +154,39 @@ class tracker():
     def update(self, objectID, centroid):
         # First we'll update the dictionary storing the object centroids
         print("Received in update", br, "Object id: ", objectID, br, "Centroid: ", centroid, br)
-        self.objects[objectID] = centroid
+        if len(self.objects[objectID]) < running_mean_threshold:
+            print("Length is less than running mean threshold.")
+            print("Appending ", [centroid][0], " to ", self.objects[objectID])
+            self.objects[objectID].append([centroid])
+            
+        if len(self.objects[objectID]) == running_mean_threshold:
+            print("Length is ewual to running mean threshold.")
+            print("Deleting first item in ",self.objects[objectID], "(",self.objects[objectID][0],")")
+            del self.objects[objectID][0]
+            print("Appending ", [centroid])
+            
+            self.objects[objectID].append([centroid])
+            print("Updated: ",self.objects[objectID] )
         
-        # for key, value in dic.items():
-        #     print(key, value)
-        #     print(len(value))
-        #     if len(value) == 1:
-        #         means[key] = value
-        #     if len(value) > 1:
-        #         c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
-        #         means[key] = c_m   
-    
-    
+    def update_means(self):
+        print("Updating means dictionary")
+        for key, value in self.objects.items():
+            print("Key ", key, "value", value)
+            if len(value) == 1:
+                print("Length is one")
+                print("Setting ", self.means[key], " to ", value)
+                self.means[key] = value
+                print("Current means dictionary: ", br, self.means)
+                
+            if len(value) > 1:
+                print("Length is more than one")
+                for v in value:
+                    print("v: ", v)
+                #k = [i[0] for i in value]
+                #print("k ", k)
+                #c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
+                #self.means[key] = c_m
+        
     def track(self, frame):
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
         print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
@@ -240,14 +227,15 @@ class tracker():
             
         else: # We are already tracking objects, so let's see if we can associate any frame detections with objects that are being tracked.
             print(br,"We are tracking existing objects.")    
-            objectIDs = list(self.objects.keys()) # grab the set of object IDs and corresponding centroids
-            objectCentroids = list(self.objects.values())
+            objectIDs = list(self.means.keys()) # grab the set of object IDs and corresponding centroids
+            objectCentroids = list(self.means.values())
+
             
             print("Obj. ID: ",objectIDs)
             print("Obj. Centroids: ",br,objectCentroids)
             print("Input centroids: ",br, inputCentroids)
 
-            D = dist.cdist(np.array(objectCentroids), inputCentroids) # compute the distance between each pair of object centroids and input centroids, respectively. Our goal will be to match an input centroid to an existing object centroid 
+            D = dist.cdist(objectCentroids, inputCentroids) # compute the distance between each pair of object centroids and input centroids, respectively. Our goal will be to match an input centroid to an existing object centroid 
 
             print("Distance matrix: \n", D)
             D[D >= max_distance] = np.nan
@@ -283,11 +271,11 @@ class tracker():
                     
                     #self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
                     #self.store_tracking_results(frame, inputCentroids[result[1]], objectIDs[result[0]]) # And store the tracking information
-                    
+              
                 else:
                     #print("Association based on distance done. Now dealing with points that were not associated.")
                     pass
-            
+            self.update_means()
             #print("Object indexes: ", objectIndexes)
             #print("Input indexes: ", inputIndexes)
             
