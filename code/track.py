@@ -53,25 +53,28 @@ running_mean_threshold = 5 # Number of frames for calculating the running mean o
 ######
 
 
-# p = np.array([[5,6]])
+objects = OrderedDict()
+objects[0] = [[2,3]]
+objects[1] = [[4,5]]
+objects[1].append([6,7])
 
-# print(p)
+means = OrderedDict()
 
+def runningMean(dic):
+    for key, value in dic.items():
+        print(key, value)
+        print(len(value))
+        if len(value) == 1:
+            means[key] = value
+        if len(value) > 1:
+            c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
+            means[key] = c_m
+            
+       
+runningMean(objects)
 
-# p = np.append(p, [[7,8]], axis = 0)
-
-# print(p)
-
-# print(len(p))
-# print(p)
-
-# if len(p) < running_mean_threshold:
-#     p = np.append(p, [centroid], axis = 0)
-# else:
-#     p = np.delete(p, 0)
-    
-
-
+print("Objects: ", br, objects)
+print("Means: ", br, means)
 
 #### PATH TO DETECTIONS ####
 detections = pd.read_csv(r'../Dummy_fortracking2.csv')
@@ -136,6 +139,7 @@ class tracker():
         return frame_detections
 
     def register(self, frame, centroid): # For registering a point
+        print("Centroid for registering: ", centroid)
         self.objects[self.nextObjectID] = [centroid] # Set the new centroid as content for the new objectID in the Objects dictionary
         self.means[self.nextObjectID] = centroid
         
@@ -147,6 +151,8 @@ class tracker():
         
         self.nextObjectID += 1 # Add 1 to the objectID counter so it's ready for the next point
         
+        print("Current objects: ", br, self.objects)
+        
     def deregister(self, objectID): # deregister object by deleting it from the objects dict and removing the associated counter from the disappeared dict.
         del self.objects[objectID]
         del self.disappeared[objectID]
@@ -156,16 +162,16 @@ class tracker():
         print("Received in update", br, "Object id: ", objectID, br, "Centroid: ", centroid, br)
         if len(self.objects[objectID]) < running_mean_threshold:
             print("Length is less than running mean threshold.")
-            print("Appending ", [centroid][0], " to ", self.objects[objectID])
-            self.objects[objectID].append([centroid])
+            print("Appending ", [centroid], " to ", self.objects[objectID])
+            self.objects[objectID].append(centroid)
             
         if len(self.objects[objectID]) == running_mean_threshold:
-            print("Length is ewual to running mean threshold.")
+            print("Length is equal to running mean threshold.")
             print("Deleting first item in ",self.objects[objectID], "(",self.objects[objectID][0],")")
             del self.objects[objectID][0]
             print("Appending ", [centroid])
             
-            self.objects[objectID].append([centroid])
+            self.objects[objectID].append([centroid][0])
             print("Updated: ",self.objects[objectID] )
         
     def update_means(self):
@@ -175,18 +181,16 @@ class tracker():
             if len(value) == 1:
                 print("Length is one")
                 print("Setting ", self.means[key], " to ", value)
-                self.means[key] = value
+                self.means[key] = value[0]
                 print("Current means dictionary: ", br, self.means)
                 
             if len(value) > 1:
                 print("Length is more than one")
-                for v in value:
-                    print("v: ", v)
-                #k = [i[0] for i in value]
-                #print("k ", k)
-                #c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
-                #self.means[key] = c_m
-        
+
+                c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
+                print("Means calculated to: ", c_m)
+                self.means[key] = c_m
+        print("Current mean dict: ",br,self.means)
     def track(self, frame):
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
         print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
@@ -213,12 +217,12 @@ class tracker():
         """
         
         inputCentroids = frame_detections.to_numpy()
-
+        
         if not self.objects: # if Objects is empty, we are currently not tracking any objects and take the input centroids and register each of them
             print("Not tracking objects. Initiating tracking on current detections.")
             for i in range(0, len(inputCentroids)):
-                print("Added detection ", i)
-                self.register(frame, inputCentroids[i])
+                print("Adding detection ", i)
+                self.register(frame, list(inputCentroids[i]))
 
             print("Current objects: ", self.objects)
             print("Object 0: ",self.objects[0])
@@ -262,7 +266,7 @@ class tracker():
                     print("Input centroid: ", inputCentroids[result[1]])
                     print("Object ids: ", objectIDs[result[0]])
                     ### Use update here! self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
-                    self.update(objectIDs[result[0]], inputCentroids[result[1]])
+                    self.update(objectIDs[result[0]], list(inputCentroids[result[1]]))
                     
                     
                     print(self.objects[objectIDs[result[0]]])
@@ -291,7 +295,7 @@ class tracker():
             
             for i in inputIndexes: # Start tracking new objects
                 #print("Registering point: ", i, "With the centroid: ", inputCentroids[i])
-                self.register(frame, inputCentroids[i])
+                self.register(frame, list(inputCentroids[i]))
         
 
 
