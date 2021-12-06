@@ -6,11 +6,7 @@ author:
 - Hjalte M. R. Mann
 - Alexandros Iosifidis
 - Toke T. Høye
-<<<<<<< HEAD
-date: "november 30, 2021"
-=======
-date: "november 25, 2021"
->>>>>>> 59eef0417b985bb6f86b574e1425a5c3eff6e494
+date: "december 06, 2021"
 output:
   word_document: default
   pdf_document:
@@ -77,8 +73,6 @@ Does flower visitation rates and/or reproductive success depend on the timing of
 
 
 
-
-<<<<<<< HEAD
 We built a framework for tracking, filtering, and evaluating tracking of objects in time-lapse image series.
 
 # Automatic tracking
@@ -105,7 +99,9 @@ Establishing associations between points based on just the distance between poin
 
 The flowers move around a center point because of their stalk. We base the tracking on the distance between a point in the current frame and the running mean of the positions of the previous X points in a track.
 
+As winds shift, flowers close to the edge of the image .. may move in and out of view. If a flower reappears in the same area as a flower is already being tracked after disappearing in a few frames, it is a reasonable assumption that it is the same individual and not that the old flower wilted/disappeared and a new one developed. The parameter **max disappeared** sets the number of frames a track can be lost before a new track is initiated for points appearing in the same area.
 
+Similarly, this deals with potential false negatives. If a given flower has not been annotated in a single frame, it should not be assigned a new track.
 
 
 
@@ -124,29 +120,26 @@ To associate other information to the flower, for example flower visits, we want
 
 Tracks that overlap have significant risk of errors. Overlapping tracks can be caused by a single flower that was erroneously assigned to several tracks, two flowers that were located sufficiently close to each other that there areas overlapped (e.g. when wind moves the flowers around), false positive detections close to a flower.Best case is two flowers that flowered in the same area but were separated by time. Here we will remove overlapping tracks to reduce the risk of error.
 
-We remove tracks consisting on only one or two points. For tracks consisting of three points, we establish the triangle from the points.
+We disregard single points that were not associated to a track. For tracks consisting of two points, we establish the straight line between the points. For tracks consisting of three points, we establish the triangle from the points. For tracks consisting of more than three points, we calculate the convex hull of all the points included in the track and derive the polygon from the vertices of the convex hull.
 
-For tracks consisting of more than three points, we calculate the convex hull of all the points included in the track. 
-Second, we check for overlap between all pairs of polygons made from the vertices of each convex hull. If the polygons for two tracks overlap, we'll filter out both/the shortest??
+We then check if any two lines intersect (for tracks with two points), if any lines intersect with any polygons, and if any polygons overlap with other polygons, and remove tracks that overlap.
 
-
-
+We evaluate the accuracy of the remaining tracks.
 
 
-=======
->>>>>>> 59eef0417b985bb6f86b574e1425a5c3eff6e494
+
+
 
 # Results
 
 
-
-<<<<<<< HEAD
 ![](../figures/figure_1.png){ width=100% }
-=======
 
->>>>>>> 59eef0417b985bb6f86b574e1425a5c3eff6e494
+**Figure 1:** Simple centroid tracking may produce erronous associations when objects move between frames. Blue shows detections in the current frame (bounding box and centroid point). Red shows centroid points for the detections in the previous frame.
+
+# Results
+
 **Figure 1:** Figure text....
-
 
 
 # Discussion
