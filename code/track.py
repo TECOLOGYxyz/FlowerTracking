@@ -77,11 +77,11 @@ running_mean_threshold = 5 # Number of frames for calculating the running mean o
 # print("Means: ", br, means)
 
 #### PATH TO DETECTIONS ####
-detections = pd.read_csv(r'../Dummy_fortracking2.csv')
-#detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
+#detections = pd.read_csv(r'../Dummy_fortracking2.csv')
+detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
 
 
-#detections['frame'] = detections['filename'].str.extract('(\d{6})')
+detections['frame'] = detections['filename'].str.extract('(\d{6})')
 
 detections['x_c'] = (detections['x_min'] + detections['x_max']) / 2
 detections['y_c'] = (detections['y_min'] + detections['y_max']) / 2
@@ -155,8 +155,9 @@ class tracker():
     def deregister(self, objectID): # deregister object by deleting it from the objects dict and removing the associated counter from the disappeared dict.
         del self.objects[objectID]
         del self.disappeared[objectID]
+        del self.means[objectID]
     
-    def update(self, objectID, centroid):
+    def update_object(self, objectID, centroid):
         # First we'll update the dictionary storing the object centroids
         print("Received in update", br, "Object id: ", objectID, br, "Centroid: ", centroid, br)
         if len(self.objects[objectID]) < running_mean_threshold:
@@ -177,14 +178,8 @@ class tracker():
         print("Updating means dictionary")
         for key, value in self.objects.items():
             print("Key ", key, "value", value)
-            # if len(value) == 1:
-            #     print("Length is one")
-            #     print("Setting ", self.means[key], " to ", value)
-            #     self.means[key] = value[0]
-                
             if len(value) > 1:
                 print("Length is more than one")
-
                 c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
                 print("Means calculated to: ", c_m)
                 self.means[key] = c_m
@@ -201,6 +196,7 @@ class tracker():
 
         if frame_detections.empty: # If the frame has no detections, we will add 1 to disappeared for all objects that are being tracked.
             for objectID in list(self.disappeared.keys()): # loop over any existing tracked objects and mark them as +1 in disappeared
+                print("Object id in disappeared: ", objectID)
                 self.disappeared[objectID] += 1
 
                 if self.disappeared[objectID] > self.max_disappeared: # if we have reached a maximum number of consecutive frames where a given object has been marked as missing, deregister it
@@ -269,7 +265,7 @@ class tracker():
                     print("Input centroid: ", inputCentroids[result[1]])
                     print("Object ids: ", objectIDs[result[0]])
                     ### Use update here! self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
-                    self.update(objectIDs[result[0]], inputCentroids[result[1]])
+                    self.update_object(objectIDs[result[0]], inputCentroids[result[1]])
                     
                     
                     print(self.objects[objectIDs[result[0]]])
@@ -277,28 +273,30 @@ class tracker():
                     print(br)
                     
                     #self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
-                    #self.store_tracking_results(frame, inputCentroids[result[1]], objectIDs[result[0]]) # And store the tracking information
+                    self.store_tracking_results(frame, inputCentroids[result[1]], objectIDs[result[0]]) # And store the tracking information
               
                 else:
                     #print("Association based on distance done. Now dealing with points that were not associated.")
                     pass
+            
             self.update_means()
             #print("Object indexes: ", objectIndexes)
             #print("Input indexes: ", inputIndexes)
             
-            #print(objectIDs)
+            print("Object indices: ",br, objectIndexes, br)
+            print("Disappeared df: ", br, self.disappeared, br)
+            
             
             for o in objectIndexes: # Add 1 to disappeared objects
                 objectID = objectIDs[o]
                 self.disappeared[objectID] += 1
-                
                 if self.disappeared[objectID] > self.max_disappeared: # if we have reached a maximum number of consecutive frames where a given object has been marked as missing, deregister it
                     self.deregister(objectID)
                     #print("Deregistering!")
             
             for i in inputIndexes: # Start tracking new objects
                 #print("Registering point: ", i, "With the centroid: ", inputCentroids[i])
-                self.register(frame, list(inputCentroids[i]))
+                self.register(frame, inputCentroids[i])
         
 
 
