@@ -53,33 +53,32 @@ running_mean_threshold = 5 # Number of frames for calculating the running mean o
 ######
 
 
-objects = OrderedDict()
-objects[0] = [[2,3]]
-objects[1] = [[4,5]]
-objects[1].append([6,7])
+# objects = OrderedDict()
+# objects[0] = [[2,3]]
+# objects[1] = [[4,5]]
+# objects[1].append([6,7])
 
-means = OrderedDict()
+# means = OrderedDict()
 
-def runningMean(dic):
-    for key, value in dic.items():
-        print(key, value)
-        print(len(value))
-        if len(value) == 1:
-            means[key] = value
-        if len(value) > 1:
-            c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
-            means[key] = c_m
+# def runningMean(dic):
+#     for key, value in dic.items():
+#         print(key, value)
+#         print(len(value))
+#         if len(value) == 1:
+#             means[key] = value
+#         if len(value) > 1:
+#             c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
+#             means[key] = c_m
             
        
-runningMean(objects)
+# runningMean(objects)
 
-print("Objects: ", br, objects)
-print("Means: ", br, means)
+# print("Objects: ", br, objects)
+# print("Means: ", br, means)
 
 #### PATH TO DETECTIONS ####
 detections = pd.read_csv(r'../Dummy_fortracking2.csv')
 #detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
-
 
 
 #detections['frame'] = detections['filename'].str.extract('(\d{6})')
@@ -169,20 +168,19 @@ class tracker():
             print("Length is equal to running mean threshold.")
             print("Deleting first item in ",self.objects[objectID], "(",self.objects[objectID][0],")")
             del self.objects[objectID][0]
-            print("Appending ", [centroid])
+            print("Appending ", centroid)
             
-            self.objects[objectID].append([centroid][0])
+            self.objects[objectID].append(centroid)
             print("Updated: ",self.objects[objectID] )
         
     def update_means(self):
         print("Updating means dictionary")
         for key, value in self.objects.items():
             print("Key ", key, "value", value)
-            if len(value) == 1:
-                print("Length is one")
-                print("Setting ", self.means[key], " to ", value)
-                self.means[key] = value[0]
-                print("Current means dictionary: ", br, self.means)
+            # if len(value) == 1:
+            #     print("Length is one")
+            #     print("Setting ", self.means[key], " to ", value)
+            #     self.means[key] = value[0]
                 
             if len(value) > 1:
                 print("Length is more than one")
@@ -190,7 +188,9 @@ class tracker():
                 c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
                 print("Means calculated to: ", c_m)
                 self.means[key] = c_m
-        print("Current mean dict: ",br,self.means)
+        print("Current mean dict: ", br, self.means)
+        
+        
     def track(self, frame):
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
         print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
@@ -216,13 +216,16 @@ class tracker():
             3. 
         """
         
-        inputCentroids = frame_detections.to_numpy()
+        #inputCentroids = frame_detections.to_numpy()
+        inputCentroids = frame_detections[['x_c', 'y_c']].values.tolist()
+        
+        print("input centroids: ",br ,inputCentroids)
         
         if not self.objects: # if Objects is empty, we are currently not tracking any objects and take the input centroids and register each of them
             print("Not tracking objects. Initiating tracking on current detections.")
             for i in range(0, len(inputCentroids)):
                 print("Adding detection ", i)
-                self.register(frame, list(inputCentroids[i]))
+                self.register(frame, inputCentroids[i])
 
             print("Current objects: ", self.objects)
             print("Object 0: ",self.objects[0])
@@ -266,7 +269,7 @@ class tracker():
                     print("Input centroid: ", inputCentroids[result[1]])
                     print("Object ids: ", objectIDs[result[0]])
                     ### Use update here! self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
-                    self.update(objectIDs[result[0]], list(inputCentroids[result[1]]))
+                    self.update(objectIDs[result[0]], inputCentroids[result[1]])
                     
                     
                     print(self.objects[objectIDs[result[0]]])
