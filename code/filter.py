@@ -33,7 +33,7 @@ TO-DO
 """
 
 #### PATH TO TRACKS ####
-tracks = pd.read_csv(r'testResults/trackResults7.csv')
+tracks = pd.read_csv(r'../testResults/trackResults8.csv')
 print(tracks)
 
 #### NORMALIZE X AND Y ####

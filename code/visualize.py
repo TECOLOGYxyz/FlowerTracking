@@ -434,17 +434,17 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 import pandas as pd
 
 
-df = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
-
+#df = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
+df = pd.read_csv(r'../testResults/trackResults8.csv')
 print(df)
 
 
-df['frame'] = df['filename'].str.extract('(\d{6})')
+#df['frame'] = df['filename'].str.extract('(\d{6})')
 
-df['x_c'] = (df['x_min'] + df['x_max']) / 2
-df['y_c'] = (df['y_min'] + df['y_max']) / 2
+#df['x_c'] = (df['x_min'] + df['x_max']) / 2
+#df['y_c'] = (df['y_min'] + df['y_max']) / 2
 
-df['frame'] = df['frame'].astype('int')
+#df['frame'] = df['frame'].astype('int')
 
 
 dfGrouped = df.groupby(['frame'])
@@ -513,8 +513,9 @@ time_text = ax.text(0.10, 1.1, '', transform=ax.transAxes)
 # ----------------------------------------------------------------------------
 
 ax.set(xlim=(0, 6080), ylim=(0, 3420))
-scat = ax.scatter(x,y, s = 202)
 scat2 = ax.scatter(x,y, s = 100)
+scat = ax.scatter(x,y, s = 202)
+
 
 for i,c in enumerate(x):
     line, = ax.plot(x[i],y[i])
@@ -530,18 +531,24 @@ def animate(i):
     x_i_pre = np.array(points[i-1][0])
     y_i_pre = np.array(points[i-1][1])
     
-    scat.set_offsets(np.c_[x_i, y_i])
+    #x_i_prepre = np.array(points[i-2][0])
+    #y_i_prepre = np.array(points[i-2][1])
     scat2.set_offsets(np.c_[x_i_pre, y_i_pre])
+    scat.set_offsets(np.c_[x_i, y_i])
     
+    #scat2.set_offsets(np.c_[x_i_pre, y_i_pre])
     #line.set_data(x_i[:i][0], y_i[:i][1])
     #line.set_data(300, 500)
+    time_text.set_text(f'Frame {t[i]}')
     for i,c in enumerate(x_i):
         line.set_data = ax.plot(x_i[i],y_i[i])
-    time_text.set_text(f'Frame {t[i]}')
+    
 
 
 # ----------------------------------------------------------------------------
 # Save the animation
 anim = FuncAnimation(fig, animate, interval=100, frames=len(frames)-1, repeat=False)
 #fig.show()
-anim.save('scatter' + '.gif',dpi = 80, writer=PillowWriter(fps=5))
+print("Saving")
+
+anim.save('../testResults/' + 'scatter' + '.gif',dpi = 80, writer=PillowWriter(fps=5))
