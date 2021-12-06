@@ -44,7 +44,7 @@ TO-DO
 
 #### SETTINGS ####
 
-resultFilename = "../testResults/trackResults7.csv"
+resultFilename = "../testResults/trackResults8.csv"
 
 max_disappeared = 4 # Maximum number of frames the algorithm should continue to look for an object
 max_distance = 500 # Maximum distance to a point before it is forced to be registered as a new ID instead of associated with the closest point
