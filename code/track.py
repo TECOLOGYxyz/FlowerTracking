@@ -18,6 +18,7 @@ Hjalte Mann
 TECOLOGY.xyz
 
 """
+
 import pandas as pd # Replace with cudf if performance is too slow?
 from collections import OrderedDict
 import numpy as np
@@ -25,6 +26,8 @@ from scipy.spatial import distance as dist
 #from scipy.ndimage.filters import uniform_filter1d
 import matplotlib.pyplot as plt
 import time
+from statistics import mean
+
 
 br = "\n"
 
@@ -41,7 +44,7 @@ TO-DO
 
 #### SETTINGS ####
 
-resultFilename = "testResults/trackResults7.csv"
+resultFilename = "../testResults/trackResults7.csv"
 
 max_disappeared = 4 # Maximum number of frames the algorithm should continue to look for an object
 max_distance = 500 # Maximum distance to a point before it is forced to be registered as a new ID instead of associated with the closest point
@@ -50,9 +53,29 @@ running_mean_threshold = 5 # Number of frames for calculating the running mean o
 ######
 
 
+# p = np.array([[5,6]])
+
+# print(p)
+
+
+# p = np.append(p, [[7,8]], axis = 0)
+
+# print(p)
+
+# print(len(p))
+# print(p)
+
+# if len(p) < running_mean_threshold:
+#     p = np.append(p, [centroid], axis = 0)
+# else:
+#     p = np.delete(p, 0)
+    
+
+
+
 #### PATH TO DETECTIONS ####
 #detections = pd.read_csv('Dummy_fortracking2.csv')
-detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_23_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv")
+detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
 
 detections['frame'] = detections['filename'].str.extract('(\d{6})')
 
@@ -63,10 +86,10 @@ detections['frame'] = detections['frame'].astype('int')
 
 frames = list(set(detections['frame'].tolist()))
 frames = sorted([int(i) for i in frames])
-print(frames)
+#print(frames)
 
 
-print("Here are the detections",br,detections,br)
+#print("Here are the detections",br,detections,br)
 
 
 with open(resultFilename, 'a') as resultFile:
@@ -74,10 +97,49 @@ with open(resultFilename, 'a') as resultFile:
     resultFile.write(header)  
 
 
+d = OrderedDict()
+d[1] = [[2,3]]
+#print(d)
+#print(len(d[1]))
+
+#d[1].append([5,6])
+
+#print(len(d[1]))
+
+#print(d)
+
+objects = OrderedDict()
+objects[0] = [[2,3]]
+objects[1] = [[4,5]]
+objects[1].append([6,7])
+
+means = OrderedDict()
+
+def runningMean(dic):
+    for key, value in dic.items():
+        print(key, value)
+        print(len(value))
+        if len(value) == 1:
+            means[key] = value
+        if len(value) > 1:
+            c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
+            means[key] = c_m
+            
+       
+runningMean(objects)
+
+print("Objects: ", br, objects)
+print("Means: ", br, means)
+
+
+#print(d[1][0])
+
 class tracker():
     def __init__(self, max_disappeared, frames):
         self.nextObjectID = 0 # Counter for object ids
         self.objects = OrderedDict() # Dictionary. objectID is the key, centroid is the content
+        self.means = OrderedDict() # Dictionary to keep track of running means of object coordinates
+        
         self.disappeared = OrderedDict() # Keeps track of how long an objectID has been lost
 
         self.max_disappeared = max_disappeared # store max_disappeared number of frames
@@ -122,8 +184,23 @@ class tracker():
     def deregister(self, objectID): # deregister object by deleting it from the objects dict and removing the associated counter from the disappeared dict.
         del self.objects[objectID]
         del self.disappeared[objectID]
-
-    def update(self, frame):
+    
+    def update(self, objectID, centroid):
+        # First we'll update the dictionary storing the object centroids
+        print("Received in update", br, "Object id: ", objectID, br, "Centroid: ", centroid, br)
+        self.objects[objectID] = centroid
+        
+        # for key, value in dic.items():
+        #     print(key, value)
+        #     print(len(value))
+        #     if len(value) == 1:
+        #         means[key] = value
+        #     if len(value) > 1:
+        #         c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
+        #         means[key] = c_m   
+    
+    
+    def track(self, frame):
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
         print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
         """
@@ -188,21 +265,33 @@ class tracker():
                     objectIndexes.remove(result[0])
                     inputIndexes.remove(result[1])
                     
-                    print("Loop ", c)
-                    print(D, br)
+                    #print("Loop ", c)
+                    #print(D, br)
                     # Here we need to update the centroid coordinates of the objects.
-                    print("Setting the centroid for object ", objectIDs[result[0]], "to ", inputCentroids[result[1]])
-                    self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
-                    self.store_tracking_results(frame, inputCentroids[result[1]], objectIDs[result[0]]) # And store the tracking information
+                    #print("Setting the centroid for object ", objectIDs[result[0]], "to ", inputCentroids[result[1]])
+                    
+                    print(br)
+                    print("Input centroid: ", inputCentroids[result[1]])
+                    print("Object ids: ", objectIDs[result[0]])
+                    ### Use update here! self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
+                    self.update(objectIDs[result[0]], inputCentroids[result[1]])
+                    
+                    
+                    print(self.objects[objectIDs[result[0]]])
+                    print(self.objects)
+                    print(br)
+                    
+                    #self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
+                    #self.store_tracking_results(frame, inputCentroids[result[1]], objectIDs[result[0]]) # And store the tracking information
                     
                 else:
-                    print("Association based on distance done. Now dealing with points that were not associated.")
+                    #print("Association based on distance done. Now dealing with points that were not associated.")
                     pass
             
-            print("Object indexes: ", objectIndexes)
-            print("Input indexes: ", inputIndexes)
+            #print("Object indexes: ", objectIndexes)
+            #print("Input indexes: ", inputIndexes)
             
-            print(objectIDs)
+            #print(objectIDs)
             
             for o in objectIndexes: # Add 1 to disappeared objects
                 objectID = objectIDs[o]
@@ -210,10 +299,10 @@ class tracker():
                 
                 if self.disappeared[objectID] > self.max_disappeared: # if we have reached a maximum number of consecutive frames where a given object has been marked as missing, deregister it
                     self.deregister(objectID)
-                    print("Deregistering!")
+                    #print("Deregistering!")
             
             for i in inputIndexes: # Start tracking new objects
-                print("Registering point: ", i, "With the centroid: ", inputCentroids[i])
+                #print("Registering point: ", i, "With the centroid: ", inputCentroids[i])
                 self.register(frame, inputCentroids[i])
         
 
@@ -228,7 +317,7 @@ t = tracker(max_disappeared, frames) # Instantiate the class instance and pass i
 starttime = time.time()
 
 for f in frames:
-    t.update(f)
+    t.track(f)
     
 endtime = time.time()
 print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
@@ -246,5 +335,4 @@ print(tracks)
 #tracks['hello'] = tracks['objectID'].astype(float).astype(int)
 #plt.scatter(tracks['x_c'], tracks['y_c'], c = tracks['objectID'])
 #detections.groupby('').plot(kind='kde', ax=plt.gca())
-
 
