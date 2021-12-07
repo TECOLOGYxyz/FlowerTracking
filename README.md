@@ -14,6 +14,14 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
+
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+
+<!-- Place this tag where you want the button to render. -->
+<a class="github-button" href="https://github.com/TECOLOGYxyz/FlowerTracking/subscription" data-color-scheme="no-preference: dark; light: dark_high_contrast; dark: dark_dimmed;" data-icon="octicon-eye" data-size="large" aria-label="Watch TECOLOGYxyz/FlowerTracking on GitHub">Watch</a>
+
 [![Stargazers][stars-shield]][https://github.com/TECOLOGYxyz/FlowerTracking/stargazers]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
