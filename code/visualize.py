@@ -513,7 +513,7 @@ time_text = ax.text(0.10, 1.1, '', transform=ax.transAxes)
 # ----------------------------------------------------------------------------
 
 ax.set(xlim=(0, 6080), ylim=(0, 3420))
-scat2 = ax.scatter(x,y, s = 100)
+scat2 = ax.scatter(-1,1, s = 100)
 scat = ax.scatter(x,y, s = 202)
 
 
@@ -540,8 +540,8 @@ def animate(i):
     #line.set_data(x_i[:i][0], y_i[:i][1])
     #line.set_data(300, 500)
     time_text.set_text(f'Frame {t[i]}')
-    for i,c in enumerate(x_i):
-        line.set_data = ax.plot(x_i[i],y_i[i])
+   # for i,c in enumerate(x_i):
+    #    line.set_data = ax.plot(x_i[i],y_i[i])
     
 
 
