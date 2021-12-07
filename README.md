@@ -16,41 +16,13 @@
 -->
 
 [![TECOLOGYxyz - FlowerTracking](https://img.shields.io/static/v1?label=TECOLOGYxyz&message=FlowerTracking&color=blue&logo=github)](https://github.com/TECOLOGYxyz/FlowerTracking "Go to GitHub repo")
-[![stars - FlowerTracking](https://img.shields.io/github/stars/TECOLOGYxyz/FlowerTracking?style=social)](https://github.com/TECOLOGYxyz/FlowerTracking)
-[![forks - FlowerTracking](https://img.shields.io/github/forks/TECOLOGYxyz/FlowerTracking?style=social)](https://github.com/TECOLOGYxyz/FlowerTracking)
-
-_Repo metadata_
-
-
-[![GitHub tag](https://img.shields.io/github/tag/TECOLOGYxyz/FlowerTracking?include_prereleases=&sort=semver&color=blue)](https://github.com/TECOLOGYxyz/FlowerTracking/releases/)
-
-
-
-_Call-to-Action buttons_
-
-<div align="center">
-
-
-
-
-
-</div>
-
-## Documentation
-
-<div align="center">
-
-[![view - Documentation](https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge)](/docs/ "Go to project documentation")
-
-</div>
-
 
 
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
   <a href="https://github.com/TECOLOGYxyz/TrackingFlowers">
-    <img src="images/logo.png" "U:\Privat\TrackingFlowers\code\static\TrackingFlowersLogo.png" alt="Logo" width="80" height="80">
+    <img src="image.png" "U:\BITCue\Projekter\TrackingFlowers\code\image.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Track Individual Flowers in Images</h3>
