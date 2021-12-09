@@ -27,49 +27,36 @@ from scipy.spatial import distance as dist
 import matplotlib.pyplot as plt
 import time
 from statistics import mean
-
+from datetime import datetime
 
 br = "\n"
 
-"""
-TO-DO
+# ===================== SETTINGS ==============================================
 
-- Done: Record tracks and output a result file
-- Create running mean solution
-- Plot results
-- Create option to disregard max_distance (to use on non-fixed objects)
-S
-"""
+verbose = True # Set to True if you want tracking process printed to screen and False if not
 
+prefix_results_filename = "testing"
 
-#### SETTINGS ####
-#resultFilename = "../testResults/trackResults10.csv"
+list_max_disappeared = [4] # Maximum number of frames a track can be lost before new points will be forces into a new track.
+list_running_mean_threshold = [0] # Maximum number of frames for calculating the running mean of the position of an object If there are less than this number of frames currently in the track, a mean over what is in the track will be used..
+list_max_distance = [0] # If set to 0, this parameter will be ignored. If not zero, points that have a distance to tracked objects higher than this parameter will be forced into new tracks.
 
-
-#max_disappeared = 4 # Maximum number of frames the algorithm should continue to look for an object
-#max_distance = 500 # Maximum distance to a point before it is forced to be registered as a new ID instead of associated with the closest point
-#running_mean_threshold = 5 # Number of frames for calculating the running mean of the position of an object
+list_of_parameters = [(x,y,z) for x in list_max_disappeared for y in list_running_mean_threshold for z in list_max_distance] # A list of all combinations of the above parameters.
 
 
 #### PATH TO DETECTIONS ####
 #detections = pd.read_csv(r'../Dummy_fortracking2.csv')
 detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
-
-
 detections['frame'] = detections['filename'].str.extract('(\d{6})')
-
 detections['x_c'] = (detections['x_min'] + detections['x_max']) / 2
 detections['y_c'] = (detections['y_min'] + detections['y_max']) / 2
-
 detections['frame'] = detections['frame'].astype('int')
 
 frames = list(set(detections['frame'].tolist()))
 frames = sorted([int(i) for i in frames])
-#print(frames)
 
-
-#print("Here are the detections",br,detections,br)
-
+if verbose:
+    print("Here are the detections",br,detections,br)
 
 class tracker():
     def __init__(self, max_disappeared, max_distance, running_mean_threshold, results_filename, frames):
@@ -79,36 +66,33 @@ class tracker():
         
         self.disappeared = OrderedDict() # Keeps track of how long an objectID has been lost
 
-        self.max_disappeared = max_disappeared # store max_disappeared number of frames
+        self.max_disappeared = max_disappeared # store parameters for use in the class
         self.max_distance = max_distance
         self.running_mean_threshold = running_mean_threshold
         self.results_filename = results_filename
         self.frames = frames
         
-        self.tracks = []
+        self.tracks = [] # Create a list for storing tracking results as we go
 
-        with open(self.results_filename, 'a') as resultFile:
+        with open(self.results_filename, 'a') as resultFile: # Write the header of the output file
             header = 'frame,filename,x_c,y_c,objectID\n'
             resultFile.write(header)
 
     def store_tracking_results(self, frame, centroid, objectID):
-        #print(br, f'Object ID {objectID} with centroid {centroid} in frame {frame} stored.', br)
         self.tracks.append([frame, centroid[0], centroid[1], objectID])
-
+        if verbose:
+            print(f'Object ID {objectID} with centroid {centroid} in frame {frame} stored.')
+        
     def write_tracks_file(self):
         starttime = time.time()
-        #line = detections.loc[(detections['frame'] == frame) & (detections['x_c'] == centroid[0])]
     
         with open(self.results_filename, 'a') as resultFile:
             for t in self.tracks:
-                frame = t[0]
-                x_c = t[1]
-                y_c = t[2]
-                objectID = t[3]
+                frame, x_c, y_c, objectID = t[0], t[1], t[2], t[3]
                 filename = detections.loc[detections['frame'] == frame, 'filename'].iloc[0]
                 resultFile.write(f'{frame},{filename},{x_c},{y_c},{objectID}{br}')
         endtime = time.time()
-        #print(f'Writing done. That took {round(endtime-starttime, 4)} seconds.')
+        print(f'Writing done. That took {round(endtime-starttime, 4)} seconds.')
 
     def get_frame_detections(self, frame):
         block = detections.loc[detections['frame'] == frame]
@@ -116,7 +100,8 @@ class tracker():
         return frame_detections
 
     def register(self, frame, centroid): # For registering a point
-        #print("Centroid for registering: ", centroid)
+        if verbose:    
+            print(f'Registering point with centroid {centroid} in frame {frame}')
         self.objects[self.nextObjectID] = [centroid] # Set the new centroid as content for the new objectID in the Objects dictionary
         self.means[self.nextObjectID] = centroid
         
@@ -128,7 +113,8 @@ class tracker():
         
         self.nextObjectID += 1 # Add 1 to the objectID counter so it's ready for the next point
         
-        #print("Current objects: ", br, self.objects)
+        if verbose:
+            print(f'Current objects: {br}{self.objects}')
         
     def deregister(self, objectID): # deregister object by deleting it from the objects dict and removing the associated counter from the disappeared dict.
         del self.objects[objectID]
@@ -137,184 +123,152 @@ class tracker():
     
     def update_object(self, objectID, centroid):
         # First we'll update the dictionary storing the object centroids
-        #print("Received in update", br, "Object id: ", objectID, br, "Centroid: ", centroid, br)
+        
+        if verbose:
+            print(f'Received in update {br} Object id: {objectID} {br}Centroid: {centroid}{br}')
+        
         if len(self.objects[objectID]) < self.running_mean_threshold:
-            #print("Length is less than running mean threshold.")
-            #print("Appending ", [centroid], " to ", self.objects[objectID])
+            if verbose:
+                print(f'Length ({len(self.objects[objectID])}) is less than running mean threshold ({self.running_mean_threshold})')
+                print(f'Appending {[centroid]} to {self.objects[objectID]}')
             self.objects[objectID].append(centroid)
             
         if len(self.objects[objectID]) == self.running_mean_threshold:
-            #print("Length is equal to running mean threshold.")
-            #print("Deleting first item in ",self.objects[objectID], "(",self.objects[objectID][0],")")
+            if verbose:
+                print("Length is equal to running mean threshold.")
+                print(f'Deleting first item in {self.objects[objectID]} ({self.objects[objectID][0]}) and appending {centroid}')
             del self.objects[objectID][0]
-            #print("Appending ", centroid)
-            
             self.objects[objectID].append(centroid)
-            #print("Updated: ",self.objects[objectID] )
         
     def update_means(self):
-        #print("Updating means dictionary")
         for key, value in self.objects.items():
-            #print("Key ", key, "value", value)
             if len(value) > 1:
-                #print("Length is more than one")
                 c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
-                #print("Means calculated to: ", c_m)
                 self.means[key] = c_m
-        #print("Current mean dict: ", br, self.means)
+        if verbose:
+            print(f'Updated means dictionary{br}Current mean dict:{br}{self.means}')
         
         
     def track(self, frame):
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
-        #print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
-        """
-        If a frame has no detections, we +1 to disappeared of all objects being tracked. 
-        If this takes any objects above the max_disappeared threshold, we remove them from the objects.
-        """
-
-        if frame_detections.empty: # If the frame has no detections, we will add 1 to disappeared for all objects that are being tracked.
+        if verbose:
+            print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
+         
+        # If the frame has no detections 
+        if frame_detections.empty: # we will add 1 to disappeared for all objects that are being tracked.
             for objectID in list(self.disappeared.keys()): # loop over any existing tracked objects and mark them as +1 in disappeared
                 #print("Object id in disappeared: ", objectID)
                 self.disappeared[objectID] += 1
 
                 if self.disappeared[objectID] > self.max_disappeared: # if we have reached a maximum number of consecutive frames where a given object has been marked as missing, deregister it
                     self.deregister(objectID)
+            
             return self.objects # return early as there are no centroids or tracking info to update
 
-        """
-        If there are detctions in the frame, we will:
-            1. Create a numpy array of the frame points
-            2. Check if we are currently tracking objects.
-                If not, we will start tracking the frame points
-                If so, we will 
-            3. 
-        """
-        
-        #inputCentroids = frame_detections.to_numpy()
-        inputCentroids = frame_detections[['x_c', 'y_c']].values.tolist()
-        
-        #print("input centroids: ",br ,inputCentroids)
-        
-        if not self.objects: # if Objects is empty, we are currently not tracking any objects and take the input centroids and register each of them
-            #print("Not tracking objects. Initiating tracking on current detections.")
-            for i in range(0, len(inputCentroids)):
-                #print("Adding detection ", i)
-                self.register(frame, inputCentroids[i])
 
-            #print("Current objects: ", self.objects)
-            #print("Object 0: ",self.objects[0])
-            #print("Current lengths: ", self.length_dict)
+        # If the frame has detections
+        inputCentroids = frame_detections[['x_c', 'y_c']].values.tolist() # we'll grab the centroid coordinates and convert to a list
+        
+        if verbose:
+            print(f'Input centroids: {br}{inputCentroids}')
+        
+        if not self.objects: # if Objects is empty, we are currently not tracking any objects, so we'll take the input centroids and register each of them
+            for i in range(0, len(inputCentroids)):
+                self.register(frame, inputCentroids[i])
             
-            
-        else: # We are already tracking objects, so let's see if we can associate any frame detections with objects that are being tracked.
-            #print(br,"We are tracking existing objects.")    
+            if verbose:    
+                print("Not tracking objects. Initiated tracking on the current points")
+                print(f'Current objects:{br}{self.objects}')
+           
+        else: # We are already tracking objects, so let's see if we can associate any current frame detections with objects that are being tracked.   
             objectIDs = list(self.means.keys()) # grab the set of object IDs and corresponding centroids
             objectCentroids = list(self.means.values())
 
-            
-            #print("Obj. ID: ",objectIDs)
-            #print("Obj. Centroids: ",br,objectCentroids)
-            #print("Input centroids: ",br, inputCentroids)
-
             D = dist.cdist(objectCentroids, inputCentroids) # compute the distance between each pair of object centroids and input centroids, respectively. Our goal will be to match an input centroid to an existing object centroid 
-
-            #print("Distance matrix: \n", D)
-            D[D >= self.max_distance] = np.nan
+            if self.max_distance != 0: # If the max_distance has been set to 0, we'll ignore the next step. (Otherwise 0 would force new tracks for each point).
+                D[D > self.max_distance] = np.nan # Set the distance to NA for the pairs that have distance above the threshold we have set. This will force the initiation of new tracks for these points.
             
-            objectIndexes = list(range(0,len(D)))
-            inputIndexes = list(range(len(D[0])))
+            if verbose:
+                print("We are tracking existing objects.") 
+                print(f'Current object ids: {objectIDs}')
+                print(f' Current object centroids:{br}{objectCentroids}')
+                print(f'Input centroids from current frame:{br}{inputCentroids}')
+                print(f'Here\'s the distance matrix:{br}{D}')
+                
+            objectIndexes = list(range(0,len(D))) # Grab a list of the object indexes (rows of the D matrix).
+            inputIndexes = list(range(len(D[0]))) # Grab a list of the input indexes (columns of the D matrix).
             
             for c in range(len(D[0])): # Loop over the input centroids
-                if not np.isnan(D).all():
-                    result = np.unravel_index(np.nanargmin(D, axis=None), D.shape)
-                    
-                    D[result[0], :] = np.nan 
+                if not np.isnan(D).all(): # Continue if there a still distance values left in the matrix (i.e. not all NA)
+                    result = np.unravel_index(np.nanargmin(D, axis=None), D.shape) # Find the row,column index of the lowest distance in the matrix
+                    D[result[0], :] = np.nan # Set the row and column for this element as NA (since the input and object has now been associated and cannot be used again)
                     D[:,result[1]] = np.nan
                     
-                    objectIndexes.remove(result[0])
-                    inputIndexes.remove(result[1])
+                    objectIndexes.remove(result[0]) # Remove the object index from the list since it has now been used
+                    inputIndexes.remove(result[1]) # Remove the object index from the list since it has now been used
                     
-                    #print("Loop ", c)
-                    #print(D, br)
-                    # Here we need to update the centroid coordinates of the objects.
-                    #print("Setting the centroid for object ", objectIDs[result[0]], "to ", inputCentroids[result[1]])
-                    
-                    #print(br)
-                    #print("Input centroid: ", inputCentroids[result[1]])
-                    #print("Object ids: ", objectIDs[result[0]])
-                    ### Use update here! self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
-                    self.update_object(objectIDs[result[0]], inputCentroids[result[1]])
-                    
-                    
-                    #print(self.objects[objectIDs[result[0]]])
-                    #print(self.objects)
-                    #print(br)
-                    
-                    #self.objects[objectIDs[result[0]]] = inputCentroids[result[1]]
+                    self.update_object(objectIDs[result[0]], inputCentroids[result[1]]) # Update the object with the new centroid coordinates
                     self.store_tracking_results(frame, inputCentroids[result[1]], objectIDs[result[0]]) # And store the tracking information
               
-                else:
-                    #print("Association based on distance done. Now dealing with points that were not associated.")
+                else: # All elements in the distance matrix are NA.
+                    if verbose:
+                        print("Association based on distance done. Now dealing with points that were not associated.")
                     pass
             
-            self.update_means()
+            self.update_means() # Update the dictionary containing the running means of the points
 
-            #print("Object indices: ",br, objectIndexes, br)
-            #print("Disappeared df: ", br, self.disappeared, br)
-            
-            
-            for o in objectIndexes: # Add 1 to disappeared objects
+            for o in objectIndexes: # We'll add 1 for the objects that were not associated with a point in the current frame (in dictionary (disappeared) containing the number of frames the tracks have been lost)).
                 objectID = objectIDs[o]
                 self.disappeared[objectID] += 1
-                if self.disappeared[objectID] > self.max_disappeared: # if we have reached a maximum number of consecutive frames where a given object has been marked as missing, deregister it
+                if self.disappeared[objectID] > self.max_disappeared: # if we have reached a maximum number of consecutive frames where a given object has been marked as missing, deregister it.
                     self.deregister(objectID)
-                    #print("Deregistering!")
+                    if verbose:
+                        print(f'Deregistering object {objectID}')
             
-            for i in inputIndexes: # Start tracking new objects
-                #print("Registering point: ", i, "With the centroid: ", inputCentroids[i])
+            for i in inputIndexes: # And we'll initiate new tracks for the points in the current frame that were not associated with an existing track.
+                if verbose:
+                    print(f'Registering point {i} with the centroid {inputCentroids[i]}')
                 self.register(frame, inputCentroids[i])
-        
+         
 
 
+# ===================== RUN ===================================================
+
+# currentTime = datetime.now() # Use this if you need to time-stamp result file
+# currentTime=('%02d-%02d-%02d'%(currentTime.hour,currentTime.minute,currentTime.second))
 
 
-#max_disappeared, max_distance, running_mean_threshold, 
-
-### RUN ###
-
-list_max_disappeared = [0,6,10]
-list_running_mean_threshold = [0,6,10]
-
-l = [(x,y) for x in list_max_disappeared for y in list_running_mean_threshold]
-
-for i in l:
-    resultsFilename = f'../testResults/NARS-13_maxDis_{i[0]}_runMean_{i[1]}.csv'    
+# ===================== Run tracking on several combinations of parameters ====
+starttime = time.time()
+for i in list_of_parameters:
+    resultsFilename = f'../testResults/{prefix_results_filename}_maxDis_{i[0]}_runMean_{i[1]}.csv'    
     
-    t = tracker(i[0], 500, i[1], resultsFilename, frames)
+    t = tracker(i[0], i[2], i[1], resultsFilename, frames)
     
     for f in frames:
         t.track(f)
     t.write_tracks_file()
     tracks = pd.read_csv(resultsFilename)
-    print(f'Number of tracks found: {len(tracks.objectID.unique())}')
-    
-
-#t = tracker(4, 500, 5, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
-
-
-#print(t)
-#starttime = time.time()
-
-#for f in frames:
-#    t.track(f)
-    
-#endtime = time.time()
-#print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
-   
-#t.write_tracks_file()
+    print(f'maxDis: {i[0]}, runMean: {i[1]} - Number of tracks found: {len(tracks.objectID.unique())}')
+endtime = time.time()
+print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds.')
+# =============================================================================
 
 
-### PLOT STUFF ###
+
+# ===================== Run a single round of tracking ========================
+# t = tracker(4, 500, 5, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
+# starttime = time.time()
+# for f in frames:
+#     t.track(f)
+# endtime = time.time()
+# print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
+# t.write_tracks_file()
+# =============================================================================
+
+
+
+# ===================== Plot stuff ============================================
 #plt.scatter(detections['x_c'], detections['y_c'], c = detections['frame'])
 #plt.plot(detections['x_c'],detections['y_c'])
 
