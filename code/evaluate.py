@@ -13,11 +13,14 @@ import pandas as pd
 iou_threshold = 0.5
 
 # Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
-gt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\2020_02_01_NorwayAnnotations_AllTestSeries_IndividualAnnotations_FRCNN_Metrics.csv", sep=",")
+gt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv", sep=",")
 #print(gt)
 # Get the tracked detections on the format [filename, x_min, y_min, x_max, y_max, id_dt]
-dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\submit_boxes_NewFormat_AllTestSeries_Sampled.csv", sep=",")
+#dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\submit_boxes_NewFormat_AllTestSeries_Sampled.csv", sep=",")
+#dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\2020_02_01_NorwayAnnotations_AllTestSeries_IndividualAnnotations_FRCNN_Metrics_copy.csv", sep=",")
 
+dt = pd.read_csv(r"../testResults/5testing_THUL-01_maxDis_4_runMean_5.csv")
+dt.rename(columns={'objectID': 'id_tr'}, inplace=True)
 print(dt)
 
 #dt['x_min'] = dt['x_min'] * 8
@@ -244,6 +247,7 @@ P = gt.shape[0]
 PR = dt.shape[0]
 CP =  PR - FP
 
+print("\n#####", " RESULTS ", "#####\n")
 print("Number of annotated objects: ", P)
 print("Number of predictions made: ", PR )
 print("Correct positives: ",CP)
@@ -264,7 +268,7 @@ print("Images in the detections: ", len(dt['filename'].unique()))
 print("Images in the ground truth: ", len(gt['filename'].unique()))
 
 
-print("#####", " SCORES ", "#####\n")
+print("\n#####", " SCORES ", "#####\n")
 print("Precision: ", precision)
 print("Recall: ", recall)
 print("F1: ", F1)
