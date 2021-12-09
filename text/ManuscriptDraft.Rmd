@@ -90,7 +90,10 @@ The parameters are particularly relevant for optimal tracking of objects that ar
 
 It is important to note, however, that the tracking algorithm can be used to track any objects.
 
-The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (realtime tracking frame per frame).
+The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (real-time tracking frame per frame).
+
+The speed of the tracking algorithm depends on the computational power available as well as the number of objects that are being tracked.
+
 
 
 ### User parameters
@@ -116,12 +119,15 @@ The counter for number of disappeared frames is reset when a new point is associ
 
 # Evaluating tracking perfomance
 
-Mota counts shifts in tracking.
+Mota counts tracking mismathces (shifts in a track).
+
+
 
 To derive flowering length, in theory we just need to track the most extreme points correctly and don't care about other points (although we filter by length when overlap).
 
 To associate other information to the flower, for example flower visits, we want as much as possible of the track to be correct.
 
+Lastly, we may be interested in the number of flowers that existed in a plot. Therefore, a final way of evaluating automatic flower tracking performance is to compare the number of tracks identified by the automatic tracking with the true number of flowers in a series. These should ideally be equal.
 
 ## Filtering tracks
 
