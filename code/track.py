@@ -35,10 +35,10 @@ br = "\n"
 
 verbose = True # Set to True if you want tracking process printed to screen and False if not
 
-prefix_results_filename = "testing"
+prefix_results_filename = "5testing_THUL-01"
 
 list_max_disappeared = [4] # Maximum number of frames a track can be lost before new points will be forces into a new track.
-list_running_mean_threshold = [0] # Maximum number of frames for calculating the running mean of the position of an object If there are less than this number of frames currently in the track, a mean over what is in the track will be used..
+list_running_mean_threshold = [5] # Maximum number of frames for calculating the running mean of the position of an object If there are less than this number of frames currently in the track, a mean over what is in the track will be used..
 list_max_distance = [0] # If set to 0, this parameter will be ignored. If not zero, points that have a distance to tracked objects higher than this parameter will be forced into new tracks.
 
 list_of_parameters = [(x,y,z) for x in list_max_disappeared for y in list_running_mean_threshold for z in list_max_distance] # A list of all combinations of the above parameters.
@@ -46,7 +46,7 @@ list_of_parameters = [(x,y,z) for x in list_max_disappeared for y in list_runnin
 
 #### PATH TO DETECTIONS ####
 #detections = pd.read_csv(r'../Dummy_fortracking2.csv')
-detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
+detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
 detections['frame'] = detections['filename'].str.extract('(\d{6})')
 detections['x_c'] = (detections['x_min'] + detections['x_max']) / 2
 detections['y_c'] = (detections['y_min'] + detections['y_max']) / 2
@@ -75,7 +75,7 @@ class tracker():
         self.tracks = [] # Create a list for storing tracking results as we go
 
         with open(self.results_filename, 'a') as resultFile: # Write the header of the output file
-            header = 'frame,filename,x_c,y_c,objectID\n'
+            header = 'frame,filename,x_min,x_max,y_min,y_max,x_c,y_c,objectID\n'
             resultFile.write(header)
 
     def store_tracking_results(self, frame, centroid, objectID):
@@ -90,9 +90,14 @@ class tracker():
             for t in self.tracks:
                 frame, x_c, y_c, objectID = t[0], t[1], t[2], t[3]
                 filename = detections.loc[detections['frame'] == frame, 'filename'].iloc[0]
-                resultFile.write(f'{frame},{filename},{x_c},{y_c},{objectID}{br}')
+                x_min = detections.loc[((detections['frame'] == frame) & (detections['x_c'] == x_c) & (detections['y_c'] == y_c)), 'x_min'].iloc[0]
+                x_max = detections.loc[((detections['frame'] == frame) & (detections['x_c'] == x_c) & (detections['y_c'] == y_c)), 'x_max'].iloc[0]
+                y_min = detections.loc[((detections['frame'] == frame) & (detections['x_c'] == x_c) & (detections['y_c'] == y_c)), 'y_min'].iloc[0]
+                y_max = detections.loc[((detections['frame'] == frame) & (detections['x_c'] == x_c) & (detections['y_c'] == y_c)), 'y_max'].iloc[0]
+                
+                resultFile.write(f'{frame},{filename},{x_min},{x_max},{y_min},{y_max},{x_c},{y_c},{objectID}{br}')
         endtime = time.time()
-        print(f'Writing done. That took {round(endtime-starttime, 4)} seconds.')
+        print(f'Writing done. That took {round(endtime-starttime, 4)} seconds. {br}File saved as: {self.results_filename}{br}')
 
     def get_frame_detections(self, frame):
         block = detections.loc[detections['frame'] == frame]
