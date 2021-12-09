@@ -6,7 +6,7 @@ author:
 - Hjalte M. R. Mann
 - Alexandros Iosifidis
 - Toke T. Høye
-date: "december 06, 2021"
+date: "december 09, 2021"
 output:
   word_document: default
   pdf_document:
@@ -85,7 +85,14 @@ The parameters are particularly relevant for optimal tracking of objects that ar
 
 It is important to note, however, that the tracking algorithm can be used to track any objects.
 
-The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (realtime tracking frame per frame).
+The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (real-time tracking frame per frame).
+
+The speed of the tracking algorithm depends on the computational power available as well as the number of objects that are being tracked.
+
+
+![](../figures/figure_1.png){ width=100% }
+**Figure 1:** Simple centroid tracking may produce erronous associations when objects move between frames. Blue shows detections in the current frame (bounding box and centroid point). Red shows centroid points for the detections in the previous frame.
+
 
 
 ### User parameters
@@ -97,24 +104,34 @@ As the wind shifts, the flower heads changes direction. This can happen instanta
 
 Establishing associations between points based on just the distance between points in the current and the previous frame can cause errors when flowers are in close vicinity of each other.
 
+![](../figures/figure_22.jpg){ width=100% }
+
 The flowers move around a center point because of their stalk. We base the tracking on the distance between a point in the current frame and the running mean of the positions of the previous X points in a track.
 
 As winds shift, flowers close to the edge of the image .. may move in and out of view. If a flower reappears in the same area as a flower is already being tracked after disappearing in a few frames, it is a reasonable assumption that it is the same individual and not that the old flower wilted/disappeared and a new one developed. The parameter **max disappeared** sets the number of frames a track can be lost before a new track is initiated for points appearing in the same area.
 
+![](../figures/figure_3.png){ width=100% }
+
+
 Similarly, this deals with potential false negatives. If a given flower has not been annotated in a single frame, it should not be assigned a new track.
 
+Setting **max disappeared** to 0 tracks objects based on the coordinates of the points in the previous frame.
 
+The counter for number of disappeared frames is reset when a new point is associated with the track within the threshold.
 
 
 
 # Evaluating tracking perfomance
 
-Mota counts shifts in tracking.
+Mota counts tracking mismathces (shifts in a track).
+
+
 
 To derive flowering length, in theory we just need to track the most extreme points correctly and don't care about other points (although we filter by length when overlap).
 
 To associate other information to the flower, for example flower visits, we want as much as possible of the track to be correct.
 
+Lastly, we may be interested in the number of flowers that existed in a plot. Therefore, a final way of evaluating automatic flower tracking performance is to compare the number of tracks identified by the automatic tracking with the true number of flowers in a series. These should ideally be equal.
 
 ## Filtering tracks
 
@@ -128,14 +145,6 @@ We evaluate the accuracy of the remaining tracks.
 
 
 
-
-
-# Results
-
-
-![](../figures/figure_1.png){ width=100% }
-
-**Figure 1:** Simple centroid tracking may produce erronous associations when objects move between frames. Blue shows detections in the current frame (bounding box and centroid point). Red shows centroid points for the detections in the previous frame.
 
 # Results
 
@@ -154,7 +163,7 @@ We evaluate the accuracy of the remaining tracks.
 
 # Data availability
 
-The code that supports the results in this paper will be made openly available at https://github.com/TECOLOGYxyz. Raw data as well as the trained flower detection model will be archived on https://zenodo.org/.
+The code that supports the results in this paper will be made openly available at https://github.com/TECOLOGYxyz/FlowerTracking. Raw data as well as the trained flower detection model will be archived on https://zenodo.org/.
 
 
 
