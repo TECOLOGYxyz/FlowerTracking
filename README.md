@@ -49,6 +49,15 @@ This repository accomplished the paper...
 
 The paper present a tracking algorithm developed for fast and accurate tracking of individual flowers in time-lapse image series.
 
+The algorithm includes a set of user-defined parameters for optimizing tracking performance.
+
+The maximum number of frames a detection can be lost before new points are forced into a new track is set by **max_disappeared**.
+The number of frames for calculating the running mean of the position of an object is set by **running_mean_threshold**. If there are less than this number of frames currently in the track, a mean over what is in the track will be used.
+Simple centroid tracking algortihms will associate any two points between the current and the previus frame, disregarding the absolute distance between them, as long as they are the closest. In our algorithm, points that have a distance to tracked objects higher than **max_distance_threshold** will be forced into new tracks. If set to 0, this parameter will be ignored.
+
+The tracking algorithm can be applied to any objects and can be used both offline (on detection output already produced) or online (in realtime, frame by frame, as detections are made).
+
+The speed of the tracking algorithm depends on the computational power available and the number of object being tracked. The method is fast, however.
 
 
 <!-- GETTING STARTED -->
