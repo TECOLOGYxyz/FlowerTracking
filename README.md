@@ -5,7 +5,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/TECOLOGYxyz/TrackingFlowers">
-    <img src="logo.png" "https://github.com/TECOLOGYxyz/FlowerTracking" alt="Logo" width="80" height="80">
+    <img src="logo.png" "https://github.com/TECOLOGYxyz/TrackingFlowers" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Track Individual Flowers in Images</h3>
