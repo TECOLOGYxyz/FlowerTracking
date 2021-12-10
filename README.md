@@ -57,7 +57,7 @@ Simple centroid tracking algortihms will associate any two points between the cu
 
 The tracking algorithm can be applied to any objects and can be used both offline (on detection output already produced) or online (in realtime, frame by frame, as detections are made).
 
-The speed of the tracking algorithm depends on the computational power available and the number of object being tracked. The method is fast, however.
+The speed of the tracking algorithm depends on the computational power available and the number of object being tracked. The method is fast, however. Tracking of a series containing 85 objects ran at 0.02 seconds per frame.
 
 
 <!-- GETTING STARTED -->
