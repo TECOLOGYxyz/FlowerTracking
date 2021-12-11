@@ -13,13 +13,13 @@ import pandas as pd
 iou_threshold = 0.5
 
 # Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
-gt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv", sep=",")
+gt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_23_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv", sep=",")
 #print(gt)
 # Get the tracked detections on the format [filename, x_min, y_min, x_max, y_max, id_dt]
 #dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\submit_boxes_NewFormat_AllTestSeries_Sampled.csv", sep=",")
 #dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\2020_02_01_NorwayAnnotations_AllTestSeries_IndividualAnnotations_FRCNN_Metrics_copy.csv", sep=",")
 
-dt = pd.read_csv(r"../testResults/2testing_NARS-13_maxDis_4_runMean_0.csv")
+dt = pd.read_csv(r"../testResults/6testing_NYAA-04_maxDis_8_runMean_10.csv")
 dt.rename(columns={'objectID': 'id_tr'}, inplace=True)
 print(dt)
 
