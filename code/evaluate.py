@@ -13,7 +13,7 @@ import pandas as pd
 iou_threshold = 0.5
 
 # Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
-gt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_23_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv", sep=",")
+gt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv", sep=",")
 #print(gt)
 # Get the tracked detections on the format [filename, x_min, y_min, x_max, y_max, id_dt]
 #dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\submit_boxes_NewFormat_AllTestSeries_Sampled.csv", sep=",")
