@@ -14,7 +14,7 @@ import time
 
 header = st.container()
 dataset = st.container()
-features = st.container()
+results = st.container()
 blabla = st.container()
 
 
@@ -31,7 +31,8 @@ with header:
 st.sidebar.title("Upload data")
 
 uploaded_file = st.sidebar.file_uploader('Choose a file')
-
+if uploaded_file is not None:    
+    df1=pd.read_csv(uploaded_file)
 
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
@@ -78,8 +79,13 @@ st.sidebar.write(f'Max distance: {maxDist}')
 
 # =============================================================================
 
-if uploaded_file is not None:
-    df1=pd.read_csv(uploaded_file)
+st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
+
+trackButton = st.sidebar.button('TRACK')
+
+
+                    
+if trackButton:    
     df1['frame'] = df1['filename'].str.extract('(\d{6})')
     df1['x_c'] = (df1['x_min'] + df1['x_max']) / 2
     df1['y_c'] = (df1['y_min'] + df1['y_max']) / 2
@@ -94,6 +100,11 @@ if uploaded_file is not None:
     starttime = time.time()
     for f in frames:
         t.track(f)
-        endtime = time.time()
-        print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
+    endtime = time.time()
+    print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
         #t.write_tracks_file()
+    
+    with results:
+        st.title("Results")
+        st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
+
