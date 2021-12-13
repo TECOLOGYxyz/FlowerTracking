@@ -31,7 +31,7 @@ br = "\n"
 
 # ===================== SETTINGS ==============================================
 
-verbose = True # Set to True if you want tracking process printed to screen and False if not
+verbose = False # Set to True if you want tracking process printed to screen and False if not
 
 prefix_results_filename = "parameterTest_1_NYAA-04"
 
@@ -243,6 +243,7 @@ class tracker():
 
 # ===================== Run tracking on several combinations of parameters ====
 if __name__ == "__main__":
+    verbose = True # Set to True if you want tracking process printed to screen and False if not
     starttime = time.time()
     for i in list_of_parameters:
         resultsFilename = f'../testResults/{prefix_results_filename}_maxDisap_{i[0]}_runMean_{i[1]}_maxDist_{i[2]}.csv'    
