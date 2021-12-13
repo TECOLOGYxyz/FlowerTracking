@@ -6,7 +6,7 @@ author:
 - Hjalte M. R. Mann
 - Alexandros Iosifidis
 - Toke T. Høye
-date: "december 11, 2021"
+date: "december 13, 2021"
 output:
   word_document: default
   pdf_document:
@@ -83,7 +83,7 @@ DeepSORT
 * **Our solution**
   + Here we demonstrate a framework for automatic flower tracking and evualutation of tracking performance
   + Ground truth tracks
-  
+
 \newpage
 
 For the individual plant, timing of flowering is of utmost importance. Precocious flowering means that the plant has failed to exploit the whole temporal window for accumulating resources before allocating energy to flowering. On the other hand, flowering too late limit the time for reproduction before the end of the growing season [@ELZINGA2007]. Further, flowering may need to be synchronous with pollinator activity for successful reproduction. Flowering phenology may plastically change as a response to abiotic cues in the environment, such as timing of spring, temperature, and photoperiod, but variation in flowering phenology is partly heritable and shaped by selective forces from the abiotic and biotic environment.
@@ -186,6 +186,9 @@ We evaluate the accuracy of the remaining tracks.
 
 
 # Results
+
+One way to plot?: Time on x-axis, gt id on y axis, tr id as colour. This will show mismatches.
+
 
 
 # Discussion
