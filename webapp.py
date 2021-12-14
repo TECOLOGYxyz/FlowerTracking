@@ -106,42 +106,38 @@ if trackButton:
     starttime = time.time()
     for f in frames:
         t.track(f)
-        
-    p = t.return_tracks_webapp()
-    
+    endtime = time.time()    
+    p = t.return_tracks_webapp() 
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     
-    fig, ax = plt.subplots()
-    ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
-
-    st.pyplot(fig)
-
-    st.write(p)
-
-    
-
-
-    @st.cache
-    def convert_df(df):
-        return df.to_csv().encode('utf-8')
-
-
-    csv = convert_df(p)
-
-    st.download_button(
-        "Press to download tracking results",
-        csv,
-        "file.csv",
-        "text/csv",
-        key='download-csv'
-        )
-
-
-    endtime = time.time()
-    print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
-        #t.write_tracks_file()
-    
     with results:
+        
         st.title("Results")
         st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
+
+    
+        fig, ax = plt.subplots()
+        ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
+
+        st.pyplot(fig)
+
+        st.write(p)
+
+    
+
+
+        @st.cache
+        def convert_df(df):
+            return df.to_csv().encode('utf-8')
+
+
+        csv = convert_df(p)
+
+        st.download_button(
+           "Press to download tracking results",
+           csv,
+           "file.csv",
+           "text/csv",
+           key='download-csv'
+           )
 
