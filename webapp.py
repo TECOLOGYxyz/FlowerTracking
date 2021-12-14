@@ -20,7 +20,6 @@ blabla = st.container()
 
 with header:
     st.title("Automatic Flower Tracking")
-#    st.header("What")
 
 
 
@@ -41,6 +40,7 @@ if uploaded_file is not None:
     frames = sorted([int(i) for i in frames])
     
     with header:
+        st.header("Uploaded data")
         fig0, ax0 = plt.subplots()
         ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
 
@@ -109,7 +109,7 @@ if trackButton:
     
     with results:
         
-        st.title("Results")
+        st.header("Results")
         st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
 
     
