@@ -113,13 +113,16 @@ if trackButton:
         ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
 
         st.pyplot(fig)
-        st.write(p)
+        
 
 
-    st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
-
+    
     with results:
+        st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
+
         st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
+        
+        st.write(p)
 
         @st.cache
         def convert_df(df):
