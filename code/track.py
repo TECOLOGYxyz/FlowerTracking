@@ -134,7 +134,9 @@ class tracker():
         if verbose:
             print(f'Updated means dictionary{br}Current mean dict:{br}{self.means}')
         
-        
+    def return_tracks_webapp(self):
+        return self.tracks
+    
     def track(self, frame):
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
         if verbose:
@@ -215,8 +217,6 @@ class tracker():
                 if verbose:
                     print(f'Registering point {i} with the centroid {inputCentroids[i]}')
                 self.register(frame, inputCentroids[i])
-         
-        return self.tracks
 
 # ===================== RUN ===================================================
 
