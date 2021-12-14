@@ -100,7 +100,8 @@ if trackButton:
     for f in frames:
         t.track(f)
     p = t.return_tracks_webapp()
-    p =pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
+    st.write(p)
+    p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     st.write(p)
     
     endtime = time.time()
