@@ -10,7 +10,6 @@ import pandas as pd
 from code.track import tracker
 import time
 import matplotlib.pyplot as plt
-import plotly
 
 header = st.container()
 dataset = st.container()
