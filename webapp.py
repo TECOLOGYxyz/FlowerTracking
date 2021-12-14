@@ -16,7 +16,7 @@ header = st.container()
 dataset = st.container()
 results = st.container()
 blabla = st.container()
-plots = st.beta_columns(2)
+plots = st.columns(2)
 
 with header:
     st.title("Automatic Flower Tracking")
