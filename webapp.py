@@ -38,12 +38,12 @@ if uploaded_file is not None:
     frames = list(set(df1['frame'].tolist()))
     frames = sorted([int(i) for i in frames])
     
-    with plots:
-        st.header("Uploaded data")
-        fig0, ax0 = plt.subplots()
-        ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
+    
+    st.header("Uploaded data")
+    fig0, ax0 = plt.subplots()
+    ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
 
-        st.pyplot(fig0)
+    plots[0].pyplot(fig0)
     
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
