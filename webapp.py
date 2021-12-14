@@ -10,7 +10,7 @@ import pandas as pd
 from code.track import tracker
 import time
 import matplotlib.pyplot as plt
-
+import plotly
 
 header = st.container()
 dataset = st.container()
@@ -117,7 +117,6 @@ if trackButton:
         ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
 
         st.pyplot(fig)
-        st.plotly_chart(fig)
         st.write(p)
 
     
