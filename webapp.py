@@ -117,7 +117,7 @@ if trackButton:
         ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
 
         st.pyplot(fig)
-
+        st.plotly_chart(fig)
         st.write(p)
 
     
