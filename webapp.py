@@ -16,7 +16,7 @@ header = st.container()
 dataset = st.container()
 results = st.container()
 blabla = st.container()
-
+plots = st.beta_columns()
 
 with header:
     st.title("Automatic Flower Tracking")
@@ -39,7 +39,7 @@ if uploaded_file is not None:
     frames = list(set(df1['frame'].tolist()))
     frames = sorted([int(i) for i in frames])
     
-    with header:
+    with plots:
         st.header("Uploaded data")
         fig0, ax0 = plt.subplots()
         ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
@@ -107,7 +107,7 @@ if trackButton:
     p = t.return_tracks_webapp() 
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     
-    with results:
+    with plots:
         
         st.header("Results")
         st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
