@@ -78,9 +78,9 @@ maxDist = st.sidebar.select_slider(
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
 if gt_choice == 'Yes':
-    st.sidebar.write('Data contain ground truth tracks')
+    st.sidebar.write('Contains ground truth track: Yes')
 else:
-    st.sidebar.write('Data does not contain ground truth tracks')
+    st.sidebar.write('Contains ground truth track: No')
 
 st.sidebar.write(f'Running mean: {runMean}')
 st.sidebar.write(f'Max disappeared: {maxDisap}')
