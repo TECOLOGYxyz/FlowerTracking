@@ -20,12 +20,12 @@ blabla = st.container()
 
 with header:
     st.title("Automatic Flower Tracking")
-    st.header("What")
+#    st.header("What")
 
 
 
-with header:
-    st.header("How?")
+# with header:
+#     st.header("How?")
 
 
 st.sidebar.title("Upload data")
@@ -33,7 +33,12 @@ st.sidebar.title("Upload data")
 uploaded_file = st.sidebar.file_uploader('Choose a file')
 if uploaded_file is not None:    
     df1=pd.read_csv(uploaded_file)
+    
+    fig, ax = plt.subplots()
+    ax.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
 
+    st.pyplot(fig)
+    
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
 
@@ -122,7 +127,7 @@ if trackButton:
     csv = convert_df(p)
 
     st.download_button(
-        "Press to Download",
+        "Press to download tracking results",
         csv,
         "file.csv",
         "text/csv",
