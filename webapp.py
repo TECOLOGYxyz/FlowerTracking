@@ -34,6 +34,16 @@ uploaded_file = st.sidebar.file_uploader('Choose a file')
 if uploaded_file is not None:    
     df1=pd.read_csv(uploaded_file)
     
+    
+    df1['frame'] = df1['filename'].str.extract('(\d{6})')
+    df1['x_c'] = (df1['x_min'] + df1['x_max']) / 2
+    df1['y_c'] = (df1['y_min'] + df1['y_max']) / 2
+    df1['frame'] = df1['frame'].astype('int')
+
+    frames = list(set(df1['frame'].tolist()))
+    frames = sorted([int(i) for i in frames])
+    
+    
     fig0, ax0 = plt.subplots()
     ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
 
@@ -90,14 +100,6 @@ trackButton = st.sidebar.button('TRACK')
 
                     
 if trackButton:    
-    df1['frame'] = df1['filename'].str.extract('(\d{6})')
-    df1['x_c'] = (df1['x_min'] + df1['x_max']) / 2
-    df1['y_c'] = (df1['y_min'] + df1['y_max']) / 2
-    df1['frame'] = df1['frame'].astype('int')
-
-    frames = list(set(df1['frame'].tolist()))
-    frames = sorted([int(i) for i in frames])
-
 
     t = tracker(maxDisap, maxDist, runMean, "testWebapp.csv", frames, df1, False) # Initiate tracker
 
