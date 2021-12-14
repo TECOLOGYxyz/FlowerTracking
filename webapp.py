@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 header = st.container()
 dataset = st.container()
 #plots = st.columns(2)
-plot1, plot2 = st.columns([6,1])
+plot1, plot2 = st.columns([6,6])
 results = st.container()
 
 with header:
