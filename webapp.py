@@ -99,6 +99,9 @@ if trackButton:
     starttime = time.time()
     for f in frames:
         t.track(f)
+    p = t.return_tracks_webapp()
+    st.write(p)
+    
     endtime = time.time()
     print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
         #t.write_tracks_file()
