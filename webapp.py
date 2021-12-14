@@ -103,6 +103,7 @@ if trackButton:
     st.write(p)
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     st.write(p)
+    st.write(p.dtypes)
     
     endtime = time.time()
     print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
