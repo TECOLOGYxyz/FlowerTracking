@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 
 header = st.container()
 dataset = st.container()
-plots = st.columns(2)
+#plots = st.columns(2)
+plot1, plot2 = st.beta_columns([6,1])
 results = st.container()
 
 with header:
@@ -37,7 +38,7 @@ if uploaded_file is not None:
     frames = list(set(df1['frame'].tolist()))
     frames = sorted([int(i) for i in frames])
     
-    with plots[0]:
+    with plot1:
         st.header("Uploaded data")
         fig0, ax0 = plt.subplots()
         ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
@@ -105,7 +106,7 @@ if trackButton:
     p = t.return_tracks_webapp() 
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     
-    with plots[1]:
+    with plots2:
         
         st.header("Results")
     
