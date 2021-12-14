@@ -44,18 +44,18 @@ list_of_parameters = [(x,y,z) for x in list_max_disappeared for y in list_runnin
 
 #### PATH TO DETECTIONS ####
 #detections = pd.read_csv(r'../Dummy_fortracking2.csv')
-def getData():
-    detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv")
-    detections['frame'] = detections['filename'].str.extract('(\d{6})')
-    detections['x_c'] = (detections['x_min'] + detections['x_max']) / 2
-    detections['y_c'] = (detections['y_min'] + detections['y_max']) / 2
-    detections['frame'] = detections['frame'].astype('int')
 
-    frames = list(set(detections['frame'].tolist()))
-    frames = sorted([int(i) for i in frames])
+detections = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv")
+detections['frame'] = detections['filename'].str.extract('(\d{6})')
+detections['x_c'] = (detections['x_min'] + detections['x_max']) / 2
+detections['y_c'] = (detections['y_min'] + detections['y_max']) / 2
+detections['frame'] = detections['frame'].astype('int')
 
-    if verbose:
-        print("Here are the detections",br,detections,br)
+frames = list(set(detections['frame'].tolist()))
+frames = sorted([int(i) for i in frames])
+
+if verbose:
+    print("Here are the detections",br,detections,br)
 
 class tracker():
     def __init__(self, max_disappeared, max_distance, running_mean_threshold, results_filename, frames):
@@ -244,9 +244,6 @@ class tracker():
 
 # ===================== Run tracking on several combinations of parameters ====
 if __name__ == "__main__":
-    
-    getData()
-    
     verbose = True # Set to True if you want tracking process printed to screen and False if not
     starttime = time.time()
     for i in list_of_parameters:
