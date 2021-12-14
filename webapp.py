@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 
 header = st.container()
 dataset = st.container()
-results = st.container()
 plots = st.columns(2)
+results = st.container()
 
 with header:
     st.title("Automatic Flower Tracking")
