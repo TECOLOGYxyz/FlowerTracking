@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 header = st.container()
 dataset = st.container()
 results = st.container()
-blabla = st.container()
 plots = st.columns(2)
 
 with header:
@@ -38,12 +37,12 @@ if uploaded_file is not None:
     frames = list(set(df1['frame'].tolist()))
     frames = sorted([int(i) for i in frames])
     
-    
-    st.header("Uploaded data")
-    fig0, ax0 = plt.subplots()
-    ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
+    with plots[0]:
+        st.header("Uploaded data")
+        fig0, ax0 = plt.subplots()
+        ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
 
-    plots[0].pyplot(fig0)
+        st.pyplot(fig0)
     
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
@@ -109,8 +108,6 @@ if trackButton:
     with plots[1]:
         
         st.header("Results")
-        st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
-
     
         fig, ax = plt.subplots()
         ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
@@ -118,8 +115,11 @@ if trackButton:
         st.pyplot(fig)
         st.write(p)
 
-    
 
+    st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
+
+    with results:
+        st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
 
         @st.cache
         def convert_df(df):
