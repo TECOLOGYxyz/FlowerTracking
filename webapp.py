@@ -9,7 +9,7 @@ import streamlit as st
 import pandas as pd
 from code.track import tracker
 import time
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 
 header = st.container()
@@ -99,12 +99,15 @@ if trackButton:
     starttime = time.time()
     for f in frames:
         t.track(f)
+        
     p = t.return_tracks_webapp()
     st.write(p)
+    
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     st.write(p)
+    
     fig, ax = plt.subplots()
-    ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'])
+    ax.scatter(x = p['x_c'], y = p['y_c'])
 
     st.pyplot(fig)
 
