@@ -38,8 +38,9 @@ verbose = False # Set to True if you want tracking process printed to screen and
 
 
 ### RUN ###
-starttime = time.time()
+
 for i in list_of_parameters:
+    starttime = time.time()
     resultsFilename = f'../testResults/_parameterTest_NYAA-04_1/{prefix_results_filename}_maxDisap_{i[0]}_runMean_{i[1]}_maxDist_{i[2]}.csv'    
     
     t = tracker(i[0], i[2], i[1], resultsFilename, frames, detections, verbose)
