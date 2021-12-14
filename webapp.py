@@ -107,7 +107,7 @@ if trackButton:
     st.write(p)
     
     fig, ax = plt.subplots()
-    ax.scatter(x = p['x_c'], y = p['y_c'])
+    ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
 
     st.pyplot(fig)
 
