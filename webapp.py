@@ -56,11 +56,11 @@ runMean = st.sidebar.select_slider(
      options=range(0,100), key = "runMean")
 
 maxDisap = st.sidebar.select_slider(
-     'Set number of frames for running mean',
+     'Set number of frames for max disappeared',
      options=range(0,100), key = "maxDisap")
 
 maxDist = st.sidebar.select_slider(
-     'Set number of frames for running mean',
+     'Set number of frames for max distance',
      options=range(0,5000), key = "maxDist")
 
 
@@ -71,7 +71,6 @@ if gt_choice == 'Yes':
 else:
     st.sidebar.write('Data does not contain ground truth tracks')
 
-st.sidebar.write(f'Running mean: {runMean}')
 st.sidebar.write(f'Running mean: {runMean}')
 st.sidebar.write(f'Max disappeared: {maxDisap}')
 st.sidebar.write(f'Max distance: {maxDist}')
@@ -95,7 +94,7 @@ if trackButton:
     frames = sorted([int(i) for i in frames])
 
 
-    t = tracker(maxDisap, maxDist, runMean, "testWebapp.csv", frames) # Initiate tracker
+    t = tracker(maxDisap, maxDist, runMean, "testWebapp.csv", frames, df1, False) # Initiate tracker
 
     starttime = time.time()
     for f in frames:
