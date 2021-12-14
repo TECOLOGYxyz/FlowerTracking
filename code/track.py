@@ -216,7 +216,7 @@ class tracker():
                     print(f'Registering point {i} with the centroid {inputCentroids[i]}')
                 self.register(frame, inputCentroids[i])
          
-
+        return self.tracks
 
 # ===================== RUN ===================================================
 
