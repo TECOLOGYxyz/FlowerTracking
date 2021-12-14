@@ -106,7 +106,7 @@ if trackButton:
     p = t.return_tracks_webapp() 
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     
-    with plots2:
+    with plot2:
         
         st.header("Results")
     
