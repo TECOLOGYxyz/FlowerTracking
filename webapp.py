@@ -9,7 +9,7 @@ import streamlit as st
 import pandas as pd
 from code.track import tracker
 import time
-
+import matplotlib as plt
 
 
 header = st.container()
@@ -103,8 +103,11 @@ if trackButton:
     st.write(p)
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     st.write(p)
-    st.write(p.dtypes)
-    
+    fig, ax = plt.subplots()
+    ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'])
+
+    st.pyplot(fig)
+
     endtime = time.time()
     print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
         #t.write_tracks_file()
