@@ -24,13 +24,10 @@ with header:
 
 
 
-# with header:
-#     st.header("How?")
-
-
 st.sidebar.title("Upload data")
 
 uploaded_file = st.sidebar.file_uploader('Choose a file')
+
 if uploaded_file is not None:    
     df1=pd.read_csv(uploaded_file)
     
@@ -43,11 +40,11 @@ if uploaded_file is not None:
     frames = list(set(df1['frame'].tolist()))
     frames = sorted([int(i) for i in frames])
     
-    
-    fig0, ax0 = plt.subplots()
-    ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
+    with header:
+        fig0, ax0 = plt.subplots()
+        ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
 
-    st.pyplot(fig0)
+        st.pyplot(fig0)
     
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
