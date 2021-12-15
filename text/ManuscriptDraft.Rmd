@@ -198,6 +198,11 @@ One way to plot?: Time on x-axis, gt id on y axis, tr id as colour. This will sh
 
 # Discussion
 
+All three parameters make a difference.
+
+In cases where we are tracking perfectly with maxDisap = 0, setting it any value will not make a difference. Not quite right. Explore more...
+
+
 
 ## Flower phenology
 
