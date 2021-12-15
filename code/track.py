@@ -50,6 +50,7 @@ class tracker():
         
         self.tracks = [] # Create a list for storing tracking results as we go
 
+
         with open(self.results_filename, 'a') as resultFile: # Write the header of the output file
             header = 'frame,filename,x_min,x_max,y_min,y_max,x_c,y_c,objectID\n'
             resultFile.write(header)
