@@ -16,7 +16,7 @@ iou_threshold = 0.5
 
 def write_header(results_filename):
     with open(results_filename, 'a') as resultFile: # Write the header of the output file
-        header = f'maxDisap,maxDist,runMean,mm,mmratio{br}'
+        header = f'maxDisap,maxDist,runMean,mm,mota,numberOfObjects{br}'
         resultFile.write(header)
 
 
@@ -37,16 +37,19 @@ class evaluator():
         self.dt_filename = dt
         basename = os.path.basename(self.dt_filename)
         print(basename)
-        runMeanSearch = re.search('runMean_(.+?)_', basename)
-        maxDistSearch = re.search('maxDist_(.+?).', basename)
-        maxDisapSearch = re.search('runMean_(.+?)_', basename)
+        runMeanSearch = re.search('runMean_(.+?)_max', basename)
+        maxDistSearch = re.search('maxDist_(.+?).csv', basename)
+        maxDisapSearch = re.search('maxDisap_(.+?)_run', basename)
         
         if runMeanSearch:
             self.runMean = runMeanSearch.group(1)
+            print(f'runMean: {self.runMean}')
         if maxDistSearch:
             self.maxDist = maxDistSearch.group(1)
+            print(f'maxDist: {self.maxDist}')
         if maxDisapSearch:
             self.maxDisap = maxDisapSearch.group(1)
+            print(f'maxDisap: {self.maxDisap}')
             
             
     def set_up_data(self):
@@ -72,7 +75,9 @@ class evaluator():
         #dt['x_max'] = dt['x_max'] * 8
         #dt['y_max'] = dt['y_max'] * 8
 
-        return dt, gt
+        number_of_objects = len(dt['id_tr'].unique())
+
+        return dt, gt, number_of_objects
         
     
     def calculate_iou(self, boxA, boxB):
@@ -143,14 +148,14 @@ class evaluator():
     	return MOTA
     
         
-    def write_results_file(self, mm, mmratio):
+    def write_results_file(self, mm, mota, number_of_objects):
         with open(self.results_filename, 'a') as resultFile:
-            resultFile.write(f'{self.maxDisap},{self.maxDist},{self.runMean},{mm},{mmratio}{br}')
+            resultFile.write(f'{self.maxDisap},{self.maxDist},{self.runMean},{mm},{mota},{number_of_objects}{br}')
 
 
     def run(self):
         
-        dt, gt = self.set_up_data()
+        dt, gt, number_of_objects = self.set_up_data()
         
         common = gt.merge(dt, on=['filename'], how = 'inner') # Create a dataframe of of frames that contain both groundt truths and detections. We'll also create a list of uniqe filenames in the common dataframe
         filenames_common = common['filename'].unique().tolist() # Get a list of unique filenames to iterate over
@@ -245,6 +250,7 @@ class evaluator():
         mota = self.calculate_mota(self.FP, self.FN, self.MM, P)
         mm_ratio = self.calculate_mismatch_ratio(P, self.MM)
         
+        
         print("False positives: ", self.FP)
         print("False negatives: ", self.FN)
         print("Mismatches: ", self.MM)
@@ -261,7 +267,8 @@ class evaluator():
         print("Mismatch ratio: ", mm_ratio)
         
         
-        self.write_results_file(self.MM, mm_ratio)
+        
+        self.write_results_file(self.MM, mota, number_of_objects)
 
 # Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
 
@@ -270,15 +277,29 @@ class evaluator():
 #dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\submit_boxes_NewFormat_AllTestSeries_Sampled.csv", sep=",")
 #dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\2020_02_01_NorwayAnnotations_AllTestSeries_IndividualAnnotations_FRCNN_Metrics_copy.csv", sep=",")
 
-gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv"
+gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv"
 #dt = r"../testResults/6testing_NYAA-04_maxDis_8_runMean_10.csv"
-dt = r"../testResults\_parameterTest_NYAA-04_1\parameterTest_1_NYAA-04_maxDisap_30_runMean_30_maxDist_500.csv"
+#dt = r"../testResults\_parameterTest_NYAA-04_1\parameterTest_NYAA-04_maxDisap_30_runMean_30_maxDist_500.csv"
+#dt = r'../testResults\_parameterTest_NYAA-04_1\parameterTest_NYAA-04__maxDisap_30_runMean_30_maxDist_500.csv'
 
 
-results_filename = "3temptest_eval.csv"
+path = r'../testResults\_parameterTest_THUL-01_1'
+files = [os.path.join(path,f) for f in os.listdir(path) if f.endswith('.csv')]
+print(files)
+
+results_filename = "8temptest_eval_THUL01.csv"
+
+
 write_header(results_filename)
-e = evaluator(dt, gt, results_filename)
-e.run()
+
+for f in files:
+    e = evaluator(f, gt, results_filename)
+    e.run()
+
+# 
+# 
+# e = evaluator(dt, gt, results_filename)
+# e.run()
 
 
 
