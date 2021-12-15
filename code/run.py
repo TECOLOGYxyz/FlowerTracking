@@ -13,14 +13,13 @@ import time
 
 ### SETTINGS ###
 
-prefix_results_filename = "parameterTest_NYAA-04_"
+prefix_results_filename = "parameterTest_NYAA-04"
 
-list_max_disappeared = [0,5,10,15,20,25,30] # Maximum number of frames a track can be lost before new points will be forces into a new track.
-list_running_mean_threshold = [0,5,10,15,20,25,30] # Maximum number of frames for calculating the running mean of the position of an object If there are less than this number of frames currently in the track, a mean over what is in the track will be used..
+list_max_disappeared = [0,5,10,15,20,25,30,35,40,45,50] # Maximum number of frames a track can be lost before new points will be forces into a new track.
+list_running_mean_threshold = [0,5,10,15,20,25,30,35,40,45,50] # Maximum number of frames for calculating the running mean of the position of an object If there are less than this number of frames currently in the track, a mean over what is in the track will be used..
 list_max_distance = [0, 100, 200, 300, 400, 500] # If set to 0, this parameter will be ignored. If not zero, points that have a distance to tracked objects higher than this parameter will be forced into new tracks.
 
 list_of_parameters = [(x,y,z) for x in list_max_disappeared for y in list_running_mean_threshold for z in list_max_distance] # A list of all combinations of the above parameters.
-
 
 #### PATH TO DETECTIONS ####
 #detections = pd.read_csv(r'../Dummy_fortracking2.csv')
@@ -41,7 +40,7 @@ verbose = False # Set to True if you want tracking process printed to screen and
 
 for i in list_of_parameters:
     starttime = time.time()
-    resultsFilename = f'../testResults/_parameterTest_NYAA-04_1/{prefix_results_filename}_maxDisap_{i[0]}_runMean_{i[1]}_maxDist_{i[2]}.csv'    
+    resultsFilename = f'../testResults/_parameterTest_NYAA-04_2/{prefix_results_filename}_maxDisap_{i[0]}_runMean_{i[1]}_maxDist_{i[2]}.csv'    
     
     t = tracker(i[0], i[2], i[1], resultsFilename, frames, detections, verbose)
     
