@@ -13,15 +13,15 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 
+col1, col2, col3 = st.columns([1,6,1])
 header = st.container()
 dataset = st.empty()
-col1, col2, col3 = st.columns([1,6,1])
 plot1, plot2 = st.columns([6,6])
 results = st.container()
 
 image = Image.open('streamlit_logo.png')
                 
-with col2:
+with col3:
     st.image(image, width=64)
 
 with header:
