@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 
-col1, col2, col3 = st.columns([1,6,1])
+col1, col2 = st.columns([1,6])
 header = st.container()
 dataset = st.empty()
 plot1, plot2 = st.columns([6,6])
@@ -21,10 +21,10 @@ results = st.container()
 
 image = Image.open('streamlit_logo.png')
                 
-with col3:
+with col1:
     st.image(image, width=64)
 
-with header:
+with col2:
     st.title("Automatic Flower Tracking")
 
 
