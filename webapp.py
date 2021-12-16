@@ -15,15 +15,16 @@ from PIL import Image
 
 header = st.container()
 dataset = st.empty()
-#plots = st.columns(2)
+col1, col2, col3 = st.columns([1,6,1])
 plot1, plot2 = st.columns([6,6])
 results = st.container()
 
 image = Image.open('streamlit_logo.png')
                 
+with col2:
+    st.image(image, width=64)
 
 with header:
-    st.image(image, width=64)
     st.title("Automatic Flower Tracking")
 
 
