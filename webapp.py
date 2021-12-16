@@ -33,7 +33,7 @@ st.markdown(
         display: flex;
     }
     .logo-text {
-        font-weight:600 !important;
+        font-weight:100 !important;
         font-size:40px !important;
         color: #000000 !important;
         padding-top: 40px !important;
