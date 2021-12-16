@@ -10,6 +10,8 @@ import pandas as pd
 from code.track import tracker
 import time
 import matplotlib.pyplot as plt
+from PIL import Image
+
 
 header = st.container()
 dataset = st.empty()
