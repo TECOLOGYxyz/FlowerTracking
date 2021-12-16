@@ -19,7 +19,7 @@ dataset = st.empty()
 plot1, plot2 = st.columns([6,6])
 results = st.container()
 
-image = Image.open('streamlit_logo.png')
+#image = Image.open('streamlit_logo.png')
 
 
 import base64
@@ -33,10 +33,10 @@ st.markdown(
         display: flex;
     }
     .logo-text {
-        font-weight:700 !important;
+        font-weight:600 !important;
         font-size:50px !important;
-        color: #f9a01b !important;
-        padding-top: 75px !important;
+        color: #000000 !important;
+        padding-top: 40px !important;
     }
     .logo-img {
         float:right;
@@ -50,18 +50,18 @@ st.markdown(
     f"""
     <div class="container">
         <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
-        <p class="logo-text">Logo Much ?</p>
+        <p class="logo-text">Automatic Flower Tracking</p>
     </div>
     """,
     unsafe_allow_html=True
 )
 
 
-with col1:
-    st.image(image, width=64)
+#with col1:
+  #  st.image(image, width=64)
 
-with col2:
-    st.title("Automatic Flower Tracking")
+#with col2:
+#    st.title("Automatic Flower Tracking")
 
 
 
