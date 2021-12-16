@@ -12,8 +12,6 @@ import time
 import matplotlib.pyplot as plt
 from PIL import Image
 
-
-col1, col2 = st.columns([1,6])
 header = st.container()
 dataset = st.empty()
 plot1, plot2 = st.columns([6,6])
@@ -33,8 +31,8 @@ st.markdown(
         display: flex;
     }
     .logo-text {
-        font-weight:100 !important;
-        font-size:40px !important;
+        font-weight:300 !important;
+        font-size:50px !important;
         color: #000000 !important;
         padding-top: 0px !important;
     }
@@ -50,7 +48,7 @@ st.markdown(
     f"""
     <div class="container">
         <img class="logo-img" width = 50 height = 50 src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
-        <p class="logo-text">Automatic Flower Tracking</p>
+        <p class="logo-text">  Automatic Flower Tracking</p>
     </div>
     """,
     unsafe_allow_html=True
