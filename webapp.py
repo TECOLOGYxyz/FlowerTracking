@@ -12,7 +12,7 @@ import time
 import matplotlib.pyplot as plt
 
 header = st.container()
-dataset = st.container()
+dataset = st.empty()
 #plots = st.columns(2)
 plot1, plot2 = st.columns([6,6])
 results = st.container()
@@ -38,7 +38,7 @@ if uploaded_file is not None:
     frames = list(set(df1['frame'].tolist()))
     frames = sorted([int(i) for i in frames])
     
-    with plot1:
+    with dataset:
         st.header("Uploaded data")
         fig0, ax0 = plt.subplots()
         ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
@@ -105,6 +105,17 @@ if trackButton:
     endtime = time.time()    
     p = t.return_tracks_webapp() 
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
+    
+    dataset = st.empty()
+    
+    with plot1:
+        st.header("Uploaded data")
+        
+        fig0, ax0 = plt.subplots()
+        ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
+
+        st.pyplot(fig0)
+    
     
     with plot2:
         
