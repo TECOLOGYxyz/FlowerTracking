@@ -20,7 +20,43 @@ plot1, plot2 = st.columns([6,6])
 results = st.container()
 
 image = Image.open('streamlit_logo.png')
-                
+
+
+import base64
+
+LOGO_IMAGE = 'streamlit_logo.png'
+
+st.markdown(
+    """
+    <style>
+    .container {
+        display: flex;
+    }
+    .logo-text {
+        font-weight:700 !important;
+        font-size:50px !important;
+        color: #f9a01b !important;
+        padding-top: 75px !important;
+    }
+    .logo-img {
+        float:right;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    f"""
+    <div class="container">
+        <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
+        <p class="logo-text">Logo Much ?</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
 with col1:
     st.image(image, width=64)
 
