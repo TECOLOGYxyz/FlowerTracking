@@ -28,10 +28,11 @@ st.markdown(
         display: flex;
     }
     .logo-text {
-        font-weight:300 !important;
+        font-weight:600 !important;
         font-size:50px !important;
         color: #000000 !important;
         padding-top: 0px !important;
+        paddinglleft: 10px;
     }
     .logo-img {
         float:right;
@@ -45,7 +46,7 @@ st.markdown(
     f"""
     <div class="container">
         <img class="logo-img" width = 50 height = 65 src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}" style="padding-top: 15px;">
-        <p class="logo-text">  Automatic Flower Tracking</p>
+        <p class="logo-text">Automatic Flower Tracking</p>
     </div>
     """,
     unsafe_allow_html=True
