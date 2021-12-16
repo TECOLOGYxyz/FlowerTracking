@@ -17,7 +17,11 @@ dataset = st.empty()
 plot1, plot2 = st.columns([6,6])
 results = st.container()
 
+image = Image.open('streamlit_logo.png')
+                
+
 with header:
+    st.image(image, width=64)
     st.title("Automatic Flower Tracking")
 
 
