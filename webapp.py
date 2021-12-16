@@ -12,10 +12,7 @@ import time
 import matplotlib.pyplot as plt
 from PIL import Image
 
-header = st.container()
-dataset = st.empty()
-plot1, plot2 = st.columns([6,6])
-results = st.container()
+
 
 #image = Image.open('streamlit_logo.png')
 
@@ -47,7 +44,7 @@ st.markdown(
 st.markdown(
     f"""
     <div class="container">
-        <img class="logo-img" width = 50 height = 50 padding-top: 10px src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
+        <img class="logo-img" width = 50 height = 50 padding-top: 50px src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
         <p class="logo-text">  Automatic Flower Tracking</p>
     </div>
     """,
@@ -55,11 +52,10 @@ st.markdown(
 )
 
 
-#with col1:
-  #  st.image(image, width=64)
-
-#with col2:
-#    st.title("Automatic Flower Tracking")
+header = st.container()
+dataset = st.empty()
+plot1, plot2 = st.columns([6,6])
+results = st.container()
 
 
 
