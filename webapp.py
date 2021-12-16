@@ -32,7 +32,7 @@ st.markdown(
         font-size:50px !important;
         color: #000000 !important;
         padding-top: 0px !important;
-        paddinglleft: 10px;
+        paddinglleft: 90px;
     }
     .logo-img {
         float:right;
