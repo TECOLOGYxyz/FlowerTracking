@@ -44,7 +44,7 @@ st.markdown(
 st.markdown(
     f"""
     <div class="container">
-        <img class="logo-img" width = 50 height = 50 src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}" style="padding-top: 15px;">
+        <img class="logo-img" width = 50 height = 65 src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}" style="padding-top: 15px;">
         <p class="logo-text">  Automatic Flower Tracking</p>
     </div>
     """,
