@@ -33,7 +33,7 @@ TO-DO
 """
 
 #### PATH TO TRACKS ####
-tracks = pd.read_csv(r'../testResults/_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_100.csv')
+tracks = pd.read_csv(r'../testResults/_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_0.csv')
 print(tracks)
 
 
@@ -52,13 +52,10 @@ class sieve():
     def gen(self):
         t = tracks.groupby('objectID')
 
-        self.tracksDict = {}
-    
-        for i,g in t:
+        for i,g in t: # Generator that yields next group in tracks dataframe
             oid = g['objectID'].iloc[0]
             x_cs = g['x_c'].tolist()
             y_cs = g['y_c'].tolist()
-            #self.tracksDict[oid] = list(map(list, zip(x_cs, y_cs)))
             p = list(map(list, zip(x_cs, y_cs)))
             yield oid, p
     
@@ -68,11 +65,9 @@ class sieve():
         lines = {}
         triangles = {}
         polygons = {}
-        polyLengths = OrderedDict()
-    
+        polyLengths = {}
         
-        
-        for oid, p in self.gen():
+        for oid, p in self.gen(): # Take next group in tracks dataframe and split into correct dictionary according to number of points the track contains
             if len(p) == 1: # Get single points
                 points[oid] = p
                 
