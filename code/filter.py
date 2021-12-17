@@ -33,7 +33,7 @@ TO-DO
 """
 
 #### PATH TO TRACKS ####
-tracks = pd.read_csv(r'../testResults/_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_0.csv')
+tracks = pd.read_csv(r'../testResults/_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_100.csv')
 print(tracks)
 
 
@@ -48,54 +48,96 @@ class sieve():
     def __init__(self, tracks):
         self.tracks = tracks
         
+        
+    def gen(self):
+        t = tracks.groupby('objectID')
+
+        self.tracksDict = {}
+    
+        for i,g in t:
+            oid = g['objectID'].iloc[0]
+            x_cs = g['x_c'].tolist()
+            y_cs = g['y_c'].tolist()
+            #self.tracksDict[oid] = list(map(list, zip(x_cs, y_cs)))
+            p = list(map(list, zip(x_cs, y_cs)))
+            yield oid, p
     
     def separate(self, tracks):
         
-        tracksGrouped = tracks.groupby(['objectID'])
-        
-        points = []
-        lines = []
-        triangles = []
-        polygons = []
-        polyID = 0
+        points = {}
+        lines = {}
+        triangles = {}
+        polygons = {}
         polyLengths = OrderedDict()
-
-        # Get single points
-        for i,group in tracksGrouped:
-            if len(group) == 1: # Get single points
-                point = []
-                for i,row in group.iterrows():
-                    p = [row['x_c'], row['y_c']]
-                    point.append(p)
-                points.append(point)
-            if len(group) == 2: # Get lines
-                line = []
-                for i,row in group.iterrows():
-                    point = [row['x_c'], row['y_c']]
-                    line.append(point)
-                lines.append(line)
-            if len(group) == 3: # Get triangles
-                triangle = []
-                for i,row in group.iterrows():
-                    point = [row['x_c'], row['y_c']]
-                    triangle.append(point)
-                triangles.append(triangle)
-            if len(group) > 3: # Get polygons
-                polygon = []
-                polyLengths[polyID] = len(group)
-                polyID += 1
-                for i,row in group.iterrows():
-                    point = [row['x_c'], row['y_c']]
-                    polygon.append(point)
-                polygons.append(polygon)
-
-        return points, lines, triangles, polygons, polyID, polyLengths
     
-    # def get_change(self, A, B):
-    #       if A == B:
-    #           return 0
-    #       else:
-    #           return (abs(A - B) / B) * 100.0
+        
+        
+        for oid, p in self.gen():
+            if len(p) == 1: # Get single points
+                points[oid] = p
+                
+            if len(p) == 2: # Get lines
+                lines[oid] = p
+                
+            if len(p) == 3: # Get triangles
+                triangles[oid] = p
+
+            if len(p) > 3: # Get polygons
+                polygons[oid] = p
+                
+        for p in polygons:
+            polyLengths[p] = len(polygons[p])
+
+    
+        
+        print(f'Points:{br}{points}')
+        print(f'Lines:{br}{lines}')
+        print(f'Triangles:{br}{triangles}')
+        print(f'Polygons:{br}{polygons}')
+        print(f'PolyLengths:{br}{polyLengths}')
+        
+        
+        return points, lines, triangles, polygons, polyLengths 
+            
+        # points = []
+        # lines = []
+        # triangles = []
+        # polygons = []
+        # polyID = 0
+        # polyLengths = OrderedDict()
+
+        # # Get single points
+        
+        
+        # for i,group in tracksGrouped:
+        #     if len(group) == 1: # Get single points
+        #         point = []
+        #         for i,row in group.iterrows():
+        #             p = [row['x_c'], row['y_c']]
+        #             point.append(p)
+        #         points.append(point)
+        #     if len(group) == 2: # Get lines
+        #         line = []
+        #         for i,row in group.iterrows():
+        #             point = [row['x_c'], row['y_c']]
+        #             line.append(point)
+        #         lines.append(line)
+        #     if len(group) == 3: # Get triangles
+        #         triangle = []
+        #         for i,row in group.iterrows():
+        #             point = [row['x_c'], row['y_c']]
+        #             triangle.append(point)
+        #         triangles.append(triangle)
+        #     if len(group) > 3: # Get polygons
+        #         polygon = []
+        #         polyLengths[polyID] = len(group)
+        #         polyID += 1
+        #         for i,row in group.iterrows():
+        #             point = [row['x_c'], row['y_c']]
+        #             polygon.append(point)
+        #         polygons.append(polygon)
+        
+
     
     def remove_from_list(self, list_to_remove_from, indexes_to_remove):
         
@@ -206,7 +248,7 @@ class sieve():
                         triangles_to_remove.append(r)
          
         
-        list_of_triangles = remove_from_list(list_of_triangles, triangles_to_remove)
+        list_of_triangles = self.remove_from_list(list_of_triangles, triangles_to_remove)
         return list_of_triangles
 
 
@@ -226,7 +268,7 @@ class sieve():
                         triangles_to_remove.append(r)
                         #continue
         
-        list_of_triangles = remove_from_list(list_of_triangles, triangles_to_remove)
+        list_of_triangles = self.remove_from_list(list_of_triangles, triangles_to_remove)
         return list_of_triangles
 
 
@@ -256,26 +298,27 @@ class sieve():
                                     polygons_to_remove.append(k)
                                 else:
                                     polygons_to_remove.append(i)
-        print(polygons_to_remove)
         
-        
-        list_of_polygons = remove_from_list(list_of_polygons, polygons_to_remove)    
+        list_of_polygons = self.remove_from_list(list_of_polygons, polygons_to_remove)    
         return list_of_polygons
 
     def run(self):
-        points, lines, triangles, polygons, polyID, polyLengths = self.separate(self.tracks)
+        self.separate(self.tracks)
+        # points, lines, triangles, polygons, polyID, polyLengths = self.separate(self.tracks)
 
-        flines = self.filter_lines_on_lines(lines) # Remove overlapping lines
-        flines = self.filter_lines_on_triangles(flines, triangles) # Remove lines overlapping with triangles
+        # flines = self.filter_lines_on_lines(lines) # Remove overlapping lines
+        # flines = self.filter_lines_on_triangles(flines, triangles) # Remove lines overlapping with triangles
         
-        ftriangles = self.filter_triangles_on_triangles(triangles)
+        # ftriangles = self.filter_triangles_on_triangles(triangles)
         
-        print("Filtered lines: ", flines)
-        print("Filtered triangles: ", ftriangles)
-        #fpolygons = self.
+        # print("Filtered lines: ", flines)
+        # print("Filtered triangles: ", ftriangles)
+        # #fpolygons = self.
         
 
-s = sieve(0)
+s = sieve(tracks)
+
+s.run()
 
 
 
