@@ -236,6 +236,7 @@ d1 %>%
 
 ```
 
+
 ```{r}
 d2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_2_NYAA-04_Evaluate.csv")
 
@@ -248,5 +249,43 @@ d2 %>%
 ```
 
 
+parameterTest_3
+```{r}
+d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NYAA-04_Evaluate.csv")
 
+
+d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+d1 %>% 
+  arrange(mm, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+```
+```{r}
+# NYAA-04 gt:
+nyaa04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv")
+
+length(unique(nyaa04_gt$id_gt))
+
+```
+```{r}
+# Minimum mm: 10,300,60-70,29,0.9835414,38
+# All zero: 0,0,0,68,0.9614075,31
+# Correct noo with minimum mm:  70-160,800-1000,10,36,0.9795687,21
+
+minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_10_runMean_60_maxDist_300.csv")
+
+allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv")
+
+cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_70_runMean_10_maxDist_800.csv")
+
+```
 
