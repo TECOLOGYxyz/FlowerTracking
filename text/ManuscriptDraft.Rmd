@@ -140,7 +140,7 @@ Our algorithm tracks objects based on distances between centroids of bounding bo
 
 ## User parameters
 
-The tracking algorithm has a set of user adjusted parameters that can optimize tracking accuracy. The parameters are particularly relevant for optimal tracking of objects that are constrained to a specific area such as flowers. It is important to note, however, that the tracking algorithm can be used to track any objects. The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (real-time tracking frame per frame). The speed of the tracking algorithm depends on the computational power available as well as the number of objects that are being tracked.
+The tracking algorithm has a set of user adjusted parameters that can optimize tracking accuracy. The parameters are particularly relevant for optimal tracking of objects that are constrained to a specific area such as flowers. It is important to note, however, that the tracking algorithm can be used to track any objects. The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (real-time tracking frame per frame). The speed of the tracking algorithm depends on the computational power available as well as the number of objects that are being tracked. The method is fast, however. Tracking of a series containing 85 objects ran at 0.02 seconds per frame.
 
 
 As the wind shifts, the flower heads changes direction. This can happen instantaneously (i.e. between two consecutive frames). As they are constrained by their stalk, there is a limit to the distance they can move.
@@ -187,7 +187,18 @@ Finally, we compare the number of tracks identified by the automatic tracking wi
 
 ## Filtering tracks
 
-Tracks that overlap have significant risk of errors. Overlapping tracks can be caused by a single flower that was erroneously assigned to several tracks, two flowers that were located sufficiently close to each other that there areas overlapped (e.g. when wind moves the flowers around), false positive detections close to a flower.Best case is two flowers that flowered in the same area but were separated by time. Here we will remove overlapping tracks to reduce the risk of error.
+Manually annotating a subset of the objects in the image series could help derive a good set of parameters.
+
+When deploying the tracking algorithm on naive data that has not been manually tracked, it is not possible to 
+
+From our results we see that erroneous tracks often occur as small sections consisting of only few points within the main tracks.
+
+
+Therefore, tracks that overlap have significant risk of errors. Overlapping tracks can be caused by a single flower that was erroneously assigned to several tracks, two flowers that were located sufficiently close to each other that there areas overlapped (e.g. when wind moves the flowers around), false positive detections close to a flower. Best case is two flowers that flowered in the same area but were separated by time. Here we will remove overlapping tracks to reduce the risk of error.
+
+We could compare number of points in the overlapping tracks. If one is less than e.g. 10% of the other, we'll remove the small track. If more than 10% we'll remove both?
+
+
 
 We disregard single points that were not associated to a track. For tracks consisting of two points, we establish the straight line between the points. For tracks consisting of three points, we establish the triangle from the points. For tracks consisting of more than three points, we calculate the convex hull of all the points included in the track and derive the polygon from the vertices of the convex hull.
 
