@@ -33,13 +33,21 @@ TO-DO
 """
 
 #### PATH TO TRACKS ####
-tracks = pd.read_csv(r'../testResults/_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_0.csv')
-print(tracks)
+tracks = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
+#print(tracks)
 
 
 #### NORMALIZE X AND Y ####
 #tracks['x_c'] = tracks['x_c']/6080
 #tracks['y_c'] = tracks['y_c']/3420
+
+
+fig, ax0 = plt.subplots(figsize=(15,10))
+ax0.set_xlim(0, 6080)
+ax0.set_ylim(0, 3420)
+scat0 = ax0.scatter(tracks['x_c'], tracks['y_c'], c = tracks['objectID'], s = 40)
+
+
 
 
 #### FUNCTIONS ####
@@ -85,11 +93,11 @@ class sieve():
 
     
         
-        print(f'Points:{br}{points}')
-        print(f'Lines:{br}{lines}')
-        print(f'Triangles:{br}{triangles}')
-        print(f'Polygons:{br}{polygons}')
-        print(f'PolyLengths:{br}{polyLengths}')
+        #print(f'Points:{br}{points}')
+        #print(f'Lines:{br}{lines}')
+        #print(f'Triangles:{br}{triangles}')
+        #print(f'Polygons:{br}{polygons}')
+        #print(f'PolyLengths:{br}{polyLengths}')
         
         
         return points, lines, triangles, polygons, polyLengths
@@ -108,39 +116,42 @@ class sieve():
         return percentage    
     
     def convex_hull(self, points): # Calculate the convex hull of points
-        print("Calculating convex hulls")
+        #print("Calculating convex hulls")
         #points = np.array([[1, 2],[1, 4],[4, 1], [2,2.5], [3.5,3.5]])
         hulls = []
-        for p in points:
-            #print(p)
-            p = np.array(p)
-            print("Points: ", p)
-            hull = ConvexHull(p)
-            #print("Hull vertices: ", p[hull.vertices])
-            hulls.append(p[hull.vertices])
+        p = points
+        #print(p)
+        p = np.array(p)
+        #print("Points: ", p)
+        hull = ConvexHull(p)
+        #print("Hull vertices: ", p[hull.vertices])
+        hulls.append(p[hull.vertices])
             
-        return hulls
+        return hulls[0].tolist()
 
-    def cart_product(listOfPolygons):
-        print("Calculating cartesian products of polygons")
-        cartProduct = []
-        #print("List of polygons: ",br, listOfPolygons)
-        listOfPolygons = [i.tolist() for i in listOfPolygons]
-        #print("List of polygons after converstion: ",br, listOfPolygons)
-        for i in listOfPolygons:
-            #print("i", i)
-            for j in listOfPolygons:
-                if not i == j and [j,i] not in cartProduct:
-                #if (i == j).all():# and [j,i] not in cartProduct:
-                    #print("jello")
-                    cartProduct.append([i,j])
+    # def cart_product(listOfPolygons):
+    #     print("Calculating cartesian products of polygons")
+    #     cartProduct = []
+    #     #print("List of polygons: ",br, listOfPolygons)
+    #     listOfPolygons = [i.tolist() for i in listOfPolygons]
+    #     #print("List of polygons after converstion: ",br, listOfPolygons)
+    #     for i in listOfPolygons:
+    #         #print("i", i)
+    #         for j in listOfPolygons:
+    #             if not i == j and [j,i] not in cartProduct:
+    #             #if (i == j).all():# and [j,i] not in cartProduct:
+    #                 #print("jello")
+    #                 cartProduct.append([i,j])
         
-        return cartProduct
+    #     return cartProduct
 
     def filter_points():
         pass
     
     def filter_lines_on_lines(self, list_of_lines):
+        
+        lines_to_remove = []
+        
         class Point:
         	def __init__(self,x,y):
         		self.x = x
@@ -153,35 +164,44 @@ class sieve():
         	return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
 
         for i in list_of_lines:
-            print("i", i)
-            a = Point(i[0][0], i[0][1])
-            b = Point(i[1][0], i[1][1])
+            #print("i", i)
+            pointsA = list_of_lines[i]
+            a = Point(pointsA[0][0], pointsA[0][1])
+            b = Point(pointsA[1][0], pointsA[1][1])
             
             for j in list_of_lines:
-                if not i == j:
-                    print("j",j)
-                    c = Point(j[0][0], j[0][1])
-                    d = Point(j[1][0], j[1][1])
+                pointsB = list_of_lines[j]
+                if not pointsA == pointsB:
+                    #print("j",j)
+                    c = Point(pointsB[0][0], pointsB[0][1])
+                    d = Point(pointsB[1][0], pointsB[1][1])
                 
                     if intersect(a,b,c,d):
-                        list_of_lines.remove(i)
-                        list_of_lines.remove(j)
+                        lines_to_remove.append(i)
+                        lines_to_remove.append(j)
                         continue
         
+        print(f'Removing {len(set(lines_to_remove))} overlapping lines')
+        self.remove_from_list(list_of_lines, set(lines_to_remove))
         return list_of_lines # Return the lines that didn't overlap
 
 
     def filter_lines_on_triangles(self, list_of_lines, list_of_triangles):
-       
+        lines_to_remove = []
+        
         for l in list_of_lines:
-           line = LineString(l)
+            line = list_of_lines[l] 
+            line = LineString(line)
            
-           for t in list_of_triangles:
-               triangle = Polygon(t)
+            for t in list_of_triangles:
+                points = list_of_triangles[t]
+                triangle = Polygon(points)
                
-               if line.intersects(triangle):
-                   list_of_lines.remove(l)
-                   continue
+                if line.intersects(triangle):
+                    lines_to_remove.append(l)
+                    #continue
+        print(f'Removing {len(set(lines_to_remove))} lines overlapping with triangles')
+        self.remove_from_list(list_of_lines, set(lines_to_remove))
         return list_of_lines
            
     
@@ -191,19 +211,22 @@ class sieve():
         
         for t in list_of_triangles:
             #print("t", t)
-            triangleA = Polygon(t)
+            pointsA = list_of_triangles[t]
+            triangleA = Polygon(pointsA)
             
             for r in list_of_triangles:
-                if not t == r:
+                pointsB = list_of_triangles[r]
+                if not pointsA == pointsB:
                     #print("r", r)
-                    triangleB = Polygon(r)
+                    triangleB = Polygon(pointsB)
                    
                     if triangleA.intersects(triangleB):
                         triangles_to_remove.append(t)
                         triangles_to_remove.append(r)
          
         
-        list_of_triangles = self.remove_from_list(list_of_triangles, triangles_to_remove)
+        print(f'Removing {len(set(triangles_to_remove))} overlapping triangles')
+        list_of_triangles = self.remove_from_list(list_of_triangles, set(triangles_to_remove))
         return list_of_triangles
 
 
@@ -213,16 +236,19 @@ class sieve():
         
         for t in list_of_triangles:
             #print("t", t)
-            triangle = Polygon(t)
+            pointsA = list_of_triangles[t]
+            triangle = Polygon(pointsA)
             
             for r in list_of_polygons:
-                    polygon = Polygon(r)
+                pointsB = list_of_polygons[r]
+                polygon = Polygon(pointsB)
                    
-                    if triangle.intersects(polygon):
-                        triangles_to_remove.append(t)
-                        triangles_to_remove.append(r)
-                        #continue
-        
+                if triangle.intersects(polygon):
+                    triangles_to_remove.append(t)
+
+        #print(list_of_triangles)            
+        #print(triangles_to_remove)
+        print(f'Removing {len(set(triangles_to_remove))} triangles overlapping with polygons')
         list_of_triangles = self.remove_from_list(list_of_triangles, triangles_to_remove)
         return list_of_triangles
 
@@ -231,54 +257,126 @@ class sieve():
         
         polygons_to_remove = []
         
-        for i, t in enumerate(list_of_polygons):
-            print("t", t)
-            polygonA = Polygon(t)
+        for t in list_of_polygons:
+            #print("t", t)
+            pointsA = list_of_polygons[t]
+            polygonA = Polygon(pointsA)
             
-            for k, p in enumerate(list_of_polygons): # Replace with itertools.product
-                if not t == p:
-                    print("r", p)
-                    polygonB = Polygon(p)
+            for p in list_of_polygons: # Replace with itertools.product
+                pointsB = list_of_polygons[p]
+                if not pointsA==pointsB:
+                    #print("r", p)
+                    
+                    polygonB = Polygon(pointsB)
                     
                     if polygonA.intersects(polygonB):
-                        if polygon_lengths[i] == polygon_lengths[k]: # If polygons contain the same number of points, remove both
-                            polygons_to_remove.append(i)
-                            polygons_to_remove.append(k)
+                        if polygon_lengths[t] == polygon_lengths[t]: # If polygons contain the same number of points, remove both
+                            polygons_to_remove.append(t)
+                            polygons_to_remove.append(p)
                         else:
-                            if self.get_change(polygon_lengths[i], polygon_lengths[k]) < 20: # If difference is less than 10%, remove both
-                                polygons_to_remove.append(i)
-                                polygons_to_remove.append(k)
+                            if self.get_change(polygon_lengths[t], polygon_lengths[p]) < 20: # If difference is less than 10%, remove both
+                                polygons_to_remove.append(t)
+                                polygons_to_remove.append(p)
                             else:                                
-                                if polygon_lengths[i] > polygon_lengths[k]: # If difference is more than 20%, remove the smallest
-                                    polygons_to_remove.append(k)
+                                if polygon_lengths[t] > polygon_lengths[p]: # If difference is more than 20%, remove the smallest
+                                    polygons_to_remove.append(p)
                                 else:
-                                    polygons_to_remove.append(i)
-        
-        list_of_polygons = self.remove_from_list(list_of_polygons, polygons_to_remove)    
+                                    polygons_to_remove.append(t)
+                                    
+        print(f'Removing {len(set(polygons_to_remove))} polygons ovelapping with polygons')
+        list_of_polygons = self.remove_from_list(list_of_polygons, set(polygons_to_remove))    
         return list_of_polygons
+
 
     def run(self):
         self.separate(self.tracks)
         points, lines, triangles, polygons, polyLengths = self.separate(self.tracks)
 
-        # flines = self.filter_lines_on_lines(lines) # Remove overlapping lines
-        # flines = self.filter_lines_on_triangles(flines, triangles) # Remove lines overlapping with triangles
+        flines = self.filter_lines_on_lines(lines) # Remove overlapping lines
+        flines = self.filter_lines_on_triangles(flines, triangles) # Remove lines overlapping with triangles
         
-        # ftriangles = self.filter_triangles_on_triangles(triangles)
+        ftriangles = self.filter_triangles_on_triangles(triangles)
         
-        # print("Filtered lines: ", flines)
-        # print("Filtered triangles: ", ftriangles)
-        # #fpolygons = self.
+        polyHulls = {}
         
-
+        for p in polygons:
+            #print("Polygon: ", br, polygons[p])
+            h = self.convex_hull(polygons[p])
+            #print("Hull: ", br, h)
+            polyHulls[p] = h
+            
+        #print(polyHulls)
+        
+        ftriangles = self.filter_triangles_on_polygons(ftriangles, polyHulls)
+        fpolygons = self.filter_polygons_on_polygons(polyHulls, polyLengths)
+            
+        # Combine dictionaries into dataframe
+        #print(o)
+        
+        tracks_to_keep = []
+        
+        if flines.keys():
+            print("kkk")
+            for o in flines.keys():
+                tracks_to_keep.append(o)
+        
+        if ftriangles.keys():
+            print("jhh")
+            for o in ftriangles.keys():
+                tracks_to_keep.append(o)
+        
+        if fpolygons.keys():
+            print("lll")
+            print(fpolygons.keys())
+            for o in fpolygons.keys():
+                print(o)
+                tracks_to_keep.append(o)
+        
+        print(f'Tracks to keep: {br}{tracks_to_keep}')
+        
+        return tracks_to_keep, polyHulls
+        
+    
+        
+        
 s = sieve(tracks)
 
-s.run()
+d,p = s.run()
+
+tracks_filtered = tracks[tracks['objectID'].isin(d)]
+
+fig, ax1 = plt.subplots(figsize=(15,10))
+ax1.set_xlim(0, 6080)
+ax1.set_ylim(0, 3420)
+
+scat1 = ax1.scatter(tracks_filtered['x_c'], tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 40)
+
+print(p)
+
+# for h in p:
+#     print(p[h])
+    
+#     #print(h)
+#     ax1.scatter(p[h][::1,0], p[h][::1,1], zorder = -1, s = 2)
+#     # ax1.fill(h[::1,0], h[::1,1], zorder = -1)
+
+hulls = [[[5,2],[1,3],[8,4]],[[9,4],[4,6],[10,20]] ]
+
+
+fig, ax2 = plt.subplots(figsize=(15,10))
+ax2.set_xlim(0, 6080)
+ax2.set_ylim(0, 3420)
+
+for h in hulls:
+    #print(h[::1,0])
+    h = np.array(h)
+    ax2.scatter(h[::1,0], h[::1,1], zorder = -1, s = 40)
+    ax2.fill(h[::1,0], h[::1,1], zorder = -1)
 
 
 
 
-# Remove single points:
+# # Remove single points:
     
     
 
