@@ -186,15 +186,15 @@ class sieve():
         return list_of_lines # Return the lines that didn't overlap
 
 
-    def filter_lines_on_triangles(self, list_of_lines, list_of_triangles):
+    def filter_lines_on_polygons(self, list_of_lines, list_of_polygons):
         lines_to_remove = []
         
         for l in list_of_lines:
             line = list_of_lines[l] 
             line = LineString(line)
            
-            for t in list_of_triangles:
-                points = list_of_triangles[t]
+            for t in list_of_polygons:
+                points = list_of_polygons[t]
                 triangle = Polygon(points)
                
                 if line.intersects(triangle):
@@ -293,43 +293,38 @@ class sieve():
         points, lines, triangles, polygons, polyLengths = self.separate(self.tracks)
 
         flines = self.filter_lines_on_lines(lines) # Remove overlapping lines
-        flines = self.filter_lines_on_triangles(flines, triangles) # Remove lines overlapping with triangles
+        flines = self.filter_lines_on_polygons(flines, triangles) # Remove lines overlapping with triangles
         
-        ftriangles = self.filter_triangles_on_triangles(triangles)
+        ftriangles = self.filter_triangles_on_triangles(triangles) # Remove overlapping triangles
+        
+        ### Create convex hulls for each polygon and return vertices
         
         polyHulls = {}
-        
         for p in polygons:
             #print("Polygon: ", br, polygons[p])
             h = self.convex_hull(polygons[p])
             #print("Hull: ", br, h)
             polyHulls[p] = h
             
-        #print(polyHulls)
+        ###
         
-        ftriangles = self.filter_triangles_on_polygons(ftriangles, polyHulls)
-        fpolygons = self.filter_polygons_on_polygons(polyHulls, polyLengths)
-            
-        # Combine dictionaries into dataframe
-        #print(o)
+        ftriangles = self.filter_triangles_on_polygons(ftriangles, polyHulls) # Remove triangles overlapping with polygons hulls
+        flines = self.filter_lines_on_polygons(flines, polyHulls) # Remove lines overlapping with polygon hulls
+        fpolygons = self.filter_polygons_on_polygons(polyHulls, polyLengths) # Filter polygons overlapping with polygons
         
+        ### Return the objectIDs that have made their way through the filter
         tracks_to_keep = []
         
         if flines.keys():
-            print("kkk")
             for o in flines.keys():
                 tracks_to_keep.append(o)
         
         if ftriangles.keys():
-            print("jhh")
             for o in ftriangles.keys():
                 tracks_to_keep.append(o)
         
         if fpolygons.keys():
-            print("lll")
-            print(fpolygons.keys())
             for o in fpolygons.keys():
-                print(o)
                 tracks_to_keep.append(o)
         
         print(f'Tracks to keep: {br}{tracks_to_keep}')
@@ -344,6 +339,8 @@ s = sieve(tracks)
 d,p = s.run()
 
 tracks_filtered = tracks[tracks['objectID'].isin(d)]
+tracks_filtered.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/filtered2_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
+
 
 fig, ax1 = plt.subplots(figsize=(15,10))
 ax1.set_xlim(0, 6080)
@@ -363,15 +360,19 @@ print(p)
 hulls = [[[5,2],[1,3],[8,4]],[[9,4],[4,6],[10,20]] ]
 
 
-fig, ax2 = plt.subplots(figsize=(15,10))
-ax2.set_xlim(0, 6080)
-ax2.set_ylim(0, 3420)
 
-for h in hulls:
-    #print(h[::1,0])
-    h = np.array(h)
-    ax2.scatter(h[::1,0], h[::1,1], zorder = -1, s = 40)
-    ax2.fill(h[::1,0], h[::1,1], zorder = -1)
+
+# fig, ax2 = plt.subplots(figsize=(15,10))
+# ax2.set_xlim(0, 6080)
+# ax2.set_ylim(0, 3420)
+
+# for h in hulls:
+#     print(h)
+#     t = hulls[h]
+#     print(t)
+    #h = np.array(h)
+    #ax2.scatter(h[::1,0], h[::1,1], zorder = -1, s = 40)
+    #ax2.fill(h[::1,0], h[::1,1], zorder = -1)
 
 
 
