@@ -35,8 +35,8 @@ TO-DO
 #### FUNCTIONS ####
 
 class sieve():
-    def __init__(self):
-        pass
+    def __init__(self, tracks):
+        self.tracks = tracks
         
         
     def gen(self):
@@ -49,7 +49,7 @@ class sieve():
             yield oid, p
     
     
-    def separate(self, tracks):
+    def separate(self):
         
         points = {}
         lines = {}
@@ -273,9 +273,9 @@ class sieve():
         return list_of_polygons
 
 
-    def run(self, tracks):
-        self.separate(self.tracks)
-        points, lines, triangles, polygons, polyLengths = self.separate(self.tracks)
+    def run(self):
+        #self.separate(tracks)
+        points, lines, triangles, polygons, polyLengths = self.separate()
 
         flines = self.filter_lines_on_lines(lines) # Remove overlapping lines
         flines = self.filter_lines_on_polygons(flines, triangles) # Remove lines overlapping with triangles
