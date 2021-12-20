@@ -146,7 +146,7 @@ if trackButton:
     endtime = time.time()  
     #global p
     p = t.return_tracks_webapp() 
-    #global p
+    global p
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     
     dataset.empty()
@@ -170,22 +170,7 @@ if trackButton:
         st.pyplot(fig)
         
         
-        
-        
-        
-        if filterButton:
-            s = sieve(p)
-            d,polyhulls = s.run()
-            tracks_filtered = p[p['objectID'].isin(d)]
-            
-            with plot4:
-                st.write("Filtered results")
-                st.write(p)
 
-                fig, ax2 = plt.subplots()
-                ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
-
-                st.pyplot(fig)
                   
 
     with results:
@@ -211,7 +196,19 @@ if trackButton:
            )
         
 
-    
+if filterButton:
+   s = sieve(p)
+   d,polyhulls = s.run()
+   tracks_filtered = p[p['objectID'].isin(d)]
+   
+   with plot4:
+       st.write("Filtered results")
+       st.write(p)
+
+       fig, ax2 = plt.subplots()
+       ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
+
+       st.pyplot(fig)   
 
 
 
