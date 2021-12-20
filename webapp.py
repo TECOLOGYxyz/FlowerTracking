@@ -194,6 +194,8 @@ if trackButton:
 
 try:
    filterButton
+   if filterButton:
+       st.header("Button works")
 except NameError:
    pass
 
