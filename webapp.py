@@ -194,19 +194,19 @@ if trackButton:
            )
         
         
-        if filterButton:
-            st.header("Button works")
-            s = sieve(p)
-            d,polyhulls = s.run()
-            tracks_filtered = p[p['objectID'].isin(d)]
+    if filterButton:
+        st.header("Button works")
+        s = sieve(p)
+        d,polyhulls = s.run()
+        tracks_filtered = p[p['objectID'].isin(d)]
         
         
-            with plot2:
+        with plot2:
                 
-                st.header("Filtering results")
+            st.header("Filtering results")
             
-                fig, ax2 = plt.subplots()
-                ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
+            fig, ax2 = plt.subplots()
+            ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
         
-                st.pyplot(fig)
+            st.pyplot(fig)
 
