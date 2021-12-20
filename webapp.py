@@ -134,7 +134,7 @@ st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-c
 trackButton = st.sidebar.button('TRACK')
 filterButton = st.sidebar.button('FILTER')
                
-#p = 0
+p = 0
     
 if trackButton:    
 
@@ -144,7 +144,6 @@ if trackButton:
     for f in frames:
         t.track(f)
     endtime = time.time()  
-    #global p
     p = t.return_tracks_webapp() 
     global p
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
