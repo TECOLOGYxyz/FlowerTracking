@@ -192,6 +192,7 @@ if trackButton:
 if filterButton:
     with plot4:
         st.write("Filtered results")
+        st.write()
         
         s = sieve(p)
         d,polyhulls = s.run()
