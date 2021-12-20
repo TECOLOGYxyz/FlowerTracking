@@ -270,17 +270,20 @@ class sieve():
                     polygonB = Polygon(pointsB)
                     
                     if polygonA.intersects(polygonB):
-                        if polygon_lengths[t] == polygon_lengths[t]: # If polygons contain the same number of points, remove both
+                        if polygon_lengths[t] == polygon_lengths[p]: # If polygons contain the same number of points, remove both
                             polygons_to_remove.append(t)
                             polygons_to_remove.append(p)
                         else:
-                            if self.get_change(polygon_lengths[t], polygon_lengths[p]) < 20: # If difference is less than 10%, remove both
+                            if self.get_change(polygon_lengths[t], polygon_lengths[p]) < 30: # If difference is less than 10%, remove both
+                                print(f'Difference is less than 20% ({self.get_change(polygon_lengths[t], polygon_lengths[p])}). Removing {t} and {p}')
                                 polygons_to_remove.append(t)
                                 polygons_to_remove.append(p)
                             else:                                
                                 if polygon_lengths[t] > polygon_lengths[p]: # If difference is more than 20%, remove the smallest
+                                    print(f'{polygon_lengths[t]} for {t} more than {polygon_lengths[p]} for {t}. Removing smallest ({p})')
                                     polygons_to_remove.append(p)
                                 else:
+                                    print(f'{polygon_lengths[p]} for {p} more than {polygon_lengths[t]} for {t}. Removing smallest ({t})')
                                     polygons_to_remove.append(t)
                                     
         print(f'Removing {len(set(polygons_to_remove))} polygons ovelapping with polygons')
@@ -315,9 +318,9 @@ class sieve():
         ### Return the objectIDs that have made their way through the filter
         tracks_to_keep = []
         
-        if flines.keys():
-            for o in flines.keys():
-                tracks_to_keep.append(o)
+        # if flines.keys():
+        #     for o in flines.keys():
+        #         tracks_to_keep.append(o)
         
         if ftriangles.keys():
             for o in ftriangles.keys():
@@ -339,7 +342,7 @@ s = sieve(tracks)
 d,p = s.run()
 
 tracks_filtered = tracks[tracks['objectID'].isin(d)]
-tracks_filtered.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/filtered2_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
+tracks_filtered.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/filtered4_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
 
 
 fig, ax1 = plt.subplots(figsize=(15,10))
