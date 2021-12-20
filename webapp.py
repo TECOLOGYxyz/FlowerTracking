@@ -168,12 +168,7 @@ if trackButton:
 
         st.pyplot(fig)
         
-        
 
-                  
-
-    with results:
-        st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
         st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
         
