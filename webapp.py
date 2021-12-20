@@ -171,6 +171,8 @@ filterButton = st.sidebar.button('FILTER')
 
 
 if filterButton:
+    st.write("Button works")
+    st.write(p)
     s = sieve(p)
     d,polyhulls = s.run()
     tracks_filtered = p[p['objectID'].isin(d)]
