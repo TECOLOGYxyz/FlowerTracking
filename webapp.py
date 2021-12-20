@@ -148,18 +148,18 @@ if trackButton:
     #global p
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     
-    dataset.empty()
+    #dataset.empty()
+    
+    # with plot1:
+    #     st.header("Uploaded data")
+        
+    #     fig0, ax0 = plt.subplots()
+    #     ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
+
+    #     st.pyplot(fig0)
+    
     
     with plot1:
-        st.header("Uploaded data")
-        
-        fig0, ax0 = plt.subplots()
-        ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
-
-        st.pyplot(fig0)
-    
-    
-    with plot2:
         
         st.header("Results")
     
@@ -208,6 +208,15 @@ if filterButton:
     d,polyhulls = s.run()
     tracks_filtered = p[p['objectID'].isin(d)]
    
+    
+    # with plot1:
+    #     st.header("Uploaded data")
+        
+    #     fig0, ax0 = plt.subplots()
+    #     ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
+
+    #     st.pyplot(fig0)
+    
     with plot2:
         st.write("Filtered results")
 
