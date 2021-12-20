@@ -191,13 +191,19 @@ if trackButton:
            "text/csv",
            key='download-csv'
            )
-        
-if (filterButton is not None):
-    if filterButton:
-        st.header("Button works")
-    # s = sieve(p)
-    # d,polyhulls = s.run()
-    # tracks_filtered = p[p['objectID'].isin(d)]
+
+try:
+   filterButton
+except NameError:
+   pass
+
+    
+# if (filterButton is not None):
+#     if filterButton:
+#         st.header("Button works")
+#     # s = sieve(p)
+#     # d,polyhulls = s.run()
+#     # tracks_filtered = p[p['objectID'].isin(d)]
     
     
     # with plot2:
