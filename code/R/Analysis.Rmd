@@ -237,19 +237,11 @@ d1 %>%
 ```
 
 
-```{r}
-d2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_2_NYAA-04_Evaluate.csv")
 
+# parameterTest_3
 
-d2 %>% 
-  ggplot() +
-  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
-  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+## NYAA 04
 
-```
-
-
-parameterTest_3
 ```{r}
 d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NYAA-04_Evaluate.csv")
 
@@ -257,6 +249,7 @@ d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_N
 d1 %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Parameter combination") +
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
 
@@ -265,6 +258,7 @@ d1 %>%
   slice_head(n = 10) %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
 
@@ -288,4 +282,147 @@ allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTe
 cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_70_runMean_10_maxDist_800.csv")
 
 ```
+
+
+
+## THUL 01
+
+```{r}
+d2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_THUL-01_Evaluate.csv")
+
+
+d2 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("THUL-01 Parameter combination") +
+  facet_wrap(vars(as.factor(maxDist)))
+
+
+d2 %>% 
+  arrange(mm, ascending = T) %>% 
+  filter(mm == 0) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm)) + 
+  ggtitle("THUL-01 All zero mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+```
+```{r}
+# NYAA-04 gt:
+thul01_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
+
+length(unique(thul01_gt$id_gt))
+
+```
+```{r}
+# Minimum mm: 0-160, 0 + 200-1000, 10, 0, 1, 6
+# All zero: 0, 0, 0, 8, 0.9885551, 6
+# Correct noo with minimum mm: 0-160, 0 + 200-1000, 10, 0, 1, 6
+
+minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_THUL-01_3/parameterTest_THUL-01_maxDisap_0_runMean_10_maxDist_0.csv")
+
+allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_THUL-01_3/parameterTest_THUL-01_maxDisap_0_runMean_0_maxDist_0.csv")
+
+cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_THUL-01_3/parameterTest_THUL-01_maxDisap_0_runMean_10_maxDist_0.csv")
+
+```
+
+
+
+
+
+## NARS-04
+
+```{r}
+d3 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NARS-04_Evaluate.csv")
+
+
+d3 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NARS-04 Parameter combination") +
+  facet_wrap(vars(as.factor(maxDist))) +
+  scale_color_gradient(low="blue", high="red")
+
+
+d3 %>% 
+  arrange(mm, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm)) + 
+  ggtitle("NARS-04 Ten lowest mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+```
+```{r}
+# NYAA-04 gt:
+NARS04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv")
+
+length(unique(NARS04_gt$id_gt))
+
+```
+
+```{r}
+# Minimum mm: 10, 500, 10, 20, 0.9883991, 32
+# All zero: 0, 0, 0, 85, 0.9506961, 31
+# Correct noo with minimum mm: 10, 500, 10, 20, 0.9883991, 32
+
+minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv")
+
+allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_0.csv")
+
+cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv")
+
+```
+
+
+
+
+## NARS-13
+
+```{r}
+d3 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NARS-04_Evaluate.csv")
+
+
+d3 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NARS-04 Parameter combination") +
+  facet_wrap(vars(as.factor(maxDist))) +
+  scale_color_gradient(low="blue", high="red")
+
+
+d3 %>% 
+  arrange(mm, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm)) + 
+  ggtitle("NARS-04 Ten lowest mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+```
+```{r}
+# NYAA-04 gt:
+NARS04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv")
+
+length(unique(NARS04_gt$id_gt))
+
+```
+
+```{r}
+# Minimum mm: 10, 500, 10, 20, 0.9883991, 32
+# All zero: 0, 0, 0, 85, 0.9506961, 31
+# Correct noo with minimum mm: 10, 500, 10, 20, 0.9883991, 32
+
+minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv")
+
+allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_0.csv")
+
+cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv")
+
+```
+
 
