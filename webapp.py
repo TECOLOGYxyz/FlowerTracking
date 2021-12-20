@@ -161,7 +161,7 @@ if trackButton:
     
     with plot1:
         
-        st.header("Results")
+        st.header("Tracking results")
     
         fig, ax = plt.subplots()
         ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
@@ -209,14 +209,15 @@ if filterButton:
     tracks_filtered = p[p['objectID'].isin(d)]
    
     
-    # with plot1:
-    #     st.header("Uploaded data")
+    with plot1:
         
-    #     fig0, ax0 = plt.subplots()
-    #     ax0.scatter(x = df1['x_c'], y = df1['y_c'], s = 15)
-
-    #     st.pyplot(fig0)
+        st.write("Tracking results")
     
+        fig, ax = plt.subplots()
+        ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
+
+        st.pyplot(fig)
+        
     with plot2:
         st.write("Filtered results")
 
