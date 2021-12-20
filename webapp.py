@@ -131,7 +131,7 @@ st.sidebar.write(f'Max distance: {maxDist}')
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
 trackButton = st.sidebar.button('TRACK')
-
+filterButton = st.sidebar.empty()
 
                     
 if trackButton:    
@@ -169,23 +169,6 @@ if trackButton:
         filterButton = st.sidebar.button('FILTER')
 
 
-    if filterButton:
-        st.header("Button works")
-        # s = sieve(p)
-        # d,polyhulls = s.run()
-        # tracks_filtered = p[p['objectID'].isin(d)]
-        
-        
-        # with plot2:
-                
-        #     st.header("Filtering results")
-            
-        #     fig, ax2 = plt.subplots()
-        #     ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
-        
-        #     st.pyplot(fig)
-
-
 
     with results:
         st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
@@ -208,3 +191,19 @@ if trackButton:
            "text/csv",
            key='download-csv'
            )
+        
+if filterButton:
+    st.header("Button works")
+    # s = sieve(p)
+    # d,polyhulls = s.run()
+    # tracks_filtered = p[p['objectID'].isin(d)]
+    
+    
+    # with plot2:
+            
+    #     st.header("Filtering results")
+        
+    #     fig, ax2 = plt.subplots()
+    #     ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
+    
+    #     st.pyplot(fig)
