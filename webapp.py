@@ -131,7 +131,7 @@ st.sidebar.write(f'Max distance: {maxDist}')
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
 trackButton = st.sidebar.button('TRACK')
-#filterButton = st.sidebar.button.empty()
+filterButton = st.sidebar.button()
 
                     
 if trackButton:    
@@ -165,8 +165,6 @@ if trackButton:
 
         st.pyplot(fig)
         
-             
-        filterButton = st.sidebar.button('FILTER')
 
 
 
@@ -191,21 +189,18 @@ if trackButton:
            "text/csv",
            key='download-csv'
            )
+        
+        
+filterButton = st.sidebar.button('FILTER')
 
-try:
-   filterButton
-   if filterButton:
-       st.header("Button works")
-except NameError:
-   pass
 
-    
-# if (filterButton is not None):
-#     if filterButton:
-#         st.header("Button works")
-#     # s = sieve(p)
-#     # d,polyhulls = s.run()
-#     # tracks_filtered = p[p['objectID'].isin(d)]
+if filterButton:
+        with plot2:
+            st.header("Filtered results")
+            
+    # s = sieve(p)
+    # d,polyhulls = s.run()
+    # tracks_filtered = p[p['objectID'].isin(d)]
     
     
     # with plot2:
