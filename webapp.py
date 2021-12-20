@@ -111,7 +111,7 @@ maxDisap = st.sidebar.select_slider(
      options=range(0,100), key = "maxDisap")
 
 maxDist = st.sidebar.select_slider(
-     'Set number of frames for max distance',
+     'Set max distance threshold',
      options=range(0,5000), key = "maxDist")
 
 
