@@ -38,6 +38,13 @@ class sieve():
     def __init__(self, tracks):
         self.tracks = tracks
         
+        self.points = {}
+        self.lines = {}
+        self.triangles = {}
+        self.polygons = {}
+        self.polyLengths = {}
+        self.polyHulls = {}
+        
         
     def gen(self):
         t = self.tracks.groupby('objectID')
@@ -50,28 +57,22 @@ class sieve():
     
     
     def separate(self):
-        
-        points = {}
-        lines = {}
-        triangles = {}
-        polygons = {}
-        polyLengths = {}
-        
+
         for oid, p in self.gen(): # Take next group in tracks dataframe and split into correct dictionary according to number of points the track contains
             if len(p) == 1: # Get single points
-                points[oid] = p
+                self.points[oid] = p
                 
             if len(p) == 2: # Get lines
-                lines[oid] = p
+                self.lines[oid] = p
                 
             if len(p) == 3: # Get triangles
-                triangles[oid] = p
+                self.triangles[oid] = p
 
             if len(p) > 3: # Get polygons
-                polygons[oid] = p
+                self.polygons[oid] = p
                 
-        for p in polygons:
-            polyLengths[p] = len(polygons[p])
+        for p in self.polygons:
+            self.polyLengths[p] = len(self.polygons[p])
 
     
         
@@ -82,7 +83,7 @@ class sieve():
         #print(f'PolyLengths:{br}{polyLengths}')
         
         
-        return points, lines, triangles, polygons, polyLengths
+        #return self.points, self.lines, self.triangles, self.polygons, self.polyLengths
 
     def remove_from_list(self, list_to_remove_from, indexes_to_remove):
         
@@ -97,19 +98,27 @@ class sieve():
             percentage = float('inf')
         return percentage    
     
-    def convex_hull(self, points): # Calculate the convex hull of points
-        #print("Calculating convex hulls")
-        #points = np.array([[1, 2],[1, 4],[4, 1], [2,2.5], [3.5,3.5]])
-        hulls = []
-        p = points
-        #print(p)
-        p = np.array(p)
-        #print("Points: ", p)
-        hull = ConvexHull(p)
-        #print("Hull vertices: ", p[hull.vertices])
-        hulls.append(p[hull.vertices])
+    def convex_hull(self, polygons): # Calculate the convex hull of points
+        for k in polygons:
+            points = np.array(polygons[k])
+            hulls = []
             
-        return hulls[0].tolist()
+            try:
+                hull = ConvexHull(points)
+                hulls.append(points[hull.vertices])
+            
+                self.polyHulls[k] = hulls[0].tolist()
+                
+                
+            except Exception as e:
+                if e.args[0][:6] == 'QH6154': # Catch error that points are colinear.
+                    print(f'Adding object {k} with points {polygons[k]} to lines')    
+                    self.lines[k] = polygons[k] # Add the points to the line dictionary
+                
+                
+        
+            
+        
 
     # def cart_product(listOfPolygons):
     #     print("Calculating cartesian products of polygons")
@@ -163,7 +172,7 @@ class sieve():
                         lines_to_remove.append(j)
                         continue
         
-        print(f'Removing {len(set(lines_to_remove))} overlapping lines')
+        #print(f'Removing {len(set(lines_to_remove))} overlapping lines')
         self.remove_from_list(list_of_lines, set(lines_to_remove))
         return list_of_lines # Return the lines that didn't overlap
 
@@ -177,9 +186,10 @@ class sieve():
            
             for t in list_of_polygons:
                 points = list_of_polygons[t]
-                triangle = Polygon(points)
+                #print("Points", points)
+                polygon = Polygon(points)
                
-                if line.intersects(triangle):
+                if line.intersects(polygon):
                     lines_to_remove.append(l)
                     #continue
         print(f'Removing {len(set(lines_to_remove))} lines overlapping with triangles')
@@ -188,12 +198,13 @@ class sieve():
            
     
     def filter_triangles_on_triangles(self, list_of_triangles):
-        
+        #print("KFKNFNFKFN")
         triangles_to_remove = []
         
         for t in list_of_triangles:
             #print("t", t)
             pointsA = list_of_triangles[t]
+            #print("Points A", pointsA)
             triangleA = Polygon(pointsA)
             
             for r in list_of_triangles:
@@ -213,12 +224,12 @@ class sieve():
 
 
     def filter_triangles_on_polygons(self, list_of_triangles, list_of_polygons):
-        
         triangles_to_remove = []
         
         for t in list_of_triangles:
             #print("t", t)
             pointsA = list_of_triangles[t]
+            #print(f'Triangle points {pointsA}')
             triangle = Polygon(pointsA)
             
             for r in list_of_polygons:
@@ -236,7 +247,6 @@ class sieve():
 
 
     def filter_polygons_on_polygons(self, list_of_polygons, polygon_lengths):
-        
         polygons_to_remove = []
         
         for t in list_of_polygons:
@@ -274,35 +284,24 @@ class sieve():
 
 
     def run(self):
-        #self.separate(tracks)
-        points, lines, triangles, polygons, polyLengths = self.separate()
+        self.separate()
+        self.convex_hull(self.polygons) # Get the hull vertices for the polygons. This also adds polygons with colinear points to the lines dictionary
 
-        flines = self.filter_lines_on_lines(lines) # Remove overlapping lines
-        flines = self.filter_lines_on_polygons(flines, triangles) # Remove lines overlapping with triangles
+        flines = self.filter_lines_on_lines(self.lines) # Remove overlapping lines
+        flines = self.filter_lines_on_polygons(flines, self.triangles) # Remove lines overlapping with triangles
+        flines = self.filter_lines_on_polygons(flines, self.polyHulls) # Remove lines overlapping with triangles
         
-        ftriangles = self.filter_triangles_on_triangles(triangles) # Remove overlapping triangles
+        ftriangles = self.filter_triangles_on_triangles(self.triangles) # Remove overlapping triangles
+        ftriangles = self.filter_triangles_on_polygons(ftriangles, self.polyHulls) # Remove triangles overlapping with polygons hulls
         
-        ### Create convex hulls for each polygon and return vertices
+        fpolygons = self.filter_polygons_on_polygons(self.polyHulls, self.polyLengths) # Filter polygons overlapping with polygons
         
-        polyHulls = {}
-        for p in polygons:
-            #print("Polygon: ", br, polygons[p])
-            h = self.convex_hull(polygons[p])
-            #print("Hull: ", br, h)
-            polyHulls[p] = h
-            
-        ###
-        
-        ftriangles = self.filter_triangles_on_polygons(ftriangles, polyHulls) # Remove triangles overlapping with polygons hulls
-        flines = self.filter_lines_on_polygons(flines, polyHulls) # Remove lines overlapping with polygon hulls
-        fpolygons = self.filter_polygons_on_polygons(polyHulls, polyLengths) # Filter polygons overlapping with polygons
-        
-        ### Return the objectIDs that have made their way through the filter
+        # ### Return the objectIDs that have made their way through the filter
         tracks_to_keep = []
         
-        # if flines.keys():
-        #     for o in flines.keys():
-        #         tracks_to_keep.append(o)
+        if flines.keys():
+            for o in flines.keys():
+                tracks_to_keep.append(o)
         
         if ftriangles.keys():
             for o in ftriangles.keys():
@@ -314,7 +313,7 @@ class sieve():
         
         print(f'Tracks to keep: {br}{tracks_to_keep}')
         
-        return tracks_to_keep, polyHulls
+        return tracks_to_keep, self.polyHulls
         
     
         
