@@ -208,9 +208,8 @@ if filterButton:
     d,polyhulls = s.run()
     tracks_filtered = p[p['objectID'].isin(d)]
    
-    with plot4:
+    with plot2:
         st.write("Filtered results")
-        st.write(p)
 
         fig, ax2 = plt.subplots()
         ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
