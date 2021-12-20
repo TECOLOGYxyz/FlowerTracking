@@ -213,9 +213,6 @@ if filterButton:
 
         st.pyplot(fig)
         
-        
-        st.write('Tracking done.')
-        
         st.write(p)
 
         @st.cache
@@ -226,7 +223,7 @@ if filterButton:
         csv = convert_df(p)
 
         st.download_button(
-           "Press to download tracking results",
+           "Press to download result",
            csv,
            "file.csv",
            "tracked/csv",
@@ -241,8 +238,6 @@ if filterButton:
 
         st.pyplot(fig)
         
-        st.write('Filtering done.')
-        
         st.write(p)
 
         @st.cache
@@ -253,7 +248,7 @@ if filterButton:
         csv = convert_df(tracks_filtered)
 
         st.download_button(
-           "Press to download tracking results",
+           "Press to download results",
            csv,
            "tracked_and_filtered.csv",
            "text/csv",
