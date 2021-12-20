@@ -8,6 +8,7 @@ Created on Mon Dec 13 15:30:13 2021
 import streamlit as st
 import pandas as pd
 from code.track import tracker
+from code.filter import sieve
 import time
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -164,6 +165,24 @@ if trackButton:
 
         st.pyplot(fig)
         
+        
+        filterkButton = st.sidebar.button('FILTER')
+
+if filterkButton:   
+    
+    s = sieve(p)
+    d,polyhulls = s.run()
+    tracks_filtered = p[p['objectID'].isin(d)]
+
+
+    with plot2:
+        
+        st.header("Results")
+    
+        fig, ax2 = plt.subplots()
+        ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
+
+        st.pyplot(fig)
 
 
     
