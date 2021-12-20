@@ -134,7 +134,7 @@ st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-c
 trackButton = st.sidebar.button('TRACK')
 filterButton = st.sidebar.button('FILTER')
                
-p = None
+p = 0
     
 if trackButton:    
 
