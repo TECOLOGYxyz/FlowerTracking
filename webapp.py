@@ -165,27 +165,26 @@ if trackButton:
 
         st.pyplot(fig)
         
-        
-        
-filterButton = st.sidebar.button('FILTER')
+             
+        filterButton = st.sidebar.button('FILTER')
 
 
-if filterButton:
-    st.write("Button works")
-    st.write(p)
-    s = sieve(p)
-    d,polyhulls = s.run()
-    tracks_filtered = p[p['objectID'].isin(d)]
-
-
-    with plot2:
-        
-        st.header("Results")
+    if filterButton:
+        st.write("Button works")
+        st.write(p)
+        s = sieve(p)
+        d,polyhulls = s.run()
+        tracks_filtered = p[p['objectID'].isin(d)]
     
-        fig, ax2 = plt.subplots()
-        ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
-
-        st.pyplot(fig)
+    
+        with plot2:
+            
+            st.header("Results")
+        
+            fig, ax2 = plt.subplots()
+            ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
+    
+            st.pyplot(fig)
 
 
     
