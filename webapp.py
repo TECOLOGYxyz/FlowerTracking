@@ -131,7 +131,7 @@ st.sidebar.write(f'Max distance: {maxDist}')
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
 trackButton = st.sidebar.button('TRACK')
-filterButton = st.sidebar.empty()
+#filterButton = st.sidebar.button.empty()
 
                     
 if trackButton:    
@@ -192,7 +192,7 @@ if trackButton:
            key='download-csv'
            )
         
-if filterButton:
+if filterButton and filterButton is not None:
     st.header("Button works")
     # s = sieve(p)
     # d,polyhulls = s.run()
