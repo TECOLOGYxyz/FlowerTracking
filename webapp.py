@@ -132,7 +132,8 @@ st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-c
 
 trackButton = st.sidebar.button('TRACK')
 filterButton = st.sidebar.button('FILTER')
-                    
+               
+     
 if trackButton:    
 
     t = tracker(maxDisap, maxDist, runMean, "testWebapp.csv", frames, df1, False) # Initiate tracker
@@ -169,8 +170,8 @@ if trackButton:
             with plot2:
                 st.header("Filtered results")
                 
-                s = sieve(p)
-                d,polyhulls = s.run()
+                s = sieve()
+                d,polyhulls = s.run(p)
                 tracks_filtered = p[p['objectID'].isin(d)]
 
     with results:
