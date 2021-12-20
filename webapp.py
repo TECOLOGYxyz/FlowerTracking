@@ -56,7 +56,7 @@ st.markdown(
 
 header = st.container()
 dataset = st.empty()
-plot1, plot2 = st.columns([6,6])
+plot1, plot2, plot3 = st.columns([6,6,6])
 results = st.container()
 
 
@@ -164,21 +164,7 @@ if trackButton:
         ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
 
         st.pyplot(fig)
-        
-
-    if filterButton:
-            with plot2:
-                st.header("Filtered results")
-                
-                s = sieve()
-                d,polyhulls = s.run(p)
-                tracks_filtered = p[p['objectID'].isin(d)]
-               
-                fig2, ax2 = plt.subplots()
-                ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
-
-                st.pyplot(fig2)
-                
+                  
 
     with results:
         st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
@@ -202,7 +188,19 @@ if trackButton:
            key='download-csv'
            )
         
-        
+    if filterButton:
+        with plot3:
+            st.header("Filtered results")
+            
+            s = sieve()
+            d,polyhulls = s.run(p)
+            tracks_filtered = p[p['objectID'].isin(d)]
+           
+            fig2, ax2 = plt.subplots()
+            ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
+
+            st.pyplot(fig2)
+    
 
 
 
