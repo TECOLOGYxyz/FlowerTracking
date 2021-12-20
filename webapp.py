@@ -213,13 +213,52 @@ if filterButton:
 
         st.pyplot(fig)
         
+        
+        st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
+        
+        st.write(p)
+
+        @st.cache
+        def convert_df(df):
+            return df.to_csv().encode('utf-8')
+
+
+        csv = convert_df(p)
+
+        st.download_button(
+           "Press to download tracking results",
+           csv,
+           "file.csv",
+           "tracked/csv",
+           key='download-csv'
+           )
+        
     with plot2:
         st.write("Filtered results")
 
         fig, ax2 = plt.subplots()
         ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
 
-        st.pyplot(fig)   
+        st.pyplot(fig)
+        
+        st.write('Filtering done.')
+        
+        st.write(p)
+
+        @st.cache
+        def convert_df(df):
+            return df.to_csv().encode('utf-8')
+
+
+        csv = convert_df(tracks_filtered)
+
+        st.download_button(
+           "Press to download tracking results",
+           csv,
+           "tracked_and_filtered.csv",
+           "text/csv",
+           key='download-csv'
+           )
 
 
 
