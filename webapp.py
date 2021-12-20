@@ -112,7 +112,7 @@ maxDisap = st.sidebar.select_slider(
 
 maxDist = st.sidebar.select_slider(
      'Set max distance threshold',
-     options=range(0,5000), key = "maxDist")
+     options=range(0,500), key = "maxDist")
 
 
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
