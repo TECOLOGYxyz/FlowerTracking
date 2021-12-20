@@ -196,7 +196,13 @@ if trackButton:
         
 
 if filterButton:
+    t = tracker(maxDisap, maxDist, runMean, "testWebapp.csv", frames, df1, False) # Initiate tracker
+    
+    for f in frames:
+        t.track(f)
+    
     p = t.return_tracks_webapp() 
+    #global p
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     s = sieve(p)
     d,polyhulls = s.run()
