@@ -182,7 +182,7 @@ if trackButton:
         csv = convert_df(p)
 
         st.download_button(
-           "Press to download tracking results",
+           "Press to download tracking result",
            csv,
            "file.csv",
            "text/csv",
