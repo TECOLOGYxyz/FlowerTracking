@@ -57,6 +57,7 @@ st.markdown(
 header = st.container()
 dataset = st.empty()
 plot1, plot2 = st.columns([6,6])
+plot3, plot4 = st.columns([6,6])
 results = st.container()
 
 
@@ -189,17 +190,17 @@ if trackButton:
            )
         
 if filterButton:
-    with plot2:
+    with plot4:
         st.write("Filtered results")
         
         s = sieve()
         d,polyhulls = s.run(p)
         tracks_filtered = p[p['objectID'].isin(d)]
        
-        fig2, ax2 = plt.subplots()
+        fig, ax2 = plt.subplots()
         ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
 
-        st.pyplot(fig2)
+        st.pyplot(fig)
     
 
 
