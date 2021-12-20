@@ -131,7 +131,7 @@ st.sidebar.write(f'Max distance: {maxDist}')
 st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
 
 trackButton = st.sidebar.button('TRACK')
-
+filterButton = st.sidebar.button('FILTER')
                     
 if trackButton:    
 
@@ -165,7 +165,13 @@ if trackButton:
         st.pyplot(fig)
         
 
-
+    if filterButton:
+            with plot2:
+                st.header("Filtered results")
+                
+                s = sieve(p)
+                d,polyhulls = s.run()
+                tracks_filtered = p[p['objectID'].isin(d)]
 
     with results:
         st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-color:#333;" /> """, unsafe_allow_html=True)
@@ -190,16 +196,10 @@ if trackButton:
            )
         
         
-filterButton = st.sidebar.button('FILTER')
 
 
-if filterButton:
-        with plot2:
-            st.header("Filtered results")
-            
-            s = sieve(p)
-            d,polyhulls = s.run()
-            tracks_filtered = p[p['objectID'].isin(d)]
+
+
     
     
     
