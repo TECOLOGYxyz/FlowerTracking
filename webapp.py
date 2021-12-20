@@ -214,7 +214,7 @@ if filterButton:
         st.pyplot(fig)
         
         
-        st.write(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
+        st.write('Tracking done.')
         
         st.write(p)
 
