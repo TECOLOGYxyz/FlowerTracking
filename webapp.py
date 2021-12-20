@@ -170,7 +170,7 @@ if trackButton:
 
 
     if filterButton:
-        st.write("Button works")
+        st.header("Button works")
         st.write(p)
         s = sieve(p)
         d,polyhulls = s.run()
