@@ -192,7 +192,7 @@ if trackButton:
            key='download-csv'
            )
         
-if filterButton and filterButton != None:
+if filterButton and (filterButton is not None):
     st.header("Button works")
     # s = sieve(p)
     # d,polyhulls = s.run()
