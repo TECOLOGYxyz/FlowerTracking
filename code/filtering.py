@@ -155,7 +155,6 @@ class sieve():
         	return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
 
         for i in list_of_lines:
-            #print("i", i)
             pointsA = list_of_lines[i]
             a = Point(pointsA[0][0], pointsA[0][1])
             b = Point(pointsA[1][0], pointsA[1][1])
@@ -198,7 +197,6 @@ class sieve():
            
     
     def filter_triangles_on_triangles(self, list_of_triangles):
-        #print("KFKNFNFKFN")
         triangles_to_remove = []
         
         for t in list_of_triangles:
@@ -266,16 +264,16 @@ class sieve():
                             polygons_to_remove.append(t)
                             polygons_to_remove.append(p)
                         else:
-                            if self.get_change(polygon_lengths[t], polygon_lengths[p]) < 30: # If difference is less than 10%, remove both
-                                print(f'Difference is less than 20% ({self.get_change(polygon_lengths[t], polygon_lengths[p])}). Removing {t} and {p}')
+                            if self.get_change(polygon_lengths[t], polygon_lengths[p]) < 40: # If difference is less than 10%, remove both
+                                print(f'Difference is less than 20% ({self.get_change(polygon_lengths[t], polygon_lengths[p])}). Removing {t} {polygon_lengths[t]} points  and {p} {polygon_lengths[p]} points')
                                 polygons_to_remove.append(t)
                                 polygons_to_remove.append(p)
                             else:                                
                                 if polygon_lengths[t] > polygon_lengths[p]: # If difference is more than 20%, remove the smallest
-                                    print(f'{polygon_lengths[t]} for {t} more than {polygon_lengths[p]} for {t}. Removing smallest ({p})')
+                                    print(f'{polygon_lengths[t]} for {t} more than {polygon_lengths[p]} for {p}. Removing smallest ({p}). ({self.get_change(polygon_lengths[t], polygon_lengths[p])})')
                                     polygons_to_remove.append(p)
                                 else:
-                                    print(f'{polygon_lengths[p]} for {p} more than {polygon_lengths[t]} for {t}. Removing smallest ({t})')
+                                    print(f'{polygon_lengths[p]} for {p} more than {polygon_lengths[t]} for {t}. Removing smallest ({t}). ({self.get_change(polygon_lengths[t], polygon_lengths[p])})')
                                     polygons_to_remove.append(t)
                                     
         print(f'Removing {len(set(polygons_to_remove))} polygons ovelapping with polygons')
@@ -289,7 +287,7 @@ class sieve():
 
         flines = self.filter_lines_on_lines(self.lines) # Remove overlapping lines
         flines = self.filter_lines_on_polygons(flines, self.triangles) # Remove lines overlapping with triangles
-        flines = self.filter_lines_on_polygons(flines, self.polyHulls) # Remove lines overlapping with triangles
+        flines = self.filter_lines_on_polygons(flines, self.polyHulls) # Remove lines overlapping with polygons
         
         ftriangles = self.filter_triangles_on_triangles(self.triangles) # Remove overlapping triangles
         ftriangles = self.filter_triangles_on_polygons(ftriangles, self.polyHulls) # Remove triangles overlapping with polygons hulls
@@ -299,9 +297,9 @@ class sieve():
         # ### Return the objectIDs that have made their way through the filter
         tracks_to_keep = []
         
-        if flines.keys():
-            for o in flines.keys():
-                tracks_to_keep.append(o)
+        # if flines.keys():
+        #     for o in flines.keys():
+        #         tracks_to_keep.append(o)
         
         if ftriangles.keys():
             for o in ftriangles.keys():
@@ -316,232 +314,4 @@ class sieve():
         return tracks_to_keep, self.polyHulls
         
     
-        
-        
-
-
-
-
-
-# fig, ax2 = plt.subplots(figsize=(15,10))
-# ax2.set_xlim(0, 6080)
-# ax2.set_ylim(0, 3420)
-
-# for h in hulls:
-#     print(h)
-#     t = hulls[h]
-#     print(t)
-    #h = np.array(h)
-    #ax2.scatter(h[::1,0], h[::1,1], zorder = -1, s = 40)
-    #ax2.fill(h[::1,0], h[::1,1], zorder = -1)
-
-
-
-
-# # Remove single points:
-    
-    
-
-# Check for overlapping lines
-## Remove both
-
-# Check for lines overlapping with triangles
-## Remove line
-
-# Check for lines overlapping with polygons (convex hulls)
-## Remove line
-
-
-# Check for triangles overlapping triangles
-## Remove both
-
-# Check for triangles overlapping polygons (convex hulls)
-## Remove triangles
-
-# Check for polygons overlapping polygons
-## If difference < 5%
-### remove smallest
-## If difference > 5%
-### Remove both
-
-
-#What is left?
-
-
-
-
-#print(polygons, br)
-
-#hulls = convex_hull(polygons)
-
-
-# for h in hulls:
-#     #print(h)
-#     ax1.scatter(h[::1,0], h[::1,1], zorder = -1, s = 2)
-#     ax1.fill(h[::1,0], h[::1,1], zorder = -1)
-    
-    
-
-#c = cart_product(hulls)
-
-#print(h, br)
-#print(c, br)
-
-
-#t = [[Polygon(np.array(p1)).intersects(Polygon(np.array(p2)))] for (p1,p2) in c]
-#print(t)
-
-
-
-# fig, res = plt.subplots(nrows = 1, ncols = 2, figsize = (12.2, 3.4))
-
-# res[0].set_xlim([0, 6080])
-# res[0].set_ylim([0, 3420])
-
-# res[1].set_xlim([0, 6080])
-# res[1].set_ylim([0, 3420])
-
-
-# for h in hulls:
-#     res[0].scatter(h[::1,0], h[::1,1], zorder = 1, s = 2)
-#     res[0].fill(h[::1,0], h[::1,1], zorder = -1)
-    
-
-# for p in polygons:
-#     print(p)
-#     x = [i[0] for i in p]
-#     y = [i[1] for i in p]
-    
-#     res[1].scatter(x, y, s = 1, zorder = 1)
-
-
-
-
-# #tracks.objectID.astype('category')
-# tracks['objectID'] = tracks['objectID'].astype('category')
-# print(tracks['objectID'].dtypes)
-# print(tracks['objectID'])
-# colors = {'0':'red', '1':'blue', '2':'green', '3':'black', '4':'brown', '5':'yellow'}
-
-#print(tracks)
-#tracks.plot.scatter(x = 'x_c', y = 'y_c', c=tracks['objectID'].apply(lambda x: colors[str(x)]))
-
-
-# #plt.plot(points[:,0], points[:,1], 'o')
-# #for simplex in hull.simplices:
-# #    plt.plot(points[simplex, 0], points[simplex, 1], 'k-')
-
-# #print(points)
-# #print(hull.simplices)
-
-
-# # plt.plot(points[hull.vertices,0], points[hull.vertices,1], 'r--', lw=2)
-# # plt.plot(points[hull.vertices[0],0], points[hull.vertices[0],1], 'ro')
-
-# # plt.plot(points2[hull2.vertices,0], points2[hull2.vertices,1], 'r--', lw=2)
-# # plt.plot(points2[hull2.vertices[0],0], points2[hull2.vertices[0],1], 'ro')
-
-
-# # plt.show()
-
-# #(hull.vertices)
-
-# # x = []
-# # y = []
-# # x2 = []
-# # y2 = []
-
-
-# # for v in hull.vertices:
-# #     #print(points[v][0])
-# #     x.append(points[v][0])
-# #     y.append(points[v][1])
-  
-    
-# # for v in hull2.vertices:
-# #     #print(points[v][0])
-# #     x2.append(points2[v][0])
-# #     y2.append(points2[v][1])
-  
-
-# #p1 = Polygon(points)
-# #p2 = Polygon(points2)
-
-# #print(p1.intersects(p2))
-
-# plt.figure(figsize=(20, 20))
-# plt.axis('equal')
-
-# plt.scatter(points[::1,0], points[::1,1], s = 90)
-# plt.fill(x,y)
-
-
-# plt.scatter(points2[::1,0], points2[::1,1], s = 90)
-# plt.fill(x2,y2)
-
-# plt.show()
-
-# #print(points2[::1,0])
-
-
-
-# p1 = [[[1,2], [2,1], [3,4], [3,2]],[[3,1], [2,4], [3,5]],[[7,4], [5,4], [8,9], [7.5,7.5]],[[5,6], [7,5], [11,7]]]
-# #p1 = [[['a'], ['b']], [['c'], ['d']], [['e'], ['f']]]
-# #p2 = [[[7,4], [5,4], [8,9]],[[5,6], [7,5], [11,7]]]
-
-# #t = [[p1, p2] for (p1,p2) in product(p1, p2)]
-
-# #print(t)
-# #print(np.array(t[0][0]))
-# #print(Polygon(np.array(t[0][0])).intersects(Polygon(np.array(t[0][1]))))
-
-# #print([[p1] for p1 in product(p1, repeat = 2)])
-
-# #t = [[Polygon(np.array(p1)).intersects(Polygon(np.array(p2)))] for (p1,p2) in product(p1, p1)]
-# #print(t)
-
-
-
-
-
-                
-# #print(cart_product(p1))
-
-
-
-
-# fig = plt.figure()
-
-# ax1 = fig.add_subplot(211)
-
-
-
-
-
-# #print(br,convex_hull(p1))
-
-
-
-# ax2 = fig.add_subplot(212)
-
-# h = convex_hull(p1)
-
-# for p in p1:
-#     #print(p)
-#     x = [i[0] for i in p]
-#     y = [i[1] for i in p]
-    
-#     ax2.scatter(x, y, s = 50, zorder = 1)
-
-# for c in h:
-#     ax2.fill(c[::1,0], c[::1,1], zorder = -1)
-
-# cart_product(h)
-
-# #t = [[Polygon(np.array(p1)).intersects(Polygon(np.array(p2)))] for (p1,p2) in cart_product(h)]
-
-
-# plt.show()
-
-
 
