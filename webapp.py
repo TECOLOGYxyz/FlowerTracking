@@ -166,10 +166,11 @@ if trackButton:
         st.pyplot(fig)
         
         
-        filterkButton = st.sidebar.button('FILTER')
+        
+filterButton = st.sidebar.button('FILTER')
 
-if filterkButton:   
-    
+
+if filterButton:
     s = sieve(p)
     d,polyhulls = s.run()
     tracks_filtered = p[p['objectID'].isin(d)]
