@@ -144,7 +144,7 @@ if trackButton:
     for f in frames:
         t.track(f)
     endtime = time.time()  
-   
+    global p
     p = t.return_tracks_webapp() 
     global p
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
