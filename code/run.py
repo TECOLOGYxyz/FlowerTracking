@@ -61,6 +61,20 @@ for i in list_of_parameters:
 # =============================================================================
 
 
+#### PATH TO TRACKS ####
+tracks = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
+#print(tracks)
+
+
+#### NORMALIZE X AND Y ####
+#tracks['x_c'] = tracks['x_c']/6080
+#tracks['y_c'] = tracks['y_c']/3420
+
+
+fig, ax0 = plt.subplots(figsize=(15,10))
+ax0.set_xlim(0, 6080)
+ax0.set_ylim(0, 3420)
+scat0 = ax0.scatter(tracks['x_c'], tracks['y_c'], c = tracks['objectID'], s = 40)
 
 
 
