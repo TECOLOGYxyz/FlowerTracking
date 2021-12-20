@@ -144,9 +144,9 @@ if trackButton:
     for f in frames:
         t.track(f)
     endtime = time.time()  
-    global p
+    #global p
     p = t.return_tracks_webapp() 
-    global p
+    #global p
     p = pd.DataFrame.from_records(p, columns=['frame', 'x_c', 'y_c', 'objectID']) 
     
     dataset.empty()
@@ -195,7 +195,7 @@ if trackButton:
 if filterButton:
     with plot4:
         st.write("Filtered results")
-        st.write()
+        st.write(p)
         
         s = sieve(p)
         d,polyhulls = s.run()
