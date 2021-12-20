@@ -7,6 +7,7 @@ Created on Tue Dec 14 12:50:10 2021
 
 import pandas as pd
 from track import tracker
+from filtering import sieve
 import time
 
 # ===================== Run tracking on several combinations of parameters ====
@@ -58,3 +59,34 @@ for i in list_of_parameters:
     print(f'maxDis: {i[0]}, runMean: {i[1]} - Number of tracks found: {len(tracks.objectID.unique())}')
 
 # =============================================================================
+
+
+
+
+
+### FILTER ###
+
+s = sieve(tracks)
+
+d,p = s.run()
+
+tracks_filtered = tracks[tracks['objectID'].isin(d)]
+tracks_filtered.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/filtered4_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
+
+
+fig, ax1 = plt.subplots(figsize=(15,10))
+ax1.set_xlim(0, 6080)
+ax1.set_ylim(0, 3420)
+
+scat1 = ax1.scatter(tracks_filtered['x_c'], tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 40)
+
+print(p)
+
+# for h in p:
+#     print(p[h])
+    
+#     #print(h)
+#     ax1.scatter(p[h][::1,0], p[h][::1,1], zorder = -1, s = 2)
+#     # ax1.fill(h[::1,0], h[::1,1], zorder = -1)
+
+hulls = [[[5,2],[1,3],[8,4]],[[9,4],[4,6],[10,20]] ]
