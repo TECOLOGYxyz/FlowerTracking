@@ -35,8 +35,8 @@ TO-DO
 #### FUNCTIONS ####
 
 class sieve():
-    def __init__(self, tracks):
-        self.tracks = tracks
+    def __init__(self):
+        pass
         
         
     def gen(self):
@@ -273,7 +273,7 @@ class sieve():
         return list_of_polygons
 
 
-    def run(self):
+    def run(self, tracks):
         self.separate(self.tracks)
         points, lines, triangles, polygons, polyLengths = self.separate(self.tracks)
 
