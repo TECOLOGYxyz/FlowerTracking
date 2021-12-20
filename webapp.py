@@ -134,7 +134,7 @@ st.sidebar.markdown("""<hr style="height:3px;border:none;color:#333;background-c
 trackButton = st.sidebar.button('TRACK')
 filterButton = st.sidebar.button('FILTER')
                
-p = 0
+#p = 0
     
 if trackButton:    
 
@@ -168,6 +168,24 @@ if trackButton:
         ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
 
         st.pyplot(fig)
+        
+        
+        
+        
+        
+        if filterButton:
+            s = sieve(p)
+            d,polyhulls = s.run()
+            tracks_filtered = p[p['objectID'].isin(d)]
+            
+            with plot4:
+                st.write("Filtered results")
+                st.write(p)
+
+                fig, ax2 = plt.subplots()
+                ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
+
+                st.pyplot(fig)
                   
 
     with results:
@@ -192,19 +210,7 @@ if trackButton:
            key='download-csv'
            )
         
-if filterButton:
-    with plot4:
-        st.write("Filtered results")
-        st.write(p)
-        
-        s = sieve(p)
-        d,polyhulls = s.run()
-        tracks_filtered = p[p['objectID'].isin(d)]
-       
-        fig, ax2 = plt.subplots()
-        ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
 
-        st.pyplot(fig)
     
 
 
