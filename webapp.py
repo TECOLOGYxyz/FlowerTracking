@@ -193,8 +193,8 @@ if filterButton:
     with plot4:
         st.write("Filtered results")
         
-        s = sieve()
-        d,polyhulls = s.run(p)
+        s = sieve(p)
+        d,polyhulls = s.run()
         tracks_filtered = p[p['objectID'].isin(d)]
        
         fig, ax2 = plt.subplots()
