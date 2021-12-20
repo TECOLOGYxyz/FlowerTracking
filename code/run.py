@@ -62,9 +62,9 @@ import time
 
 
 # #### PATH TO TRACKS ####
-tracks = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
+#tracks = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
 # #print(tracks)
-
+tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-13_3\parameterTest_NARS-13_maxDisap_0_runMean_0_maxDist_100.csv')
 
 # #### NORMALIZE X AND Y ####
 # #tracks['x_c'] = tracks['x_c']/6080
@@ -82,8 +82,8 @@ tracks = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3\parameterTest_NYA
 
 s = sieve(tracks)
 
-d,p = s.run()
-
+#d,p = s.run()
+s.run()
 # tracks_filtered = tracks[tracks['objectID'].isin(d)]
 # tracks_filtered.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/filtered4_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
 
