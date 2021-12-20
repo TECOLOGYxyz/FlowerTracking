@@ -56,7 +56,7 @@ st.markdown(
 
 header = st.container()
 dataset = st.empty()
-plot1, plot2, plot3 = st.columns([6,6,6])
+plot1, plot2 = st.columns([6,6])
 results = st.container()
 
 
@@ -188,18 +188,18 @@ if trackButton:
            key='download-csv'
            )
         
-    if filterButton:
-        with plot3:
-            st.header("Filtered results")
-            
-            s = sieve()
-            d,polyhulls = s.run(p)
-            tracks_filtered = p[p['objectID'].isin(d)]
-           
-            fig2, ax2 = plt.subplots()
-            ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
+if filterButton:
+    with plot2:
+        st.write("Filtered results")
+        
+        s = sieve()
+        d,polyhulls = s.run(p)
+        tracks_filtered = p[p['objectID'].isin(d)]
+       
+        fig2, ax2 = plt.subplots()
+        ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
 
-            st.pyplot(fig2)
+        st.pyplot(fig2)
     
 
 
