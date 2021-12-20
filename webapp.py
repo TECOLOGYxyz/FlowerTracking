@@ -206,7 +206,7 @@ if filterButton:
     
     with plot1:
         
-        st.write("Tracking results")
+        st.header("Tracking results")
     
         fig, ax = plt.subplots()
         ax.scatter(x = p['x_c'], y = p['y_c'], c = p['objectID'], s = 15)
@@ -231,7 +231,7 @@ if filterButton:
            )
         
     with plot2:
-        st.write("Filtered results")
+        st.header("Filtered results")
 
         fig, ax2 = plt.subplots()
         ax2.scatter(x = tracks_filtered['x_c'], y = tracks_filtered['y_c'], c = tracks_filtered['objectID'], s = 15)
