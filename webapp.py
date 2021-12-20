@@ -192,8 +192,9 @@ if trackButton:
            key='download-csv'
            )
         
-if filterButton and (filterButton is not None):
-    st.header("Button works")
+if (filterButton is not None):
+    if filterButton:
+        st.header("Button works")
     # s = sieve(p)
     # d,polyhulls = s.run()
     # tracks_filtered = p[p['objectID'].isin(d)]
