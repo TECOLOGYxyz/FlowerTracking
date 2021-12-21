@@ -117,9 +117,6 @@ class sieve():
                     print(f'Adding object {k} with points {polygons[k]} to lines')    
                     self.lines[k] = polygons[k] # Add the points to the line dictionary
                 
-                
-        
-            
         
 
     # def cart_product(listOfPolygons):
@@ -150,7 +147,7 @@ class sieve():
         		self.x = x
         		self.y = y
         
-        def ccw(A,B,C):
+        def ccw(A,B,C): # Look for intersection between lines
         	return (C.y-A.y)*(B.x-A.x) > (B.y-A.y)*(C.x-A.x)
         
         def intersect(A,B,C,D):
@@ -249,13 +246,8 @@ class sieve():
     def filter_polygons_on_polygons(self, list_of_polygons, polygon_lengths):
         polygons_to_remove = []
         print(f'Polygon lengths: {br}{polygon_lengths}')
-        # for p in list_of_polygons:
-        #     points = list_of_polygons[p]
-        #     pol = Polygon(points)
-        #     polygons[p] = pol
-        # print(polygons)
 
-        def bla(two_polygons):
+        def filter_two_polygons(two_polygons):
             if polygon_lengths[two_polygons[0]] == polygon_lengths[two_polygons[1]]: # If polygons contain the same number of points, remove both
                 polygons_to_remove.extend(two_polygons)
                 
@@ -311,58 +303,17 @@ class sieve():
                         print(f'Keep these: {polygonKeys[:2]}')
                         
                         polygonKeys = polygonKeys[:2]
-                        bla(polygonKeys)
+                        filter_two_polygons(polygonKeys)
                     if len(polygonKeys) == 2:
                         print("Length is two.", polygonKeys)
-                        bla(polygonKeys)
+                        filter_two_polygons(polygonKeys)
                 else:
                     overlaps = {}
+                    
         print(f'Removing {len(set(polygons_to_remove))} polygons ovelapping with polygons')
         list_of_polygons = self.remove_from_list(list_of_polygons, set(polygons_to_remove))    
         return list_of_polygons
                         
-                # for poly1, poly2 in  itertools.combinations(list_of_polygons, 2):
-                #     poly1 = Polygon(poly1)
-                #     poly2 = Polygon(poly2)
-                #     if poly1.intersects(poly2):
-                #           polygon_list_B.append(poly1)
-                #           polygon_list_B.append(poly2)
-                #  result = [geom for geom in polygon_list_A if geom not in polygon_list_B]
-        
-        
-        # for t in list_of_polygons:
-        #     #print("t", t)
-        #     pointsA = list_of_polygons[t]
-        #     polygonA = Polygon(pointsA)
-            
-        #     for p in list_of_polygons: # Replace with itertools.product
-        #         pointsB = list_of_polygons[p]
-        #         if not pointsA==pointsB:
-        #             #print("r", p)
-                    
-        #             polygonB = Polygon(pointsB)
-                    
-        #             if polygonA.intersects(polygonB):
-        #                 if polygon_lengths[t] == polygon_lengths[p]: # If polygons contain the same number of points, remove both
-        #                     polygons_to_remove.append(t)
-        #                     polygons_to_remove.append(p)
-        #                 else:
-        #                     if self.get_change(polygon_lengths[t], polygon_lengths[p]) < 40: # If difference is less than 10%, remove both
-        #                         print(f'Difference is less than 20% ({self.get_change(polygon_lengths[t], polygon_lengths[p])}). Removing {t} {polygon_lengths[t]} points  and {p} {polygon_lengths[p]} points')
-        #                         polygons_to_remove.append(t)
-        #                         polygons_to_remove.append(p)
-        #                     else:                                
-        #                         if polygon_lengths[t] > polygon_lengths[p]: # If difference is more than 20%, remove the smallest
-        #                             print(f'{polygon_lengths[t]} for {t} more than {polygon_lengths[p]} for {p}. Removing smallest ({p}). ({self.get_change(polygon_lengths[t], polygon_lengths[p])})')
-        #                             polygons_to_remove.append(p)
-        #                         else:
-        #                             print(f'{polygon_lengths[p]} for {p} more than {polygon_lengths[t]} for {t}. Removing smallest ({t}). ({self.get_change(polygon_lengths[t], polygon_lengths[p])})')
-        #                             polygons_to_remove.append(t)
-                                    
-        # print(f'Removing {len(set(polygons_to_remove))} polygons ovelapping with polygons')
-        # list_of_polygons = self.remove_from_list(list_of_polygons, set(polygons_to_remove))    
-        # return list_of_polygons
-
 
     def run(self):
         self.separate()
@@ -395,6 +346,3 @@ class sieve():
         print(f'Tracks to keep: {br}{tracks_to_keep}')
         
         return tracks_to_keep, self.polyHulls
-        
-    
-
