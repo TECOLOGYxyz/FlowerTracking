@@ -326,6 +326,8 @@ class sieve():
         ftriangles = self.filter_triangles_on_triangles(self.triangles) # Remove overlapping triangles
         ftriangles = self.filter_triangles_on_polygons(ftriangles, self.polyHulls) # Remove triangles overlapping with polygons hulls
         
+        allPolyHulls = self.polyHulls
+        
         fpolygons = self.filter_polygons_on_polygons(self.polyHulls, self.polyLengths) # Filter polygons overlapping with polygons
         
         # ### Return the objectIDs that have made their way through the filter
@@ -344,5 +346,5 @@ class sieve():
                 tracks_to_keep.append(o)
         
         print(f'Tracks to keep: {br}{tracks_to_keep}')
-        
-        return tracks_to_keep, self.polyHulls
+        print("All poly hulls: ", allPolyHulls)
+        return tracks_to_keep, self.polyHulls, allPolyHulls
