@@ -8,6 +8,8 @@ Created on Tue Dec 14 12:50:10 2021
 import pandas as pd
 from track import tracker
 from filtering import sieve
+
+
 import time
 
 # ===================== Run tracking on several combinations of parameters ====
@@ -64,7 +66,7 @@ import time
 # #### PATH TO TRACKS ####
 #tracks = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv')
 # #print(tracks)
-tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv')
+tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-13_3\parameterTest_NARS-13_maxDisap_10_runMean_10_maxDist_300.csv')
 
 # #### NORMALIZE X AND Y ####
 # #tracks['x_c'] = tracks['x_c']/6080
@@ -87,7 +89,7 @@ d,p = s.run()
 print(p)
 
 tracks_filtered = tracks[tracks['objectID'].isin(d)]
-tracks_filtered.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/filtered16_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv')
+tracks_filtered.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/filtered_NARS-13_maxDisap_10_runMean_10_maxDist_300.csv')
 
 
 # fig, ax1 = plt.subplots(figsize=(15,10))
