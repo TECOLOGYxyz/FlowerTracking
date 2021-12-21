@@ -50,7 +50,7 @@ nars13 = nars13 %>%
 
 
 
-nyaa04 = read.csv("../../data/annotations/2020_05_23_NorwayAnnotations_Nyaa-04_IndividualAnnotations_FRCNN.csv", header = F)
+nyaa04 = read.csv("../../data/annotations/2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv", header = T)
 
 colnames(nyaa04) = c("FileName", "x_min", "y_min", "x_max", "y_max", "Class")
 
@@ -157,18 +157,6 @@ nyaa04 %>%
 ```
 
 
-```{r}
-tracksThul01 = read.csv('../../trackResults4.csv',stringsAsFactors = FALSE)
-
-tracksThul01$x_c = as.numeric(tracksThul01$x_C)
-
-tracksThul01 %>% 
-  ggplot() +
-  geom_point(aes(x = x_c, y = y_c, color = as.factor(objectID))) + 
-  xlim(0,6080) +
-  ylim(0,3420)
-```
-
 
 ```{r}
 
@@ -200,8 +188,8 @@ all = bind_rows(thul01_meta[,c("flower_start","flower_length", "CameraID")], nar
 
 all %>% 
 ggplot()+
-  geom_point(aes(x = flower_start, y = flower_length, colour = CameraID)) +
-geom_smooth(aes(x = flower_start, y = flower_length), method=lm)
+  geom_point(aes(x = flower_start, y = flower_length, colour = CameraID))# +
+#geom_smooth(aes(x = flower_start, y = flower_length), method=lm)
  
 t.test(nyaa04_meta$flower_length, nars13_meta$flower_length)
 
@@ -214,15 +202,6 @@ ggplot()+
 ```
 
 
-```{r}
-d = read.csv("U:/BITCue/Projekter/TrackingFlowers/code/7temptest_eval.csv")
-
-
-d %>% 
-  ggplot() +
-  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
-  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
-```
 
 
 ```{r}
@@ -291,14 +270,14 @@ cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTes
 d2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_THUL-01_Evaluate.csv")
 
 
-d2 %>% 
+THUL01_p1 = d2 %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
   ggtitle("THUL-01 Parameter combination") +
   facet_wrap(vars(as.factor(maxDist)))
 
 
-d2 %>% 
+THUL01_p2 = d2 %>% 
   arrange(mm, ascending = T) %>% 
   filter(mm == 0) %>% 
   ggplot() +
@@ -307,6 +286,11 @@ d2 %>%
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
 
+THUL01_p1
+THUL01_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/THUL-01_AllCombinations.png', THUL01_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/THUL-01_AllZero.png', THUL01_p2)
 ```
 ```{r}
 # NYAA-04 gt:
@@ -383,32 +367,38 @@ cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTes
 ## NARS-13
 
 ```{r}
-d3 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NARS-04_Evaluate.csv")
+d4 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NARS-13_Evaluate.csv")
 
 
-d3 %>% 
+NARS13_p1 = d4 %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
-  ggtitle("NARS-04 Parameter combination") +
+  ggtitle("NARS-13 Parameter combination") +
   facet_wrap(vars(as.factor(maxDist))) +
   scale_color_gradient(low="blue", high="red")
 
 
-d3 %>% 
+NARS13_p2 = d4 %>% 
   arrange(mm, ascending = T) %>% 
   slice_head(n = 10) %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm)) + 
-  ggtitle("NARS-04 Ten lowest mismatches") +
+  ggtitle("NARS-13 Ten lowest mismatches") +
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+NARS13_p1
+NARS13_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-13_AllCombinations.png', NARS13_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-13_TenLowest.png', NARS13_p2)
 
 
 ```
 ```{r}
 # NYAA-04 gt:
-NARS04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv")
+NARS13_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
 
-length(unique(NARS04_gt$id_gt))
+length(unique(NARS13_gt$id_gt))
 
 ```
 
@@ -417,11 +407,11 @@ length(unique(NARS04_gt$id_gt))
 # All zero: 0, 0, 0, 85, 0.9506961, 31
 # Correct noo with minimum mm: 10, 500, 10, 20, 0.9883991, 32
 
-minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv")
+minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_0_runMean_0_maxDist_0.csv")
 
-allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_0.csv")
+allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_0_runMean_0_maxDist_0.csv")
 
-cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv")
+cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_10_runMean_10_maxDist_0.csv")
 
 ```
 
