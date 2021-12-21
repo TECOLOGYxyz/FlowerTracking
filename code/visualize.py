@@ -16,20 +16,41 @@ import pandas as pd
 
 #df = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
 #df = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_10_runMean_60_maxDist_300.csv')
-gt = pd.read_csv(r'../data\annotations\2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv')
+gt = pd.read_csv(r'../data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv')
 
-df2 = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv')
-df3 = pd.read_csv(r'../testResults/filtered16_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv')
+df2 = pd.read_csv(r'../testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_10_runMean_10_maxDist_300.csv')
+df3 = pd.read_csv(r'../testResults/filtered_NARS-13_maxDisap_10_runMean_10_maxDist_300.csv')
 
 #m = pd.merge(df, gt, on = ['filename', 'x_min', 'x_max', 'y_min', 'y_max'], how = 'inner')
 m2 = pd.merge(df2, gt, on = ['filename', 'x_min', 'x_max', 'y_min', 'y_max'], how = 'inner')
 m3 = pd.merge(df3, gt, on = ['filename', 'x_min', 'x_max', 'y_min', 'y_max'], how = 'inner')
 
 
-m2.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/NYAA04_Merged_m2.csv')
+#m2.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/NYAA04_Merged_m2_3.csv')
 
-m3.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/NYAA04_Merged.csv')
+#m3.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/NYAA04_Merged_m3_3.csv')
+#print(m3)
+#m4 = m2.loc[m2['id_gt'] == 'FLower_01']
 
+
+#m4 = m2.loc[m2['id_gt'] == 'Flower_10']
+
+# print(m4)
+# plt.plot(m4['x_c'], m4['y_c'], c = m4['objectID'], s = 5)
+# plt.show()
+
+
+# groups = m4.groupby('objectID')
+
+# # Plot
+# fig, ax = plt.subplots()
+# ax.margins(0.05) # Optional, just adds 5% padding to the autoscaling
+# ax.axis(xmin=0,xmax=6080, ymin=0, ymax=3420)
+# for name, group in groups:
+#     ax.plot(group.x_c, group.y_c, marker='o', linestyle='', ms=1, label=name)
+# ax.legend()
+
+# plt.show()
 
 #m4 = pd.merge(df4, gt, on = ['filename', 'x_min', 'x_max', 'y_min', 'y_max'], how = 'inner')
 
@@ -39,8 +60,8 @@ m3.to_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults/NYAA04_Merged.csv')
 plt.scatter(df2['x_c'], df2['y_c'], c = df2['objectID'], s = 5)
 plt.show()
 
-plt.scatter(df3['x_c'], df3['y_c'], c = df3['objectID'], s = 5)
-plt.show()
+# plt.scatter(df3['x_c'], df3['y_c'], c = df3['objectID'], s = 5)
+# plt.show()
 
 
 
@@ -62,7 +83,7 @@ for i,r in m2.iterrows():
     #print(most_common)
     
     if oid != most_common:
-        print(f'{oid} is not {most_common}')
+        #print(f'{oid} is not {most_common}')
         #print(type(oid))
         #print(type(most_common))
         colour.append(0)
@@ -71,7 +92,7 @@ for i,r in m2.iterrows():
         colour.append(1)
 
 m2['colour'] = colour
-print()
+#print()
 
 # fig, axa = plt.subplots(figsize=(15,10))
 # scata = axa.scatter(m2['frame'], m2['id_gt'], c = m2['colour'], s = 40)
@@ -113,17 +134,17 @@ for i,r in m3.iterrows():
         
 
 m3['colour'] = colour
-print(m3)
+#print(m3)
 
-plt.scatter(m2['frame'], m2['id_gt'], c = m2['colour'], s = 10)
-plt.show()
+# plt.scatter(m2['frame'], m2['id_gt'], c = m2['colour'], s = 10)
+# plt.show()
 
-plt.scatter(m3['frame'], m3['id_gt'], c = m3['colour'], s = 10)
-plt.show()
+# plt.scatter(m3['frame'], m3['id_gt'], c = m3['colour'], s = 10)
+# plt.show()
 
 
-plt.scatter(m3['frame'], m3['objectID'], c = m3['colour'], s = 10)
-plt.show()
+# plt.scatter(m3['frame'], m3['objectID'], c = m3['colour'], s = 10)
+# plt.show()
 
 
 #m3.to_csv("hello2.csv")
