@@ -31,7 +31,7 @@ header-includes:
 keywords: Tracking, flowering phenology, Arctic, 
 bibliography: ./library.bib
 csl: ./journal-of-ecology.csl
-abstract: ABSTRACT | Often simple variables will be used to describe the flowering phenology of a population of plants, e.g. onset or peak of flowering and to infer respones to climate change. Here we show that image-based monitoring of field plots at very high temporal resolution can return information on flowering phenology at the level of indiviuals. Further, we present an automatic flower tracking algorithm.
+abstract: ABSTRACT | Often simple variables will be used to describe the flowering phenology of a population of plants, e.g. onset or peak of flowering. Here we show that image-based monitoring of field plots at very high temporal resolution can return information on flowering phenology at the level of indiviuals. Further, we present a framework for automatically tracking, filtering, and visualizing flowers in time-lapse image series. We compare the results of automatic tracking with manual tracking. 
 ---
 
 ```{r eval = FALSE, echo=FALSE}
@@ -157,6 +157,14 @@ Setting **max disappeared** to 0 tracks objects based on the coordinates of the 
 
 
 ### Identifying optimal user parameters
+
+To estimate the optimal values for max_disappeared and max_distance, we analysed the ground truth tracks of the four series.
+
+To estimate the value for max_distance, we calculated the largest distance between any two points within any track for any flower in each of the four series. 
+
+The maximum number of frames a flower track was lost and subsequently reappeared were xxx. 
+
+
 
 To explore the effect of the user parameters and to identify the optimal combination of parameters for our case of tracking flowers, we followed a step wise approach. First, we ran the tracking algorithm on each of the four image series with every combination of the following settings (3.179 combinations):
 
