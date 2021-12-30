@@ -57,6 +57,17 @@ colnames(nyaa04) = c("FileName", "x_min", "y_min", "x_max", "y_max", "Class")
 nyaa04 = nyaa04 %>%
   mutate(FileName = str_extract(FileName, regex("[A-Z]{4,5}-\\d{0,3}_\\d{6}.JPG")))
 
+
+
+nars17 = read.csv("../../data/annotations/2021_12_30_NorwayAnnotations_NARS-17_IndividualAnnotations_FRCNN_Metrics.csv", header = T)
+
+colnames(nars17) = c("FileName", "x_min", "y_min", "x_max", "y_max", "Class")
+
+nars17 = nars17 %>%
+  mutate(FileName = str_extract(FileName, regex("[A-Z]{4,5}-\\d{0,3}_\\d{6}.JPG")))
+
+
+
 ```
 
 Import metadata for the 1-h subsets
@@ -110,24 +121,40 @@ meta_2019 = read.csv("../../data/annotations/DetectionPhenology_2019_Meta_Clean_
 
 
 nars13_meta = merge(nars13, meta_2019, by.x = "FileName")
-
 nars13_meta$time = nars13_meta$DOY + (nars13_meta$Hour/24)
-
 nars13_meta %>% 
+
 ggplot()+
   geom_point(aes(x = time, y = Class))
-  
-  
+
 nars13_meta = nars13_meta %>%
   group_by(Class) %>% 
   mutate(flower_start = min(time),
     flower_length = max(time) - min(time))
 
-
 nars13_meta %>% 
 ggplot()+
   geom_point(aes(x = flower_start, y = flower_length))
   
+
+
+
+nars17_meta = merge(nars17, meta_2019, by.x = "FileName")
+nars17_meta$time = nars17_meta$DOY + (nars17_meta$Hour/24)
+
+nars17_meta %>% 
+ggplot()+
+  geom_point(aes(x = time, y = Class))
+
+nars17_meta = nars17_meta %>%
+  group_by(Class) %>% 
+  mutate(flower_start = min(time),
+    flower_length = max(time) - min(time))
+
+nars17_meta %>% 
+ggplot()+
+  geom_point(aes(x = flower_start, y = flower_length))
+
 
 ```
 
@@ -153,6 +180,29 @@ nyaa04 %>%
   ylim(0,3420) + 
   theme(legend.position = "none")
 
+
+
+nars17$x_c = (nars17$x_min + nars17$x_max) / 2
+nars17$y_c = (nars17$y_min + nars17$y_max) / 2
+
+nars17 %>% 
+  ggplot() +
+  geom_jitter(aes(x = x_c, y = y_c, color = Class), size = 5) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  theme(legend.position = "none")
+
+
+
+nars13$x_c = (nars13$x_min + nars13$x_max) / 2
+nars13$y_c = (nars13$y_min + nars13$y_max) / 2
+
+nars13 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = Class), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  theme(legend.position = "none")
 
 ```
 
@@ -184,7 +234,7 @@ ggplot()+
 
 ```{r}
 
-all = bind_rows(thul01_meta[,c("flower_start","flower_length", "CameraID")], nars04_meta[,c("flower_start","flower_length", "CameraID")], nars13_meta[,c("flower_start","flower_length", "CameraID")], nyaa04_meta[,c("flower_start","flower_length", "CameraID")])
+all = bind_rows(thul01_meta[,c("flower_start","flower_length", "CameraID")], nars04_meta[,c("flower_start","flower_length", "CameraID")], nars13_meta[,c("flower_start","flower_length", "CameraID")], nyaa04_meta[,c("flower_start","flower_length", "CameraID")], nars17_meta[,c("flower_start","flower_length", "CameraID")])
 
 all %>% 
 ggplot()+
@@ -204,19 +254,6 @@ ggplot()+
 
 
 
-```{r}
-d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/code/8temptest_eval_THUL01.csv")
-
-
-d1 %>% 
-  ggplot() +
-  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
-  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
-
-```
-
-
-
 # parameterTest_3
 
 ## NYAA 04
@@ -225,14 +262,14 @@ d1 %>%
 d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NYAA-04_Evaluate.csv")
 
 
-d1 %>% 
+NYAA04_p1 = d1 %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
   ggtitle("NYAA-04 Parameter combination") +
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
 
-d1 %>% 
+NYAA04_p2 = d1 %>% 
   arrange(mm, ascending = T) %>% 
   slice_head(n = 10) %>% 
   ggplot() +
@@ -240,6 +277,12 @@ d1 %>%
   ggtitle("NYAA-04 Ten Lowest Mismatches") +
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
+
+NYAA04_p1
+NYAA04_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NYAA-04_AllCombinations.png', NYAA04_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NYAA-04_TenLowest.png', NYAA04_p2)
 
 ```
 ```{r}
@@ -322,7 +365,7 @@ cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTes
 d3 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NARS-04_Evaluate.csv")
 
 
-d3 %>% 
+NARS04_p1 = d3 %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
   ggtitle("NARS-04 Parameter combination") +
@@ -330,7 +373,7 @@ d3 %>%
   scale_color_gradient(low="blue", high="red")
 
 
-d3 %>% 
+NARS04_p2 = d3 %>% 
   arrange(mm, ascending = T) %>% 
   slice_head(n = 10) %>% 
   ggplot() +
@@ -339,6 +382,9 @@ d3 %>%
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
 
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-04_AllCombinations.png', NARS04_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-04_TenLowest.png', NARS04_p2)
 ```
 ```{r}
 # NYAA-04 gt:
@@ -394,6 +440,43 @@ ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-13_TenLowes
 
 
 ```
+
+
+
+
+```{r}
+d5 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NARS-17_Evaluate.csv")
+
+
+NARS17_p1 = d5 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NARS-13 Parameter combination") +
+  facet_wrap(vars(as.factor(maxDist))) +
+  scale_color_gradient(low="blue", high="red")
+
+
+NARS17_p2 = d5 %>% 
+  arrange(mm, ascending = T) %>% 
+  filter(mm == 0) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm)) + 
+  ggtitle("THUL-01 All zero mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+NARS17_p1
+NARS17_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-17_AllCombinations.png', NARS17_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-17_TenLowest.png', NARS17_p2)
+
+
+```
+
+
+
+
+
 ```{r}
 # NYAA-04 gt:
 NARS13_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
