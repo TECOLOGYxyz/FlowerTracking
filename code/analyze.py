@@ -15,7 +15,8 @@ import pandas as pd
 import numpy as np
 
 # Input ground truth annotations
-df = pd.read_csv(r"data\annotations\2020_05_23_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv")
+df = pd.read_csv(r"../data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
+
 
 #print(thul01)
 
@@ -33,7 +34,10 @@ def dist(a,b):
     d = np.linalg.norm(a-b)
     return d
 
-#print(dist)
+def ave(lst):
+    return sum(lst) / len(lst)
+
+
 
 df_grouped = df.groupby(['id_gt'])
 
@@ -57,10 +61,45 @@ for i, g in df_grouped:
 print(f'Largest dist found: {largestDist}')
 
 # THUL-01: 449.00334074481003
-# NYAA-04: 2307.41034495384
-# NARS-13: 782.0206199327483
+# NYAA-04: 632.9178461696273
+# NARS-13: 782.0206199327483 QC
 # NARS-04: 557.953851138246
+# NARS-17: 615.5536126122565
 
+
+# Largest distance between mean of track and each point
+largestDist = 0
+
+for i, g in df_grouped:
+    #print(g)
+    x_cs = []
+    y_cs = []
+    g_points = []
+    for i,l in g.iterrows():
+        x_cs.append(l['x_c'])
+        y_cs.append(l['y_c'])
+        g_points.append(np.array([l['x_c'], l['y_c']]))
+
+    mx = ave(x_cs)
+    my = ave(y_cs)
+    
+    m = np.array([mx, my]) # Mean of x and mean of y
+    for p1 in g_points:
+        d = dist(p1, m)
+        if d > largestDist:
+            print(f'{d} is larger than {largestDist}. Storing {d}')
+            print(f'Distance calculated between {p1} and {m}')
+            largestDist = d
+            
+            
+print(f'Largest dist found: {largestDist}')
+
+
+# THUL-01: 278.2451605832456
+# NYAA-04: 
+# NARS-13: 456.82260896011803
+# NARS-04: 
+# NARS-17: 376.3443382217583
     
 
 # Find the largest distance between two points in a track. This will help us set max_distance in the tracking algorithm.
