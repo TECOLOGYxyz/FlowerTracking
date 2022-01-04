@@ -277,17 +277,17 @@ class evaluator():
 #dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\submit_boxes_NewFormat_AllTestSeries_Sampled.csv", sep=",")
 #dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\2020_02_01_NorwayAnnotations_AllTestSeries_IndividualAnnotations_FRCNN_Metrics_copy.csv", sep=",")
 
-gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2021_12_30_NorwayAnnotations_NARS-17_IndividualAnnotations_FRCNN_Metrics.csv"
+gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv"
 #dt = r"../testResults/6testing_NYAA-04_maxDis_8_runMean_10.csv"
 #dt = r"../testResults\_parameterTest_NYAA-04_1\parameterTest_NYAA-04_maxDisap_30_runMean_30_maxDist_500.csv"
 #dt = r'../testResults\_parameterTest_NYAA-04_1\parameterTest_NYAA-04__maxDisap_30_runMean_30_maxDist_500.csv'
 
 
-path = r'../testResults\_parameterTest_NARS-17_3/'
+path = r'../testResults\tempTHUL01'
 files = [os.path.join(path,f) for f in os.listdir(path) if f.endswith('.csv')]
 print(files)
 
-results_filename = "../testResults/parameterTest_3_NARS-17_Evaluate.csv"
+results_filename = "../testResults/parameterTest_3_THUL-01_temp.csv"
 
 
 write_header(results_filename)
