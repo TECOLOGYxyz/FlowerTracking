@@ -15,17 +15,16 @@ import numpy as np
 from scipy.spatial import ConvexHull
 
 
-
 # Note, EPS_DISTANCE = 20 is a magic number and it needs to be
 # * smaller than the gap between any two islands
 # * large enough to cluster polygons in one island in same cluster
-EPS_DISTANCE = 100
+EPS_DISTANCE = 281 #281
 MIN_SAMPLE_POLYGONS = 1
 
 
 #tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_THUL-01_3\parameterTest_THUL-01_maxDisap_0_runMean_0_maxDist_0.csv')
-tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-13_3\parameterTest_NARS-13_maxDisap_10_runMean_10_maxDist_400.csv')
-gt = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv')
+tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv')
+gt = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv')
 
 
 # tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv')
