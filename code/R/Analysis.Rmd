@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Import ground truth tracked data
 
 ```{r}
-thul01 = read.csv("../../data/annotations/2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN.csv", header = F)
+thul01 = read.csv("../../data/annotations/2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv", header = T)
 
 colnames(thul01) = c("FileName", "x_min", "y_min", "x_max", "y_max", "Class")
 
@@ -204,6 +204,11 @@ nars13 %>%
   ylim(0,3420) + 
   theme(legend.position = "none")
 
+
+nars04$x_c = (nars04$x_min + nars04$x_max) / 2
+nars04$y_c = (nars04$y_min + nars04$y_max) / 2
+
+
 ```
 
 
@@ -258,7 +263,7 @@ ggplot()+
 
 ## NYAA 04
 
-```{r}
+```{r fig.height=4}
 d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NYAA-04_Evaluate.csv")
 
 
@@ -285,6 +290,11 @@ ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NYAA-04_AllCombi
 ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NYAA-04_TenLowest.png', NYAA04_p2)
 
 ```
+
+
+
+
+
 ```{r}
 # NYAA-04 gt:
 nyaa04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv")
@@ -297,7 +307,7 @@ length(unique(nyaa04_gt$id_gt))
 # All zero: 0,0,0,68,0.9614075,31
 # Correct noo with minimum mm:  70-160,800-1000,10,36,0.9795687,21
 
-minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_10_runMean_60_maxDist_300.csv")
+nyaa04minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_10_runMean_60_maxDist_300.csv")
 
 allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_0_runMean_0_maxDist_0.csv")
 
@@ -306,10 +316,31 @@ cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTes
 ```
 
 
+```{r fig.height=4}
+
+nyaa04minmm %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(objectID)), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("NYAA-04 Tracked (Minimum mm)") +
+  theme(legend.position = "none")
+
+
+
+nyaa04 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(Class)), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("NYAA-04 Ground Truth") +
+  theme(legend.position = "none")
+```
+
 
 ## THUL 01
 
-```{r}
+```{r fig.height=4}
 d2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_THUL-01_Evaluate.csv")
 
 
@@ -335,6 +366,7 @@ THUL01_p2
 ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/THUL-01_AllCombinations.png', THUL01_p1)
 ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/THUL-01_AllZero.png', THUL01_p2)
 ```
+
 ```{r}
 # NYAA-04 gt:
 thul01_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
@@ -355,13 +387,34 @@ cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTes
 
 ```
 
+```{r fig.height=4}
+
+cornoo %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(objectID)), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("THUL-01 Tracked") +
+  theme(legend.position = "none")
+
+
+
+thul01 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(id_gt)), size = 1, shape = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("THUL-01 Ground Truth") +
+  theme(legend.position = "none")
+```
 
 
 
 
 ## NARS-04
 
-```{r}
+```{r fig.height=4}
+
 d3 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NARS-04_Evaluate.csv")
 
 
@@ -381,13 +434,17 @@ NARS04_p2 = d3 %>%
   ggtitle("NARS-04 Ten lowest mismatches") +
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
+NARS04_p1
+NARS04_p2
 
-
-ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-04_AllCombinations.png', NARS04_p1)
-ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-04_TenLowest.png', NARS04_p2)
+#ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-04_AllCombinations.png', NARS04_p1)
+#ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-04_TenLowest.png', NARS04_p2)
 ```
+
+
+
 ```{r}
-# NYAA-04 gt:
+# NARS-04 gt:
 NARS04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv")
 
 length(unique(NARS04_gt$id_gt))
@@ -399,7 +456,7 @@ length(unique(NARS04_gt$id_gt))
 # All zero: 0, 0, 0, 85, 0.9506961, 31
 # Correct noo with minimum mm: 10, 500, 10, 20, 0.9883991, 32
 
-minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv")
+nars04minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv")
 
 allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_0_runMean_0_maxDist_0.csv")
 
@@ -407,6 +464,27 @@ cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTes
 
 ```
 
+
+```{r fig.height=4}
+
+nars04minmm %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(objectID)), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("NARS-04 Tracked") +
+  theme(legend.position = "none")
+
+
+
+nars04 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(Class)), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("NARS-04 Ground Truth") +
+  theme(legend.position = "none")
+```
 
 
 
@@ -473,12 +551,8 @@ ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-17_TenLowes
 
 ```
 
-
-
-
-
 ```{r}
-# NYAA-04 gt:
+# NARS-13 gt:
 NARS13_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
 
 length(unique(NARS13_gt$id_gt))
@@ -486,16 +560,40 @@ length(unique(NARS13_gt$id_gt))
 ```
 
 ```{r}
-# Minimum mm: 10, 500, 10, 20, 0.9883991, 32
-# All zero: 0, 0, 0, 85, 0.9506961, 31
-# Correct noo with minimum mm: 10, 500, 10, 20, 0.9883991, 32
+# Minimum mm: 10-20, 300-400, 10, 78, 0.9840393, 81+85+93+97
+# All zero: 0, 0, 0, 267, 0.9453653, 88
+# Correct noo with minimum mm: 10, 400, 10, 78, 0.9840393, 85
 
-minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_0_runMean_0_maxDist_0.csv")
+nars13minmm = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_0_runMean_0_maxDist_0.csv")
 
 allzero = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_0_runMean_0_maxDist_0.csv")
 
 cornoo = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_10_runMean_10_maxDist_0.csv")
 
+```
+
+```{r fig.height=4}
+
+nars13minmm %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(objectID)), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("NARS-13 Tracked (Minimum mm)") +
+  theme(legend.position = "none")
+
+
+
+nars13 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(Class)), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("NARS-13 Ground Truth") +
+  theme(legend.position = "none")
+
+
+length(unique(nars13$Class))
 ```
 
 
