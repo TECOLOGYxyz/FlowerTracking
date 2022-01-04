@@ -6,7 +6,7 @@ author:
 - Hjalte M. R. Mann
 - Alexandros Iosifidis
 - Toke T. Høye
-date: "december 16, 2021"
+date: "januar 04, 2022"
 output:
   word_document: default
   pdf_document:
@@ -31,7 +31,7 @@ header-includes:
 keywords: Tracking, flowering phenology, Arctic, 
 bibliography: ./library.bib
 csl: ./journal-of-ecology.csl
-abstract: ABSTRACT | Often simple variables will be used to describe the flowering phenology of a population of plants, e.g. onset or peak of flowering and to infer respones to climate change. Here we show that image-based monitoring of field plots at very high temporal resolution can return information on flowering phenology at the level of indiviuals. Further, we present an automatic flower tracking algorithm.
+abstract: ABSTRACT | Often simple variables will be used to describe the flowering phenology of a population of plants, e.g. onset or peak of flowering. Here we show that image-based monitoring of field plots at very high temporal resolution can return information on flowering phenology at the level of indiviuals. Further, we present a framework for automatically tracking, filtering, and visualizing flowers in time-lapse image series. We compare the results of automatic tracking with manual tracking. 
 ---
 
 
@@ -39,45 +39,23 @@ abstract: ABSTRACT | Often simple variables will be used to describe the floweri
 
 # Introduction
 
-* **Flowering phenology**
-  + Importance of studying flowering phenology
-  + Responses to climate change
-  + Phenology of communities, populations, individuals
-  + Traditional methods for studying
-  + Onset of flowering says little about true distribution
-    - Even true distribition of community says little about flowering lengths of individuals and for example how it varies accross the season.
-  + Difficult to study at the individual level - requires high temporal resolution and keeping track of individuals
-* **Image based monitoring**
-  + Automatic, high temporal resolution, remote sites
-  + High temporal resolution means that we can annotate individuals and get phenology of the individual
-
-* **Tracking**
-  + Offline and online
-  + Online often coupled with CNNs that attempt to distinguish individuals from each other and recognize them through frames
-  
-  + Flowers appear very similar and 
-  + Many methods for offline tracking
-  + Hungarian/Kahlmann filter
-  ++ May not be applicable for objects that move weirdly, e.g. change directions between frames.
-  + Tracking based on distance.
-    - Good but has some problems
-    - Two points always associated disregarding absolute distance
-    - Tracks lost when objects disappear
-    - Objects close to each other may swap tracks
-
-* **Our solution**
-  + Here we demonstrate a framework for automatic flower tracking and evaluation of tracking performance
-  + Ground truth tracks
-
-\newpage
-
 For the individual plant, timing of flowering is of utmost importance. Precocious flowering means that the plant has failed to exploit the whole temporal window for accumulating resources before allocating energy to flowering. On the other hand, flowering too late limit the time for reproduction before the end of the growing season [@ELZINGA2007]. Further, flowering may need to be synchronous with pollinator activity for successful reproduction. Flowering phenology may plastically change as a response to abiotic cues in the environment, such as timing of spring, temperature, and photoperiod, but variation in flowering phenology is partly heritable and shaped by selective forces from the abiotic and biotic environment.
 
 Monitoring of flower phenology at high temporal resolution is laboursome and time-consuming, particularly in logistically challenging environment such as the Arctic. Consequently, simple variables are often used as proxies for the flowering phenology of a population, such as the date for onset of flowering, often derived from weekly observations of sample plots. Such proxies may fail to reveal dynamics in flowering phenology for example caused by changes in climate.
 
 Automatic image-based monitoring of flowering phenology can return phenology data for specific species at very high temporal resolution (Mann et al., in prep), but phenological responses at the individual level may be indiscernible regardless of the temporal resolution of the data at population level. For example, a shortening of individual flower longevity may not be directly obvious at the population level. Many research questions can only be explored on the basis of individual phenology data. For example, investigating the association between reproductive success and timing of flowering and flower longevity requires phenology data at the level of individuals. Similarly, such data is necessary for investigating whether flower visitation rates and/or reproductive success depends on the timing of flowering for the individual flower.
 
-Here, we show that information on phenology at the level of individuals can be derived from image-based monitoring of flower phenology. Further, we present and evaluate an automatic flower tracking algorithm. 
+Here, we show that information on phenology at the level of individuals can be derived from image-based monitoring of flower phenology. Further, we present and evaluate an automatic flower tracking and filtering algorithm. 
+
+
+Tracking individual flowers enables the possibility of assigning reproductive success to the individual, for example by observation of seed set. Thereby, it can be explored whether reproductive success is affected by timing and length of flowering. By simultaneously tracking flower visits, these could be assigned to the individual flower and visitation rates per flower could be calculated per flower and related to reproductive success. Further, any information of taxonomic grouping could refine this analyses.
+
+
+For complex scenes with many flowers in close vicinity to each other, we suggest a conservative filtering approach. The approach may remove correct tracks, but the tracks that remain will have a lower risk of tracking errors. The approach allows for more confidence in upscaling the method. E.g., when running the method on a large number of image series, it is preferable to extract individual high-confidence tracks from each series and ignore the remaining tracks.
+
+
+
+
 
 
 
@@ -135,7 +113,7 @@ Our algorithm tracks objects based on distances between centroids of bounding bo
 
 ## User parameters
 
-The tracking algorithm has a set of user adjusted parameters that can optimize tracking accuracy. The parameters are particularly relevant for optimal tracking of objects that are constrained to a specific area such as flowers. It is important to note, however, that the tracking algorithm can be used to track any objects. The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (real-time tracking frame per frame). The speed of the tracking algorithm depends on the computational power available as well as the number of objects that are being tracked.
+The tracking algorithm has a set of user adjusted parameters that can optimize tracking accuracy. The parameters are particularly relevant for optimal tracking of objects that are constrained to a specific area such as flowers. It is important to note, however, that the tracking algorithm can be used to track any objects. The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (real-time tracking frame per frame). The speed of the tracking algorithm depends on the computational power available as well as the number of objects that are being tracked. The method is fast, however. Tracking of a series containing 85 objects ran at 0.02 seconds per frame.
 
 
 As the wind shifts, the flower heads changes direction. This can happen instantaneously (i.e. between two consecutive frames). As they are constrained by their stalk, there is a limit to the distance they can move.
@@ -153,6 +131,16 @@ Setting **max disappeared** to 0 tracks objects based on the coordinates of the 
 
 ### Identifying optimal user parameters
 
+
+
+To estimate the optimal values for max_disappeared and max_distance, we analysed the ground truth tracks of the four series.
+
+To estimate the value for max_distance, we calculated the largest distance between any two points within any track for any flower in each of the four series. 
+
+The maximum number of frames a flower track was lost and subsequently reappeared were xxx. 
+
+
+
 To explore the effect of the user parameters and to identify the optimal combination of parameters for our case of tracking flowers, we followed a step wise approach. First, we ran the tracking algorithm on each of the four image series with every combination of the following settings (3.179 combinations):
 
 max_disappeared = [0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160]
@@ -163,6 +151,11 @@ max_distance = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 
 Note that max_distance set to zero. We identified the setting(s) that returned the lowest number of track mismatches and performed a second run with finer scaled settings for each series. Finally, we compare the tracking results between optimal settings and all parameters set to zero.
 
+
+
+
+
+Depending on the nature of the objects being tracked and the complexity of the scene, the user parameters can be estimated from visual examination of the tracking results. Often it may be preferable to manually annotate a subset of the objects in the image series and derive a set of user parameters from these results.
 
 
 # Evaluating tracking perfomance
@@ -182,11 +175,29 @@ Finally, we compare the number of tracks identified by the automatic tracking wi
 
 ## Filtering tracks
 
-Tracks that overlap have significant risk of errors. Overlapping tracks can be caused by a single flower that was erroneously assigned to several tracks, two flowers that were located sufficiently close to each other that there areas overlapped (e.g. when wind moves the flowers around), false positive detections close to a flower.Best case is two flowers that flowered in the same area but were separated by time. Here we will remove overlapping tracks to reduce the risk of error.
+When deploying the automatic tracking algorithm on naive data without ground truth tracks, it is not possible to manually filter for correct tracks. Therefore, we present a conservative filtering method that extracts the most trustworthy tracks from a scene. 
+
 
 We disregard single points that were not associated to a track. For tracks consisting of two points, we establish the straight line between the points. For tracks consisting of three points, we establish the triangle from the points. For tracks consisting of more than three points, we calculate the convex hull of all the points included in the track and derive the polygon from the vertices of the convex hull.
 
+
+We then apply the DBSCAN clustering algorithm on these track geometrics to remove tracks in areas with a high density of tracks as these have a high risk of tracking mismatches. Second, we filter overlapping tracks using the following approach.
+
+We could compare number of points in the overlapping tracks. If one is less than e.g. 10% of the other, we'll remove the small track. If more than 10% we'll remove both?
+
+
 We then check if any two lines intersect (for tracks with two points), if any lines intersect with any polygons, and if any polygons overlap with other polygons, and remove tracks that overlap.
+
+
+
+From our results we see that erroneous tracks often occur as small sections consisting of only few points within the main tracks.
+
+
+
+
+Therefore, tracks that overlap have significant risk of errors. Overlapping tracks can be caused by a single flower that was erroneously assigned to several tracks, two flowers that were located sufficiently close to each other that there areas overlapped (e.g. when wind moves the flowers around), false positive detections close to a flower. Best case is two flowers that flowered in the same area but were separated by time. Here we will remove overlapping tracks to reduce the risk of error.
+
+
 
 We evaluate the accuracy of the remaining tracks.
 
@@ -220,16 +231,41 @@ The code that supports the results in this paper will be made openly available a
 **NOTES**
 
 
-Online tracking:
-SORT
-DeepSORT
+* **Flowering phenology**
+  + Importance of studying flowering phenology
+  + Responses to climate change
+  + Phenology of communities, populations, individuals
+  + Traditional methods for studying
+  + Onset of flowering says little about true distribution
+    - Even true distribition of community says little about flowering lengths of individuals and for example how it varies accross the season.
+  + Difficult to study at the individual level - requires high temporal resolution and keeping track of individuals
+* **Image based monitoring**
+  + Automatic, high temporal resolution, remote sites
+  + High temporal resolution means that we can annotate individuals and get phenology of the individual
+
+* **Tracking**
+  + Offline and online
+  + Online often coupled with CNNs that attempt to distinguish individuals from each other and recognize them through frames
+  
+  + Flowers appear very similar and 
+  + Many methods for offline tracking
+  + Hungarian/Kahlmann filter
+  ++ May not be applicable for objects that move weirdly, e.g. change directions between frames.
+  + Tracking based on distance.
+    - Good but has some problems
+    - Two points always associated disregarding absolute distance
+    - Tracks lost when objects disappear
+    - Objects close to each other may swap tracks
+
+* **Our solution**
+  + Here we demonstrate a framework for automatic flower tracking and evaluation of tracking performance
+  + Ground truth tracks
+
+
 
 
 \newpage
 # References\
   
-
-
-
 
 
