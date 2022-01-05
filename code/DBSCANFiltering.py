@@ -168,7 +168,7 @@ class DBSCANsieve():
         dfSub.plot(ax=ax2, column = 'clusterID', marker = ".", markersize=0.2)
         
         
-        fig.savefig(f'BeforeAndAfterFiltering_eps_{self.eps_distance}.png', dpi=300)
+        fig.savefig(f'../testResults/BeforeAndAfterFiltering_eps_{self.eps_distance}.png', dpi=300)
 
     
         return 0
