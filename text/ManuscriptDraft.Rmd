@@ -183,25 +183,15 @@ Finally, we compare the number of tracks identified by the automatic tracking wi
 When deploying the automatic tracking algorithm on naive data without ground truth tracks, it is not possible to manually filter for correct tracks. Therefore, we present a conservative filtering method that extracts the most trustworthy tracks from a scene. 
 
 
-We disregard single points that were not associated to a track. For tracks consisting of two points, we establish the straight line between the points. For tracks consisting of three points, we establish the triangle from the points. For tracks consisting of more than three points, we calculate the convex hull of all the points included in the track and derive the polygon from the vertices of the convex hull.
+For tracks consisting of two points, we establish the straight line between the points. For tracks consisting of three points, we establish the triangle from the points. For tracks consisting of more than three points, we calculate the convex hull of all the points included in the track and derive the polygon from the vertices of the convex hull. Single points are kept.
 
 
-We then apply the DBSCAN clustering algorithm on these track geometrics to remove tracks in areas with a high density of tracks as these have a high risk of tracking mismatches. Second, we filter overlapping tracks using the following approach.
+We then apply the DBSCAN clustering algorithm on these track geometrics to remove tracks in areas with a high density of tracks as these have a high risk of tracking mismatches. The filtering is done in two steps. First, DBSCAN algorithm is run with a conservatively high value for the eps parameter, meaning that tracks in close vicinity to each other will be clustered together. Second, all tracks that were not assigned to a unique cluster are removed. Tracks that are spatially isolated remains.
+
+
+
 
 We could compare number of points in the overlapping tracks. If one is less than e.g. 10% of the other, we'll remove the small track. If more than 10% we'll remove both?
-
-
-We then check if any two lines intersect (for tracks with two points), if any lines intersect with any polygons, and if any polygons overlap with other polygons, and remove tracks that overlap.
-
-
-
-From our results we see that erroneous tracks often occur as small sections consisting of only few points within the main tracks.
-
-
-
-
-Therefore, tracks that overlap have significant risk of errors. Overlapping tracks can be caused by a single flower that was erroneously assigned to several tracks, two flowers that were located sufficiently close to each other that there areas overlapped (e.g. when wind moves the flowers around), false positive detections close to a flower. Best case is two flowers that flowered in the same area but were separated by time. Here we will remove overlapping tracks to reduce the risk of error.
-
 
 
 We evaluate the accuracy of the remaining tracks.
@@ -222,6 +212,9 @@ All three parameters make a difference.
 In cases where we are tracking perfectly with maxDisap = 0, setting it any value will not make a difference. Not quite right. Explore more...
 
 
+# Filtering
+
+Extracting tracks that are spatially isolated does not guarantee that the tracks are correct/without errors. However, as spatially isolated objects are easier to track, it increases confidence in the remaining tracks.
 
 
 # Acknowledgements
