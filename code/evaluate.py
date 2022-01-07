@@ -16,6 +16,15 @@ iou_threshold = 0.5
 
 verbose = False # Set to True if you want tracking process printed to screen and False if not
 
+
+
+"""
+To-do
+
+If basename does not include parameters, create other filename for result and output. So evaluate can be run on other files than the parameter tests.
+
+"""
+
 def write_header(results_filename):
     with open(results_filename, 'a') as resultFile: # Write the header of the output file
         header = f'maxDisap,maxDist,runMean,mm,mota,numberOfObjects{br}'
