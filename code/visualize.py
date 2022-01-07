@@ -18,7 +18,7 @@ import pandas as pd
 #df = pd.read_csv(r'../testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_10_runMean_60_maxDist_300.csv')
 gt = pd.read_csv(r'../data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv')
 
-df2 = pd.read_csv(r'../testResults/_parameterTest_NARS-13_3/parameterTest_NARS-13_maxDisap_10_runMean_10_maxDist_300.csv')
+df2 = pd.read_csv(r'../testResults/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv')
 df3 = pd.read_csv(r'../testResults/filtered_NARS-13_maxDisap_10_runMean_10_maxDist_300.csv')
 
 #m = pd.merge(df, gt, on = ['filename', 'x_min', 'x_max', 'y_min', 'y_max'], how = 'inner')
@@ -57,11 +57,10 @@ m3 = pd.merge(df3, gt, on = ['filename', 'x_min', 'x_max', 'y_min', 'y_max'], ho
 #plt.scatter(m['frame'], m['id_gt'], c = m['objectID'], s = 15)
 #plt.show()
 
-plt.scatter(df2['x_c'], df2['y_c'], c = df2['objectID'], s = 5)
-plt.show()
 
-# plt.scatter(df3['x_c'], df3['y_c'], c = df3['objectID'], s = 5)
-# plt.show()
+scatter = plt.scatter(df2['x_c'], df2['y_c'], c = df2['objectID'], s = 5)
+ax = scatter.axes
+ax.invert_yaxis()
 
 
 
