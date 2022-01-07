@@ -226,9 +226,6 @@ class tracker():
 
 
 
-
-
-
 # ===================== Run a single round of tracking ========================
 # t = tracker(4, 500, 5, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
 # starttime = time.time()
