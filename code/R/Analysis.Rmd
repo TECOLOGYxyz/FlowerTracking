@@ -529,7 +529,7 @@ d5 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_N
 NARS17_p1 = d5 %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
-  ggtitle("NARS-13 Parameter combination") +
+  ggtitle("NARS-17 Parameter combination") +
   facet_wrap(vars(as.factor(maxDist))) +
   scale_color_gradient(low="blue", high="red")
 
@@ -539,7 +539,7 @@ NARS17_p2 = d5 %>%
   filter(mm == 0) %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm)) + 
-  ggtitle("THUL-01 All zero mismatches") +
+  ggtitle("NARS-17 All zero mismatches") +
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
 NARS17_p1
@@ -596,4 +596,22 @@ nars13 %>%
 length(unique(nars13$Class))
 ```
 
+
+```{r}
+tempNARS04 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/tempNARS04.csv")
+
+
+tempNARS04 %>% 
+  filter(x_c > 1100 & x_c < 1110) %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, colour = as.factor(objectID))) + 
+  xlim(1100,1110) + 
+  ylim(2250,2320)
+
+
+tempNARS04 %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, colour = as.factor(objectID)), size = 0.5) 
+
+```
 
