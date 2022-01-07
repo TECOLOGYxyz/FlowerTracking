@@ -6,7 +6,7 @@ author:
 - Hjalte M. R. Mann
 - Alexandros Iosifidis
 - Toke T. Høye
-date: "januar 04, 2022"
+date: "januar 07, 2022"
 output:
   word_document: default
   pdf_document:
@@ -35,9 +35,18 @@ abstract: ABSTRACT | Often simple variables will be used to describe the floweri
 ---
 
 
+
+
+
+
+
+
 \newpage
 
 # Introduction
+
+
+
 
 For the individual plant, timing of flowering is of utmost importance. Precocious flowering means that the plant has failed to exploit the whole temporal window for accumulating resources before allocating energy to flowering. On the other hand, flowering too late limit the time for reproduction before the end of the growing season [@ELZINGA2007]. Further, flowering may need to be synchronous with pollinator activity for successful reproduction. Flowering phenology may plastically change as a response to abiotic cues in the environment, such as timing of spring, temperature, and photoperiod, but variation in flowering phenology is partly heritable and shaped by selective forces from the abiotic and biotic environment.
 
@@ -178,36 +187,44 @@ Finally, we compare the number of tracks identified by the automatic tracking wi
 When deploying the automatic tracking algorithm on naive data without ground truth tracks, it is not possible to manually filter for correct tracks. Therefore, we present a conservative filtering method that extracts the most trustworthy tracks from a scene. 
 
 
-We disregard single points that were not associated to a track. For tracks consisting of two points, we establish the straight line between the points. For tracks consisting of three points, we establish the triangle from the points. For tracks consisting of more than three points, we calculate the convex hull of all the points included in the track and derive the polygon from the vertices of the convex hull.
+For tracks consisting of two points, we establish the straight line between the points. For tracks consisting of three points, we establish the triangle from the points. For tracks consisting of more than three points, we calculate the convex hull of all the points included in the track and derive the polygon from the vertices of the convex hull. Single points are kept.
 
 
-We then apply the DBSCAN clustering algorithm on these track geometrics to remove tracks in areas with a high density of tracks as these have a high risk of tracking mismatches. Second, we filter overlapping tracks using the following approach.
+We then apply the DBSCAN clustering algorithm on these track geometrics to remove tracks in areas with a high density of tracks as these have a high risk of tracking mismatches. The filtering is done in two steps. First, DBSCAN algorithm is run with a conservatively high value for the eps parameter, meaning that tracks in close vicinity to each other will be clustered together. Second, all tracks that were not assigned to a unique cluster are removed. Tracks that are spatially isolated remains.
+
+
+
 
 We could compare number of points in the overlapping tracks. If one is less than e.g. 10% of the other, we'll remove the small track. If more than 10% we'll remove both?
 
 
-We then check if any two lines intersect (for tracks with two points), if any lines intersect with any polygons, and if any polygons overlap with other polygons, and remove tracks that overlap.
-
-
-
-From our results we see that erroneous tracks often occur as small sections consisting of only few points within the main tracks.
-
-
-
-
-Therefore, tracks that overlap have significant risk of errors. Overlapping tracks can be caused by a single flower that was erroneously assigned to several tracks, two flowers that were located sufficiently close to each other that there areas overlapped (e.g. when wind moves the flowers around), false positive detections close to a flower. Best case is two flowers that flowered in the same area but were separated by time. Here we will remove overlapping tracks to reduce the risk of error.
-
-
-
 We evaluate the accuracy of the remaining tracks.
+
+
+Here we set eps DBSCAN parameter to XXX. Although the value could be fine-tuned for improved results for each image series individually, this value returns good results overall. In a naive setting, a general value could be chosen of the value could be adjusted for each series based on visual examination of performance or testing on a subset of data.
 
 
 
 
 # Results
 
+
+
+
+
+**Table 1:** Bla bla...
+#
+![](../figures/table1.png){ width=100% }
+
+ shows the performance of the tracking algorithm.
+
+
+
+
 One way to plot?: Time on x-axis, gt id on y axis, tr id as colour. This will show mismatches.
 
+
+Our tracking algorithm consistently returns high MOTA scores. 
 
 
 # Discussion
@@ -217,6 +234,27 @@ All three parameters make a difference.
 In cases where we are tracking perfectly with maxDisap = 0, setting it any value will not make a difference. Not quite right. Explore more...
 
 
+Our method for filtering tracks using DBSCAN on track centroids ensures that all tracks are given the same weighting in the filtering since each track is represented by a single point. In some cases 
+e.g. if it is given a priori that an object will always appear in a minimum of two frames, then single point tracks can be filtered out. However, when such a priori knowledge is not accessible, a conservative approach as the one we present is preferable.
+
+
+Applying the technique on detection instead of manual annotations.
+Detections introduce false positives.
+Either manual or automatic quality control to remove these before tracking or after. 
+
+Our manually tracked data is ground truth, but for example when flowers periodically move out of the frame, this mimics false negatives. Similarly when one flower occludes another.
+
+Our tracking algorithm returned high MOTA scores even with all three parameters set to zero. 
+
+Automatically detecting flowers would likely introduce a degree of false negatives which would decrease the MOTA score if max disappeared is set to zero. Introducing a value for this parameter can deal with the problem of false negatives.
+
+
+
+
+
+# Filtering
+
+Extracting tracks that are spatially isolated does not guarantee that the tracks are correct/without errors. However, as spatially isolated objects are easier to track, it increases confidence in the remaining tracks.
 
 
 # Acknowledgements
@@ -263,6 +301,15 @@ The code that supports the results in this paper will be made openly available a
 
 
 
+Tracking Multiple Moving Objects Using Unscented Kalman
+Filtering Techniques:
+"Kalman filtering (KF) [5] is widely used to track moving objects, with which we
+can estimate the velocity and even acceleration of an object with the measurement of its locations.
+However, the accuracy of KF is dependent on the assumption of linear motion for any object to be
+tracked. If an object takes some abrupt turns, the nonlinear movement cannot be well handled by the
+KF framework (due to the linear movement assumption of the design of KF)."
+Kalman, R. E. A New Approach to Linear Filtering and Prediction Problems. Journal of Basic
+Engineering, 1960(82), pp. 35-45.
 
 \newpage
 # References\

@@ -40,6 +40,22 @@ knit('ManuscriptDraft.Rmd')
 rmarkdown::render("ManuscriptDraft.Rmd", output_file = "ManuscriptDraft.docx")
 system2("open","ManuscriptDraft.docx")
 ```
+
+```{r echo=FALSE}
+# Function for creating word comments in Rmarkdown
+# Use: This text contains a `r word_comment("This is the comment", "comment.")`.
+
+word_comment <- function(comment, highlight = "") {
+  if (isTRUE(knitr:::pandoc_to() == "docx")) {
+    paste0('[', comment, ']{.comment-start id="0" author="Hjalte M."',
+           'date="2020-01"}', highlight, '[]{.comment-end id="0"}')
+  }
+}
+```
+
+
+
+
 \newpage
 
 # Introduction
@@ -197,12 +213,32 @@ We could compare number of points in the overlapping tracks. If one is less than
 We evaluate the accuracy of the remaining tracks.
 
 
+We demonstrate our filtering approach for the image series for which our tracking algorithm did not produce perfect results.
+
+
+Here we set eps DBSCAN parameter to XXX. Although the value could be fine-tuned for improved results for each image series individually, this value returns good results overall. In a naive setting, a general value could be chosen of the value could be adjusted for each series based on visual examination of performance or testing on a subset of data.
+
 
 
 # Results
 
+
+
+
+
+**Table 1:** Bla bla...
+#
+![](../figures/table1.png){ width=100% }
+
+`r word_comment("Table 1 doesn't show excactly which combinations of parameters gives the result. This could be shown in suppl. e.g. with a network-like graph, but I am thinking it is overkill and this table is sufficient.", "Table 1")` shows the performance of the tracking algorithm.
+
+
+
+
 One way to plot?: Time on x-axis, gt id on y axis, tr id as colour. This will show mismatches.
 
+
+Our tracking algorithm consistently returns high MOTA scores. 
 
 
 # Discussion
@@ -210,6 +246,25 @@ One way to plot?: Time on x-axis, gt id on y axis, tr id as colour. This will sh
 All three parameters make a difference.
 
 In cases where we are tracking perfectly with maxDisap = 0, setting it any value will not make a difference. Not quite right. Explore more...
+
+
+Our method for filtering tracks using DBSCAN on track centroids ensures that all tracks are given the same weighting in the filtering since each track is represented by a single point. In some cases 
+e.g. if it is given a priori that an object will always appear in a minimum of two frames, then single point tracks can be filtered out. However, when such a priori knowledge is not accessible, a conservative approach as the one we present is preferable.
+
+
+Applying the technique on detection instead of manual annotations.
+Detections introduce false positives.
+Either manual or automatic quality control to remove these before tracking or after. 
+
+Our manually tracked data is ground truth, but for example when flowers periodically move out of the frame, this mimics false negatives. Similarly when one flower occludes another.
+
+Our tracking algorithm returned high MOTA scores even with all three parameters set to zero. 
+
+Automatically detecting flowers would likely introduce a degree of false negatives which would decrease the MOTA score if max disappeared is set to zero. Introducing a value for this parameter can deal with the problem of false negatives.
+
+
+We ran our tracking algorithm on 3xxx combination of the three parameters. Using the parameters increased the performance of the tracking substantially. Our steps in parameter values were crude, however, and it is very likely that finer steps in these values would identify combinations that produce even better results. Here we do not perform this analysis, however, as our goal is to show that the parameters can be used for optimizing tracking performance in general.
+
 
 
 # Filtering
