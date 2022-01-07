@@ -45,7 +45,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This repository accomplished the paper...
+This repository supports the paper X.
 
 The paper present a tracking algorithm developed for fast and accurate tracking of individual flowers in time-lapse image series.
 
