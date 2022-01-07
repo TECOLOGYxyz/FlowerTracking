@@ -14,6 +14,8 @@ br = "\n"
 
 iou_threshold = 0.5
 
+verbose = False # Set to True if you want tracking process printed to screen and False if not
+
 def write_header(results_filename):
     with open(results_filename, 'a') as resultFile: # Write the header of the output file
         header = f'maxDisap,maxDist,runMean,mm,mota,numberOfObjects{br}'
@@ -21,7 +23,7 @@ def write_header(results_filename):
 
 
 class evaluator():
-    def __init__(self, dt, gt, results_filename):
+    def __init__(self, dt, gt, results_filename, verbose):
         self.P = 0 # Positives (meaning total number of objects (e.g. flowers) across all images)
         self.CP = 0 # Correct positives (meaning total number of objects that were correclty detected)
         self.FP = 0 # False positives
@@ -36,33 +38,44 @@ class evaluator():
 
         self.dt_filename = dt
         basename = os.path.basename(self.dt_filename)
-        print(basename)
+            
         runMeanSearch = re.search('runMean_(.+?)_max', basename)
         maxDistSearch = re.search('maxDist_(.+?).csv', basename)
         maxDisapSearch = re.search('maxDisap_(.+?)_run', basename)
         
         if runMeanSearch:
             self.runMean = runMeanSearch.group(1)
-            print(f'runMean: {self.runMean}')
+
         if maxDistSearch:
             self.maxDist = maxDistSearch.group(1)
-            print(f'maxDist: {self.maxDist}')
+            
         if maxDisapSearch:
             self.maxDisap = maxDisapSearch.group(1)
-            print(f'maxDisap: {self.maxDisap}')
             
+        
+        if verbose:
+            print(f'Running on: {basename}')
+            print(f'runMean: {self.runMean}')
+            print(f'maxDist: {self.maxDist}')
+            print(f'maxDisap: {self.maxDisap}')
             
     def set_up_data(self):
         
-        dt = pd.read_csv(self.dt, sep=",", header = 0)
-        gt = pd.read_csv(self.gt, sep=",", header = 0)
+        if not isinstance(self.dt, pd.DataFrame):
+            dt = pd.read_csv(self.dt, sep=",", header = 0)
+        else:
+            dt = self.dt
+
+        if not isinstance(self.gt, pd.DataFrame):
+            gt = pd.read_csv(self.gt, sep=",", header = 0)
+        else:
+            gt = self.gt
         
         #dt['x_min'] = dt['x_min'].astype('Int64')
         
-        print(f'dt type: {dt.dtypes}')
-        print(f'gt type: {gt.dtypes}')
-        
-        
+        #print(f'dt type: {dt.dtypes}')
+        #print(f'gt type: {gt.dtypes}')
+
         dt.rename(columns={'objectID': 'id_tr'}, inplace=True)
         gt['frame'] = gt['filename'].str.extract('(\d{6})')
         #dt['frame'] = dt['filename'].str.extract('(\d{6})')
@@ -150,7 +163,7 @@ class evaluator():
         
     def write_results_file(self, mm, mota, number_of_objects):
         with open(self.results_filename, 'a') as resultFile:
-            resultFile.write(f'{self.maxDisap},{self.maxDist},{self.runMean},{mm},{mota},{number_of_objects}{br}')
+                resultFile.write(f'{self.maxDisap},{self.maxDist},{self.runMean},{mm},{mota},{number_of_objects}{br}')
 
 
     def run(self):
@@ -237,11 +250,12 @@ class evaluator():
         PR = dt.shape[0]
         CP =  PR - self.FP
         
-        print("\n#####", " RESULTS ", "#####\n")
-        print("Number of annotated objects: ", P)
-        print("Number of predictions made: ", PR )
-        print("Correct positives: ",CP)
-        print("Matches nrow: ",matches.shape[0])
+        if verbose:
+            print("\n#####", " RESULTS ", "#####\n")
+            print("Number of annotated objects: ", P)
+            print("Number of predictions made: ", PR )
+            print("Correct positives: ",CP)
+            print("Matches nrow: ",matches.shape[0])
         
         
         precision = self.calculate_precision(CP,self.FP)
@@ -250,58 +264,27 @@ class evaluator():
         mota = self.calculate_mota(self.FP, self.FN, self.MM, P)
         mm_ratio = self.calculate_mismatch_ratio(P, self.MM)
         
-        
-        print("False positives: ", self.FP)
-        print("False negatives: ", self.FN)
-        print("Mismatches: ", self.MM)
-        
-        print("Images in the detections: ", len(dt['filename'].unique()))
-        print("Images in the ground truth: ", len(gt['filename'].unique()))
-        
-        
-        print("\n#####", " SCORES ", "#####\n")
-        print("Precision: ", precision)
-        print("Recall: ", recall)
-        print("F1: ", F1)
-        print("MOTA: ", mota)
-        print("Mismatch ratio: ", mm_ratio)
+        if verbose:
+            print("False positives: ", self.FP)
+            print("False negatives: ", self.FN)
+            print("Mismatches: ", self.MM)
+            
+            print("Images in the detections: ", len(dt['filename'].unique()))
+            print("Images in the ground truth: ", len(gt['filename'].unique()))
+            
+            
+            print("\n#####", " SCORES ", "#####\n")
+            print("Precision: ", precision)
+            print("Recall: ", recall)
+            print("F1: ", F1)
+            print("MOTA: ", mota)
+            print("Mismatch ratio: ", mm_ratio)
         
         
         
         self.write_results_file(self.MM, mota, number_of_objects)
 
-# Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
-
-#print(gt)
-# Get the tracked detections on the format [filename, x_min, y_min, x_max, y_max, id_dt]
-#dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\submit_boxes_NewFormat_AllTestSeries_Sampled.csv", sep=",")
-#dt = pd.read_csv(r"U:\BITCue\Projekter\NorwayAnnotations\Experiments\2020_06_30_DetectionPhenology\Rmd\ModelQ_Results\DT_GT\2020_02_01_NorwayAnnotations_AllTestSeries_IndividualAnnotations_FRCNN_Metrics_copy.csv", sep=",")
-
-gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv"
-#dt = r"../testResults/6testing_NYAA-04_maxDis_8_runMean_10.csv"
-#dt = r"../testResults\_parameterTest_NYAA-04_1\parameterTest_NYAA-04_maxDisap_30_runMean_30_maxDist_500.csv"
-#dt = r'../testResults\_parameterTest_NYAA-04_1\parameterTest_NYAA-04__maxDisap_30_runMean_30_maxDist_500.csv'
-
-
-path = r'../testResults\tempTHUL01'
-files = [os.path.join(path,f) for f in os.listdir(path) if f.endswith('.csv')]
-print(files)
-
-results_filename = "../testResults/parameterTest_3_THUL-01_temp.csv"
-
-
-write_header(results_filename)
-
-for f in files:
-    e = evaluator(f, gt, results_filename)
-    e.run()
-
-# 
-# 
-# e = evaluator(dt, gt, results_filename)
-# e.run()
-
-
+        return self.MM
 
 
 
