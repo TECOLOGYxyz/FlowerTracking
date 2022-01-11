@@ -83,13 +83,13 @@ def impdata(camID):
 # ===================== Evaluate tracking accuracy ====
 
 
-# Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
-# gt = impdata("NARS-04")
-# dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_300.csv'
-# results_filename = "../testResults/tempNARS04.csv"
+#Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
+gt = impdata("NYAA-04")
+dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv'
+results_filename = "../testResults/tempNARS04.csv"
 
-# e = evaluator(dt, gt, results_filename, verbose = False)
-# e.run()
+e = evaluator(dt, gt, results_filename, verbose = True)
+e.run()
 
 
 # # ===================== Filter with DBSCANSieve ====
@@ -131,107 +131,129 @@ def impdata(camID):
 
 # Find a good value for eps
 
-epslist = [25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550, 600, 650, 700]
-results_filename = '../testResults/temp_epstest.csv'
+# epslist = [350]
+# results_filename = '../testResults/temp_epstest.csv'
 
-temppath = '../testResults/temp_epsExperiment_maxDisap_10_runMean_10_maxDist_300.csv'
+# temppath = '../testResults/temp_epsExperiment_maxDisap_10_runMean_10_maxDist_300.csv'
+# gt_temppath = '../testResults/gttemp.csv'
 
-for eps in epslist:
-    mmsum = 0
+# for eps in epslist:
+#     mmsum = 0
+#     flowersum = 0
+#     # Return also the number of flowers/object returned after filtering. Find good combo between this and mismatches.
+
     
-    # Return also the number of flowers/object returned after filtering. Find good combo between this and mismatches.
-
-    
-    dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-17_3\parameterTest_NARS-17_maxDisap_10_runMean_10_maxDist_300.csv'
-    gt = pd.read_csv(impdata("NARS-17"))
+#     # dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-17_3\parameterTest_NARS-17_maxDisap_10_runMean_10_maxDist_300.csv'
+#     # gt = pd.read_csv(impdata("NARS-17"))
         
-    d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
-    filteredTracks = d.run()
-    filteredTracks.to_csv(temppath)    
+#     # d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
+#     # filteredTracks = d.run()
+#     # filteredTracks.to_csv(temppath)    
     
-    gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
+#     # gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
 
-    e = evaluator(temppath, gt, results_filename, verbose = False)
-    mm = e.run()   
-    mmsum += mm
-    print(f'NARS-17 = {mm}')
+#     # e = evaluator(temppath, gt, results_filename, verbose = False)
+#     # mm = e.run()   
+#     # mmsum += mm
+#     # print(f'NARS-17 = {mm}')
     
     
 
-    dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_THUL-01_3\parameterTest_THUL-01_maxDisap_10_runMean_10_maxDist_300.csv'
-    gt = pd.read_csv(impdata("THUL-01"))
+#     # dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_THUL-01_3\parameterTest_THUL-01_maxDisap_10_runMean_10_maxDist_300.csv'
+#     # gt = pd.read_csv(impdata("THUL-01"))
         
-    d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
-    filteredTracks = d.run()
-    filteredTracks.to_csv(temppath)    
+#     # d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
+#     # filteredTracks = d.run()
+#     # filteredTracks.to_csv(temppath)    
     
-    gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
+#     # gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
 
-    e = evaluator(temppath, gt, results_filename, verbose = False)
-    mm = e.run()   
-    mmsum += mm
-    print(f'THUL-01 = {mm}')
+#     # e = evaluator(temppath, gt, results_filename, verbose = False)
+#     # mm = e.run()   
+#     # mmsum += mm
+#     # print(f'THUL-01 = {mm}')
          
     
-    
-    dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-13_3\parameterTest_NARS-13_maxDisap_10_runMean_10_maxDist_300.csv'
-    gt = pd.read_csv(impdata("NARS-13"))
+#     ### RUN FILTERING ###
+#     dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-13_3\parameterTest_NARS-13_maxDisap_10_runMean_10_maxDist_300.csv'
+#     gt = pd.read_csv(impdata("NARS-13"))
         
-    d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
-    filteredTracks = d.run()
-    filteredTracks.to_csv(temppath)    
+#     d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
+#     filteredTracks = d.run()
+#     filteredTracks.to_csv(temppath)    
     
-    gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
-
-    e = evaluator(temppath, gt, results_filename, verbose = False)
-    mm = e.run()   
-    mmsum += mm
-    print(f'NARS-13 = {mm}')
+#     gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
+#     gtSub.to_csv(gt_temppath)
+    
+#     e = evaluator(temppath, gt_temppath, results_filename, verbose = True)
+#     mm = e.run()   
+#     mmsum += mm
+    
+#     tracksKept = len(filteredTracks['objectID'].unique())
+#     flowersum += tracksKept
+#     print(f'NARS-13 = {mm} mismatches with {tracksKept} tracks kept')
     
 
 
-    dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_300.csv'
-    gt = pd.read_csv(impdata("NARS-04"))
+
+
+#     ### RUN FILTERING ###
+#     dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_300.csv'
+#     gt = pd.read_csv(impdata("NARS-04"))
         
-    d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
-    filteredTracks = d.run()
-    filteredTracks.to_csv(temppath)   
+#     d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
+#     filteredTracks = d.run()
+#     filteredTracks.to_csv(temppath)   
     
-    gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
+#     gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
+#     gtSub.to_csv(gt_temppath)
+    
+#     e = evaluator(temppath, gt_temppath, results_filename, verbose = True)
+#     mm = e.run()   
+#     mmsum += mm
+    
+#     tracksKept = len(filteredTracks['objectID'].unique())
+#     flowersum += tracksKept
+#     print(f'NARS-04 = {mm} mismatches with {tracksKept} tracks kept')
 
-    e = evaluator(temppath, gt, results_filename, verbose = False)
-    mm = e.run()   
-    mmsum += mm
-    print(f'NARS-04 = {mm}')
     
-    dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv'
-    gt = pd.read_csv(impdata("NYAA-04"))
     
-    d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
-    filteredTracks = d.run()
-    filteredTracks.to_csv(temppath) 
     
-    gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
+    
+#     ### RUN FILTERING ###
+#     dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv'
+#     gt = pd.read_csv(impdata("NYAA-04"))
+    
+#     d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
+#     filteredTracks = d.run()
+#     filteredTracks.to_csv(temppath) 
+    
+#     gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
+#     gtSub.to_csv(gt_temppath)
 
-    e = evaluator(temppath, gt, results_filename, verbose = False)
-    mm = e.run()   
-    mmsum += mm
-    print(f'NYAA-04 = {mm}')
+#     e = evaluator(temppath, gt_temppath, results_filename, verbose = True)
+#     mm = e.run()   
+#     mmsum += mm
     
-    print(f'eps = {eps} gives mmsum: {mmsum}')
+#     tracksKept = len(filteredTracks['objectID'].unique())
+#     flowersum += tracksKept
+#     print(f'NYAA-04 = {mm} mismatches with {tracksKept} tracks kept')
+
+
+#     print(f'"""\neps = {eps} gives {mmsum} mismatches with {flowersum} tracks kept \n"""')
 
 
 
 
 # ===================== Filter with DBSCANSieve ====
-eps_distance = 350
+# eps_distance = 350
 
-d = DBSCANsieve(dt, eps_distance = eps_distance, min_sample_polygons = 1)
-filteredTracks = d.run()
+# d = DBSCANsieve(dt, eps_distance = eps_distance, min_sample_polygons = 1)
+# filteredTracks = d.run()
 
 
-results_filename_tracked = os.path.splitext(dt)[0] + f'_Filtered_EpsDist_{eps_distance}.csv'
-filteredTracks.to_csv(results_filename_tracked)
+# results_filename_tracked = os.path.splitext(dt)[0] + f'_Filtered_EpsDist_{eps_distance}.csv'
+# filteredTracks.to_csv(results_filename_tracked)
 
 
 # ===================== Evaluate tracking accuracy of remaining tracks ====

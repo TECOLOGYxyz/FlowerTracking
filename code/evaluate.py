@@ -14,7 +14,7 @@ br = "\n"
 
 iou_threshold = 0.5
 
-verbose = False # Set to True if you want tracking process printed to screen and False if not
+#verbose = False # Set to True if you want tracking process printed to screen and False if not
 
 
 
@@ -38,7 +38,8 @@ class evaluator():
         self.FP = 0 # False positives
         self.FN = 0 # False negatives
         self.MM = 0 # Tracking mismatches
-
+        self.verbose = verbose
+        
         self.dt = dt
         self.gt = gt
         
@@ -62,13 +63,15 @@ class evaluator():
             self.maxDisap = maxDisapSearch.group(1)
             
         
-        if verbose:
+        if self.verbose:
             print(f'Running on: {basename}')
             print(f'runMean: {self.runMean}')
             print(f'maxDist: {self.maxDist}')
             print(f'maxDisap: {self.maxDisap}')
             
     def set_up_data(self):
+        dt = self.dt
+        gt = self.gt
         
         if not isinstance(self.dt, pd.DataFrame):
             dt = pd.read_csv(self.dt, sep=",", header = 0)
@@ -84,7 +87,8 @@ class evaluator():
         
         #print(f'dt type: {dt.dtypes}')
         #print(f'gt type: {gt.dtypes}')
-
+        #print(dt)
+        
         dt.rename(columns={'objectID': 'id_tr'}, inplace=True)
         gt['frame'] = gt['filename'].str.extract('(\d{6})')
         #dt['frame'] = dt['filename'].str.extract('(\d{6})')
@@ -178,7 +182,7 @@ class evaluator():
     def run(self):
         
         dt, gt, number_of_objects = self.set_up_data()
-        
+
         common = gt.merge(dt, on=['filename'], how = 'inner') # Create a dataframe of of frames that contain both groundt truths and detections. We'll also create a list of uniqe filenames in the common dataframe
         filenames_common = common['filename'].unique().tolist() # Get a list of unique filenames to iterate over
         #print("Filenames common: ",filenames_common)
@@ -259,7 +263,7 @@ class evaluator():
         PR = dt.shape[0]
         CP =  PR - self.FP
         
-        if verbose:
+        if self.verbose:
             print("\n#####", " RESULTS ", "#####\n")
             print("Number of annotated objects: ", P)
             print("Number of predictions made: ", PR )
@@ -273,7 +277,7 @@ class evaluator():
         mota = self.calculate_mota(self.FP, self.FN, self.MM, P)
         mm_ratio = self.calculate_mismatch_ratio(P, self.MM)
         
-        if verbose:
+        if self.verbose:
             print("False positives: ", self.FP)
             print("False negatives: ", self.FN)
             print("Mismatches: ", self.MM)
