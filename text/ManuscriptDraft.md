@@ -6,7 +6,7 @@ author:
 - Hjalte M. R. Mann
 - Alexandros Iosifidis
 - Toke T. Høye
-date: "januar 07, 2022"
+date: "januar 11, 2022"
 output:
   word_document: default
   pdf_document:
@@ -45,9 +45,6 @@ abstract: ABSTRACT | Often simple variables will be used to describe the floweri
 
 # Introduction
 
-
-
-
 For the individual plant, timing of flowering is of utmost importance. Precocious flowering means that the plant has failed to exploit the whole temporal window for accumulating resources before allocating energy to flowering. On the other hand, flowering too late limit the time for reproduction before the end of the growing season [@ELZINGA2007]. Further, flowering may need to be synchronous with pollinator activity for successful reproduction. Flowering phenology may plastically change as a response to abiotic cues in the environment, such as timing of spring, temperature, and photoperiod, but variation in flowering phenology is partly heritable and shaped by selective forces from the abiotic and biotic environment.
 
 Monitoring of flower phenology at high temporal resolution is laboursome and time-consuming, particularly in logistically challenging environment such as the Arctic. Consequently, simple variables are often used as proxies for the flowering phenology of a population, such as the date for onset of flowering, often derived from weekly observations of sample plots. Such proxies may fail to reveal dynamics in flowering phenology for example caused by changes in climate.
@@ -72,55 +69,26 @@ For complex scenes with many flowers in close vicinity to each other, we suggest
 # Material and methods
 
 ## Study site
-
+Toke, perhaps you can fill in some stuff here.
 
 
 ## The image series
-
+Original time-lapse intervals, explanation and result of sampling scheme and subsequent temporal resolution.
 
 
 ## Flower annotations
 
-The annotation process is described in Mann et al., in prep, but in short: We manually annotated all flowers in the sampled image series using the rectangular bounding box tool in the VIA VGG annotation software. Further, we assigned each individual a unique ID. These annotations constitue our ground truth tracks.
+We manually annotated all flowers in the sampled image series using the rectangular bounding box tool in the VIA VGG annotation software. Further, we assigned each individual flower a unique ID. These annotations constitute our ground truth tracks.
 
 
 
-
-
-
-# Automatic tracking
+## Automatic tracking
 
 We built a framework for tracking, filtering, and evaluating tracking of objects in time-lapse image series.
 
 Our algorithm tracks objects based on distances between centroids of bounding boxes.
 
 
-
-
-
-
-
-
-
-
-# 
-![](../figures/figure_1.png){ width=100% }
-
-**Figure 1:** Simple centroid tracking may produce erroneous associations when objects move between frames. Blue shows detections in the current frame (bounding box and centroid point). Red shows centroid points for the detections in the previous frame.
-
-
-# 
-![](../figures/figure_22.jpg){width=100%}
-
-**Figure 2:** Simple centroid tracking may produce erroneous associations when objects move between frames. Basing the association on the running mean of the positions of the previous n number of tracks may alleviate this issue. In this case basing the association on only the previous point would produce a wrong results while basing it on the running mean would produce a correct result. Red points: Centroids for bounding boxes in current frame, blue points: Centroids for bounding boxes in previous frame; grey points: Centroids for bounding boxes in a number of frames before t-1; green points: Running mean of the previous n points. Circles delimit the two individuals.
-
-# 
-![](../figures/figure_3.png){ width=100% }
-
-**Figure 3:** Simple centroid tracking may produce erroneous associations when objects disappear periodically from the frame. Here the top flower moves out of frame and the bottom flower would be assigned to the track of the top flower in frame t-1.
-
-
-## User parameters
 
 The tracking algorithm has a set of user adjusted parameters that can optimize tracking accuracy. The parameters are particularly relevant for optimal tracking of objects that are constrained to a specific area such as flowers. It is important to note, however, that the tracking algorithm can be used to track any objects. The tracking algorithm can be applied both offline (on a set of detections/annotations that have already been produced) or online (real-time tracking frame per frame). The speed of the tracking algorithm depends on the computational power available as well as the number of objects that are being tracked. The method is fast, however. Tracking of a series containing 85 objects ran at 0.02 seconds per frame.
 
@@ -138,8 +106,24 @@ Similarly, this deals with potential false negatives. If a given flower has not 
 Setting **max disappeared** to 0 tracks objects based on the coordinates of the points in only the previous frame. The counter for number of disappeared frames is reset when a new point is associated with the track within the threshold.
 
 
-### Identifying optimal user parameters
+#
+![](../figures/figure_1.png){ width=100% }
 
+**Figure 1:** Simple centroid tracking may produce erroneous associations when objects move between frames. Blue shows detections in the current frame (bounding box and centroid point). Red shows centroid points for the detections in the previous frame.
+
+
+# 
+![](../figures/figure_22.jpg){width=100%}
+
+**Figure 2:** Simple centroid tracking may produce erroneous associations when objects move between frames. Basing the association on the running mean of the positions of the previous n number of tracks may alleviate this issue. In this case basing the association on only the previous point would produce a wrong results while basing it on the running mean would produce a correct result. Red points: Centroids for bounding boxes in current frame, blue points: Centroids for bounding boxes in previous frame; grey points: Centroids for bounding boxes in a number of frames before t-1; green points: Running mean of the previous n points. Circles delimit the two individuals.
+
+# 
+![](../figures/figure_3.png){ width=100% }
+
+**Figure 3:** Simple centroid tracking may produce erroneous associations when objects disappear periodically from the frame. Here the top flower moves out of frame and the bottom flower would be assigned to the track of the top flower in frame t-1.
+
+
+### Identifying optimal user parameters
 
 
 To estimate the optimal values for max_disappeared and max_distance, we analysed the ground truth tracks of the four series.
@@ -147,7 +131,6 @@ To estimate the optimal values for max_disappeared and max_distance, we analysed
 To estimate the value for max_distance, we calculated the largest distance between any two points within any track for any flower in each of the four series. 
 
 The maximum number of frames a flower track was lost and subsequently reappeared were xxx. 
-
 
 
 To explore the effect of the user parameters and to identify the optimal combination of parameters for our case of tracking flowers, we followed a step wise approach. First, we ran the tracking algorithm on each of the four image series with every combination of the following settings (3.179 combinations):
@@ -162,12 +145,10 @@ Note that max_distance set to zero. We identified the setting(s) that returned t
 
 
 
-
-
 Depending on the nature of the objects being tracked and the complexity of the scene, the user parameters can be estimated from visual examination of the tracking results. Often it may be preferable to manually annotate a subset of the objects in the image series and derive a set of user parameters from these results.
 
 
-# Evaluating tracking perfomance
+## Evaluating tracking perfomance
 
 The optimal way of quantifying tracking performance depends on the goal of the tracking. To associate other information obtained in the images to the individual flower, for example flower visits, we want as much as possible of the track to be correct. To derive flowering length in theory we just need to track the most extreme points correctly and don't care about the intermediate points. Lastly, we may be interested in the number of flowers that existed in a plot, in which case we want the number of tracks obtained by automatic tracking to be as close as possible to the actual number of individuals in the series.
 
@@ -177,8 +158,6 @@ The multiple object tracking accuracy (MOTA) score quantifies tracking performan
 For each series, we calculate the ratio of flowers for which the automatic tracking algorithm returns the correct flowering length compared to the ground truth tracks.
 
 Finally, we compare the number of tracks identified by the automatic tracking with the true number of flowers in a series. These should ideally be equal.
-
-
 
 
 
@@ -193,23 +172,17 @@ For tracks consisting of two points, we establish the straight line between the 
 We then apply the DBSCAN clustering algorithm on these track geometrics to remove tracks in areas with a high density of tracks as these have a high risk of tracking mismatches. The filtering is done in two steps. First, DBSCAN algorithm is run with a conservatively high value for the eps parameter, meaning that tracks in close vicinity to each other will be clustered together. Second, all tracks that were not assigned to a unique cluster are removed. Tracks that are spatially isolated remains.
 
 
-
-
-We could compare number of points in the overlapping tracks. If one is less than e.g. 10% of the other, we'll remove the small track. If more than 10% we'll remove both?
-
-
 We evaluate the accuracy of the remaining tracks.
+
+
+We demonstrate our filtering approach for the image series for which our tracking algorithm did not produce perfect results.
 
 
 Here we set eps DBSCAN parameter to XXX. Although the value could be fine-tuned for improved results for each image series individually, this value returns good results overall. In a naive setting, a general value could be chosen of the value could be adjusted for each series based on visual examination of performance or testing on a subset of data.
 
 
 
-
 # Results
-
-
-
 
 
 **Table 1:** Bla bla...
@@ -219,23 +192,40 @@ Here we set eps DBSCAN parameter to XXX. Although the value could be fine-tuned 
  shows the performance of the tracking algorithm.
 
 
+The results of the filtering algorithm on the three series in which our tracking algorithm did not return perfect results are given in table 2 and the pipeline is visualised in fig. 4. Our filtering method successfully extracted 28 tracked flowers with only a single mismatch from the three series with complex scenes using a fixed value of 350 for eps and fixed values for the tracking parameters (10, 10, 10, for running mean, max disappeared and max distance, respectively). 
 
 
-One way to plot?: Time on x-axis, gt id on y axis, tr id as colour. This will show mismatches.
+**Table 2:** Results of the filtering algorithm with an eps value of 350 applied across all three series. 
 
 
-Our tracking algorithm consistently returns high MOTA scores. 
+#
+![](../figures/FilterScores.png){ width=100% }
+
+#
+![](../figures/filtering1.png){ width=100% }
+![](../figures/filtering2.png){ width=100% }
+![](../figures/filtering3.png){ width=100% }
+**Figure 4:** Track filtering pipeline. Row 1, 2, and 3 is NARS-13, NARS-04, and NYAA-04, respectively. First column shows the centroid points in the given series, coloured by the track id from the centroid tracking algorithm. Second column shows the polygons calculated from the tracks. The DBSCAN clustering algorithm with eps = 350 was applied to the centroids of these polygons and the polygons are coloured by cluster id. Third row shows the results of the filtering where all tracks that were not assigned a unique cluster whas been removed.
+
+
+ 
 
 
 # Discussion
+
+
+
+## Tracking
+
+Our tracking algorithm consistently returns high MOTA scores.
+
+A paragraph about the ecological perspectives of being able to track the individual flowers (at scale).
+
 
 All three parameters make a difference.
 
 In cases where we are tracking perfectly with maxDisap = 0, setting it any value will not make a difference. Not quite right. Explore more...
 
-
-Our method for filtering tracks using DBSCAN on track centroids ensures that all tracks are given the same weighting in the filtering since each track is represented by a single point. In some cases 
-e.g. if it is given a priori that an object will always appear in a minimum of two frames, then single point tracks can be filtered out. However, when such a priori knowledge is not accessible, a conservative approach as the one we present is preferable.
 
 
 Applying the technique on detection instead of manual annotations.
@@ -249,12 +239,23 @@ Our tracking algorithm returned high MOTA scores even with all three parameters 
 Automatically detecting flowers would likely introduce a degree of false negatives which would decrease the MOTA score if max disappeared is set to zero. Introducing a value for this parameter can deal with the problem of false negatives.
 
 
+We ran our tracking algorithm on 3xxx combination of the three parameters. Using the parameters increased the performance of the tracking substantially. Our steps in parameter values were crude, however, and it is very likely that finer steps in these values would identify combinations that produce even better results. Here we do not perform this analysis, however, as our goal is to show that the parameters can be used for optimizing tracking performance in general.
 
 
 
-# Filtering
+## Filtering
 
 Extracting tracks that are spatially isolated does not guarantee that the tracks are correct/without errors. However, as spatially isolated objects are easier to track, it increases confidence in the remaining tracks.
+
+We applied a single value for the DBSCAN eps parameter in our tracking algorithm. We note that this value could be finetuned for improved results for the individual series (i.e. more flowers extracted without increased number of mismatches). However, as our goal here was to show that a single conservative value can be applied across series, we do not show those results here. 
+
+Our method for filtering tracks using DBSCAN on track centroids ensures that all tracks are given the same weighting in the filtering since each track is represented by a single point. In some cases 
+e.g. if it is given a priori that an object will always appear in a minimum of two frames, then single point tracks can be filtered out. However, when such a priori knowledge is not accessible, a conservative approach as the one we present is preferable.
+
+
+## The image series
+
+A point on the fact the these series are complex.
 
 
 # Acknowledgements
