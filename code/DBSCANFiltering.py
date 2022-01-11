@@ -146,9 +146,13 @@ class DBSCANsieve():
         ax2.axes.get_xaxis().set_visible(False)  
         ax0.axes.get_xaxis().set_visible(False)
 
-        ax0.set_aspect(1)
-        ax1.set_aspect('auto')
-        ax2.set_aspect('auto')
+        # ax0.set_aspect(1)
+        # ax1.set_aspect('auto')
+        # ax2.set_aspect('auto')
+
+        # ax0.set_aspect(6080, 3420)
+        # ax1.set_aspect(6080, 3420)
+        # ax2.set_aspect(6080, 3420)
 
         scatter = ax0.scatter(self.tracks['x_c'], self.tracks['y_c'], c = self.tracks['objectID'], s = 0.2)
         ax0 = scatter.axes
@@ -159,7 +163,7 @@ class DBSCANsieve():
         
         currentTime = datetime.now() # Use this if you need to time-stamp result file
         currentTime=('%02d-%02d-%02d'%(currentTime.hour,currentTime.minute,currentTime.second))
-        fig.savefig(f'../testResults/{currentTime}_BeforeAndAfterFiltering_eps_{self.eps_distance}.png', dpi=300)
+        fig.savefig(f'../testResults/{currentTime}_BeforeAndAfterFiltering_eps_{self.eps_distance}.png', dpi=600)
         ### ####
         
         return tracksSub
