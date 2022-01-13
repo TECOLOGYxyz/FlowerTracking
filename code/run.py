@@ -84,12 +84,12 @@ def impdata(camID):
 
 
 #Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
-gt = impdata("NYAA-04")
-dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv'
-results_filename = "../testResults/tempNARS04.csv"
+# gt = impdata("NYAA-04")
+# dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NYAA-04_3\parameterTest_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv'
+# results_filename = "../testResults/tempNARS04.csv"
 
-e = evaluator(dt, gt, results_filename, verbose = True)
-e.run()
+# e = evaluator(dt, gt, results_filename, verbose = True)
+# e.run()
 
 
 # # ===================== Filter with DBSCANSieve ====
@@ -131,31 +131,31 @@ e.run()
 
 # Find a good value for eps
 
-# epslist = [350]
-# results_filename = '../testResults/temp_epstest.csv'
+epslist = [350]
+results_filename = '../testResults/temp_epstest.csv'
 
-# temppath = '../testResults/temp_epsExperiment_maxDisap_10_runMean_10_maxDist_300.csv'
-# gt_temppath = '../testResults/gttemp.csv'
+temppath = '../testResults/temp_epsExperiment_maxDisap_10_runMean_10_maxDist_300.csv'
+gt_temppath = '../testResults/gttemp.csv'
 
-# for eps in epslist:
-#     mmsum = 0
-#     flowersum = 0
-#     # Return also the number of flowers/object returned after filtering. Find good combo between this and mismatches.
+for eps in epslist:
+    mmsum = 0
+    flowersum = 0
+    # Return also the number of flowers/object returned after filtering. Find good combo between this and mismatches.
 
     
-#     # dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-17_3\parameterTest_NARS-17_maxDisap_10_runMean_10_maxDist_300.csv'
-#     # gt = pd.read_csv(impdata("NARS-17"))
-        
-#     # d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
-#     # filteredTracks = d.run()
-#     # filteredTracks.to_csv(temppath)    
+    dt = r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-17_3\parameterTest_NARS-17_maxDisap_10_runMean_10_maxDist_300.csv'
+    gt = pd.read_csv(impdata("NARS-17"))
+    print(gt)    
+    d = DBSCANsieve(dt, eps_distance = eps, min_sample_polygons = 1)
+    filteredTracks = d.run()
+    filteredTracks.to_csv(temppath)    
     
-#     # gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
-
-#     # e = evaluator(temppath, gt, results_filename, verbose = False)
-#     # mm = e.run()   
-#     # mmsum += mm
-#     # print(f'NARS-17 = {mm}')
+    gtSub = gt.merge(filteredTracks, on=['filename','x_min', 'x_max', 'y_min', 'y_max'], how='inner', indicator=True)
+    print(gtSub)
+    e = evaluator(temppath, gt, results_filename, verbose = False)
+    mm = e.run()   
+    mmsum += mm
+    print(f'NARS-17 = {mm}')
     
     
 
