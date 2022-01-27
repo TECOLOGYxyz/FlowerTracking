@@ -287,37 +287,20 @@ For the three series with complex scenes, applying the max gap size parameter im
 
 In all cases, except NARS-17, for which perfect tracking was achieved with all parameters set to zero, did a value for running mean above 0 improve results.
 
-Interestingly, setting the value to 10 produced the best results in all these cases, except for the combination returning the lowest number of mismatches for NYAA-04.
-
-Increasing the value for running mean means that less weight is put on movements between each frame.
-
-Maybe NYAA-04 flowers move more? Maybe longer stalk?
-
-Coincidently, the flowers in NYAA-04 also flower longer on average than the other series. 
+Interestingly, setting the value to 10 produced the best results in all these cases, except for the combination returning the lowest number of mismatches for NYAA-04. Increasing the value for running mean means that less weight is put on movements between each frame. Changing the running mean to 10 while keeping the other two parameters equal only resulted in a slight increase in number of `r word_comment("This result is not given - should results for every combination be given in suppl.? It's 3179*5 rows of data, so it's quite a lot.)", "mismatches")` (from 29 to 36). Thus, it is a likely explanation that the improved accuracy from the large value for running mean stems from slightly better tracking of flowers that moved a lot.
 
 
-If the average euclidean distance that a flower moves is higher for NYAA-04 it may improve results to even out this movement by increasing the value for running mean.
+For the three series for which the tracking algorithm did not produce perfect results, the optimal range for max distance were relatively narrow (300 - 500). The optimal value for this setting is one that is sufficiently high so that it does not force individual flowers into separate tracks because of movement between frames yet is low enough to separate any flowers into individual tracks that would otherwise have been grouped together. This explains well why the extreme values for this parameter was not included in the highest accuracy tracks.
 
-Look at this tomorrow....
-
-
+It is important to note that the tracking parameters are not independent. For example, the distance between a point in the current frame and a point in the previous frame may not be the same as that for a point in the current frame and the mean location of the previous ten points in a track. Thus, changing the setting for running mean could influence the optimal setting for max distance. This underlines the relevance of search for an optimal combination based on ground truth data.
 
 
-These parameters are not independent. For example, the distance between a point in the current frame and a point in the previous frame may not be the same as that for a point in the current frame and the mean location of the previous ten points in a track. This underlines the relevance of search for an optimal combination based on ground truth data.
+In general, the optimal settings for the three tracking parameters fall into relatively narrow ranges. This strengthens the assumption that the method is generalisable and could be applied for example across many more cameras than what have been demonstrated here.
 
 
+The eps parameter for the filtering... 
 
-Pointe: Selvom vi kigger på mange komvinationer af parameterne, så falder kombinationerne hvor de bedste resultater produceres (laveste mismatches) indenfor forholdsvis smalle områder. Det tyder på at metoden med de givne parametre er generaliserbar og kan anvendes på andre kameraer med samme setting.
-
-
-
-
-For our application, we find that a 
-
-For the three series for which the tracking algorithm failed to produce perfect results, the range 
-
-
-
+Thus, increasing eps means that more distant points will be clustered together. Oppositely, lowering eps will separate points into individual clusters despite being in close vicinity.
 
 
 Why do they make a difference:
