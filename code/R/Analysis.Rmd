@@ -232,7 +232,7 @@ nyaa04_meta = nyaa04_meta %>%
 
 nyaa04_meta %>% 
 ggplot()+
-  geom_point(aes(x = flower_start, y = flower_length))
+  geom_point(aes(x = flower_start, y = flower_length, colour = Class))
   
 
 ```
@@ -327,6 +327,17 @@ nyaa04minmm %>%
   theme(legend.position = "none")
 
 
+nyaa04xx = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/_parameterTest_NYAA-04_3/parameterTest_NYAA-04_maxDisap_10_runMean_10_maxDist_300.csv")
+
+nyaa04xx %>% 
+  ggplot() +
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(objectID)), size = 1) + 
+  xlim(0,6080) +
+  ylim(0,3420) + 
+  ggtitle("NYAA-04 Tracked (xx)")  +
+  theme(legend.position = "none")
+
+
 
 nyaa04 %>% 
   ggplot() +
@@ -335,6 +346,15 @@ nyaa04 %>%
   ylim(0,3420) + 
   ggtitle("NYAA-04 Ground Truth") +
   theme(legend.position = "none")
+
+
+
+
+#nyaa04_meta %>% 
+#  ggplot() +
+#  geom_point(aes(x = DOY, y = Class))
+
+
 ```
 
 
@@ -612,6 +632,45 @@ tempNARS04 %>%
 tempNARS04 %>% 
   ggplot() +
   geom_point(aes(x = x_c, y = y_c, colour = as.factor(objectID)), size = 0.5) 
+
+```
+Largest gap in time
+
+```{r}
+x = nyaa04_meta %>%
+    group_by(Class) %>%
+    arrange(time) %>%
+    mutate(diff = time - lag(time, default = first(time)))
+
+x = nars13_meta %>%
+    group_by(Class) %>%
+    arrange(time) %>%
+    mutate(diff = time - lag(time, default = first(time)))
+
+
+
+
+
+
+# NYAA-04: 5.1
+# NARS-13: 1.25
+
+
+```
+
+
+
+
+Largest gap in number of frames
+
+```{r}
+
+x = nyaa04 %>% 
+  mutate(frame = as.integer(str_remove(str_extract(FileName, regex("\\d{6}")), "^0+"))) %>% 
+  group_by(Class) %>%
+  arrange(frame) %>%
+  mutate(diff = frame - lag(frame, default = first(frame)))
+
 
 ```
 
