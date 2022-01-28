@@ -305,12 +305,6 @@ Thus, increasing eps means that more distant points will be clustered together. 
 
 Why do they make a difference:
 
-max gap size:
-
-Running mean:
-
-Max distance:
-
 eps:
 
 
