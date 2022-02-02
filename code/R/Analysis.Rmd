@@ -241,6 +241,45 @@ ggplot()+
 
 all = bind_rows(thul01_meta[,c("flower_start","flower_length", "CameraID")], nars04_meta[,c("flower_start","flower_length", "CameraID")], nars13_meta[,c("flower_start","flower_length", "CameraID")], nyaa04_meta[,c("flower_start","flower_length", "CameraID")], nars17_meta[,c("flower_start","flower_length", "CameraID")])
 
+# Camera codes:
+# 2018 NARS-04: 2018 NARS A
+# 2018 THUL-01: 2018 THUL B
+# 2019 NARS-13: 2019 NARS C
+# 2019 NARS-17: 2019 NARS D
+# 2019 NYAA-04: 2019 NYAA E
+
+
+all = all %>% 
+  mutate("camCode" = case_when(CameraID == "THUL-01"~ "2018 THUL B", CameraID == "NARS-04"~ "2018 NARS A", CameraID == "NARS-13"~ "2019 NARS C", CameraID == "NARS-17"~ "2019 NARS D", CameraID == "NYALE-04"~ "2019 NYAA E"))
+
+axisSize = 30
+legendTitleSize = 30
+legendTextSize = 28
+  
+f1 = all %>% 
+ggplot()+
+  geom_point(aes(x = flower_start, y = flower_length, fill = camCode, shape = camCode), size = 8) + 
+  xlab("Onset of flowering (DOY)") + 
+  ylab("Number of days flowering") +
+    theme_bw()  +
+  scale_fill_manual(name = "Camera ID",
+                      values = c("gray26", "brown3", "dodgerblue3", "darkorange2", "chartreuse3"), aesthetics = c("colour", "fill")) + 
+  scale_shape_manual(name = "Camera ID",
+                      values = c(21,22,23,24,25)) + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        legend.title = element_text(size = legendTitleSize),
+        text = element_text(size = axisSize),
+        legend.text = element_text(size = legendTextSize),
+        axis.line = element_line(),
+        axis.text=element_text(colour="black"),
+        panel.spacing = unit(0.7, "lines"))
+
+f1
+
+ggsave("U:/BITCue/Projekter/TrackingFlowers/figures/OnsetVSLength.png", f1, width = 15, height = 10)
+
 all %>% 
 ggplot()+
   geom_point(aes(x = flower_start, y = flower_length, colour = CameraID))# +
@@ -421,7 +460,7 @@ cornoo %>%
 
 thul01 %>% 
   ggplot() +
-  geom_point(aes(x = x_c, y = y_c, color = as.factor(id_gt)), size = 1, shape = 1) + 
+  geom_point(aes(x = x_c, y = y_c, color = as.factor(Class)), size = 1, shape = 1) + 
   xlim(0,6080) +
   ylim(0,3420) + 
   ggtitle("THUL-01 Ground Truth") +
