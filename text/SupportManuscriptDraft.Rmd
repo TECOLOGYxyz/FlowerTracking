@@ -1,0 +1,65 @@
+---
+new_session: FALSE
+title: |
+  **Supporting Information: Towards individual-based pollination ecology: Automatic tracking of life histories of individual flowers**
+author:
+- Hjalte M. R. Mann
+- Alexandros Iosifidis
+- Toke T. Høye
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  word_document: default
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+    latex_engine: pdflatex
+  html_document:
+    df_print: paged
+fontfamily: mathpazo
+fontsize: 12pt
+geometry: margin = 1in
+header-includes:
+- \usepackage{setspace}\doublespacing
+- \usepackage[left]{lineno}
+- \linenumbers
+- \usepackage{dcolumn}
+- \usepackage{caption}
+- \usepackage{float}
+- \usepackage{afterpage}
+- \usepackage{siunitx}
+- \usepackage{amsmath}
+keywords: Tracking, flowering phenology, Arctic
+bibliography: ./library.bib
+csl: ./journal-of-ecology.csl
+---
+
+```{r eval = FALSE, echo=FALSE}
+library(knitr)
+knit('ManuscriptDraft.Rmd')
+rmarkdown::render("SupportManuscriptDraft.Rmd", output_file = "SupportManuscriptDraft.docx")
+system2("open","SupportManuscriptDraft.docx")
+```
+
+```{r echo=FALSE}
+# Function for creating word comments in Rmarkdown
+# Use: This text contains a `r word_comment("This is the comment", "comment.")`.
+
+word_comment <- function(comment, highlight = "") {
+  if (isTRUE(knitr:::pandoc_to() == "docx")) {
+    paste0('[', comment, ']{.comment-start id="0" author="Hjalte M."',
+           'date="2020-01"}', highlight, '[]{.comment-end id="0"}')
+  }
+}
+```
+
+
+
+\newpage
+
+
+**Table S1:** Results of the filtering algorithm for filtering distances 5-500 with a stepsize of 50 for all three series.
+
+![](../figures/FullFilteringDistanceTest.png){ width=100% }
+
+
+
