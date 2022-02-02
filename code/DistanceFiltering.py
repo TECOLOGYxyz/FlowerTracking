@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+Created on Mon Jan 31 12:56:11 2022
+
+@author: au309263
+"""
+# -*- coding: utf-8 -*-
+"""
 Created on Tue Dec 21 13:28:48 2021
 
 @author: au309263
@@ -14,21 +20,22 @@ from filtering import sieve
 import numpy as np
 from scipy.spatial import ConvexHull
 from datetime import datetime
+from itertools import combinations
+
 
 # Note, EPS_DISTANCE needs to be smaller than the gap between any two polygons we want to keep and large enough to cluster polygons that we want to discard together
 # EPS_DISTANCE = 281 is the highest value that keeps all tracks in THUL-01
 
 #tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv')
 
-class DBSCANsieve():
-    def __init__(self, tracks, eps_distance, min_sample_polygons):
+class distanceSieve():
+    def __init__(self, tracks, eps_distance):
         if not isinstance(tracks, pd.DataFrame):
             self.tracks = pd.read_csv(tracks, sep=",", header = 0)
         else:
             self.tracks = tracks
         
         self.eps_distance = eps_distance
-        self.min_sample_polygons = min_sample_polygons
         
         self.points = {}
         self.lines = {}
@@ -104,26 +111,58 @@ class DBSCANsieve():
                         print(f'Adding object {k} with points {polygons[k]} to lines')    
                         self.lines[k] = polygons[k] # Add the points to the line dictionary  
     
+    def dist(self,a,b):
+        d = np.linalg.norm(a-b)
+        return d
+    
+    def ave(self, lst):
+        return sum(lst) / len(lst)
+    
     def run(self):
         self.separate() # Separate the tracks into points, lines, and polygons
         self.convex_hull(self.polygons) # Calcuate the convex hull of the polygons. This will also add colinear points to lines dictionary
         
         df, coords = self.geometries() # Get the geometry dataframe containing the track polygons and the centroid coordinates of which to perform the DBSCAN clustering
-
-        dbscan = DBSCAN(eps=self.eps_distance, min_samples=self.min_sample_polygons) # Run the DBSCAN clustering
-        clusters = dbscan.fit(coords)
-
-        labels = pd.Series(clusters.labels_).rename('clusterID') # Grab the clustering labels and concatenate to df
-        df = pd.concat([df, labels], axis=1)
         
-        print(df)
-        grouped_df = df.groupby("clusterID") # Group by the clusterID and count the number of tracks within each cluster
-        grouped_df = grouped_df.agg({"objectID": "nunique"}).reset_index()
-        sub = grouped_df.loc[grouped_df['objectID'] == 1] # Make a list of clusterIDs that contain only one track
-        l = sub['clusterID'].tolist()
+        #print(df)
+        x = df.loc[df['objectID'] == '0']        
+        #print(x)
+        y = self.tracks
+        y = y.loc[y['objectID'] == 0]
+        #print(self.ave(y['x_c']))
+        #print(self.ave(y['y_c']))
+        ids = list(df['objectID'])
+        passed = []
+        
+        for i,r in df.iterrows():
+            oid = r['objectID']
+            oidcx = r['x']
+            oidcy = r['y']
+            
+            oidp = np.array([oidcx, oidcy])
+            distances = []
+            for o,p in df.iterrows():
+                
+                if oid != p['objectID']:
+                    pcx = p['x']
+                    pcy = p['y']
+                    pp = np.array([pcx, pcy])
+                    
+                    d = self.dist(oidp, pp)
+                    distances.append(d)
+                    
+            #print("Distances = ", distances)
+            if any(i < self.eps_distance for i in distances):
+                continue
+            else:
+                passed.append(oid)
+        
+        #print("Passed distance ", passed)
 
-        dfSub = df[df['clusterID'].isin(l)] # Subset the  df on the list so that it only includes only the isolated tracks (clusters containing a single track)
-        print("Passed DBSCAN ", l)
+        l = passed #sub['clusterID'].tolist()
+
+        dfSub = df[df['objectID'].isin(l)] # Subset the  df on the list so that it only includes only the isolated tracks (clusters containing a single track)
+        
 
         keepTracks = map(int, dfSub['objectID'].tolist()) # List of objectIDs we want to keep (map used to convert from str object to integer)
         tracksSub = self.tracks[self.tracks['objectID'].isin(keepTracks)] # Subset the tracks that passed the filtering. We'll return this dataframe from the filtering
@@ -159,13 +198,13 @@ class DBSCANsieve():
         ax0 = scatter.axes
         ax0.invert_yaxis()
 
-        df.plot(ax=ax1, column = 'clusterID', marker = ".", markersize = 0.2)
-        dfSub.plot(ax=ax2, column = 'clusterID', marker = ".", markersize=0.2)
+        df.plot(ax=ax1, column = 'objectID', marker = ".", markersize = 0.2)
+        dfSub.plot(ax=ax2, column = 'objectID', marker = ".", markersize=0.2)
         
         currentTime = datetime.now() # Use this if you need to time-stamp result file
         currentTime=('%02d-%02d-%02d'%(currentTime.hour,currentTime.minute,currentTime.second))
         fig.savefig(f'../testResults/{currentTime}_BeforeAndAfterFiltering_eps_{self.eps_distance}.png', dpi=600)
-        ### ####
+        # ####
         
         return tracksSub
 
