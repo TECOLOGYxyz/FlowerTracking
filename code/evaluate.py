@@ -200,26 +200,26 @@ class evaluator():
         ##
     
     
-        #print("Only fn: \n", only_fn)
-        #print("Only fp: \n", only_fp)
+        print("Only fn: \n", only_fn)
+        print("Only fp: \n", only_fp)
         ####
         
         common['id_uni_gt'] = common['filename'] + "_" + common['id_gt'] # Create unique ids for every single ground truth bounding box and every detection bounding box
         common['id_uni_tr'] = common['filename'] + "_" + common['id_tr'].astype(str)
 
         common['iou'] = common.apply(lambda x: self.calculate_iou([x['x_min_x'], x['y_min_x'], x['x_max_x'], x['y_max_x']],[x['x_min_y'], x['y_min_y'], x['x_max_y'], x['y_max_y']]), axis=1)
-        #print("Common: \n", common)
+        print("Common: \n", common)
 
         matches = common[common['iou'] >= iou_threshold]
-        #print("Matches: \n", matches)
+        print("Matches: \n", matches)
     
         no_matches = common[common['iou'] < iou_threshold] # Get the ground truths that have no matching detections and add them to the false negatives
         false_negatives = no_matches[~no_matches['id_uni_gt'].isin(matches['id_uni_gt'])].drop_duplicates(subset=['id_uni_gt'])
         self.FN = self.FN + false_negatives.shape[0]
     
-        #print("False negatives: ", false_negatives)
+        print("False negatives: ", false_negatives)
     
-        #print("No matches: ",no_matches)
+        print("No matches: ",no_matches)
     
         # Get the detections that have no matching ground truth and add them to the false positives
         false_positives = no_matches[~no_matches['id_uni_tr'].isin(matches['id_uni_tr'])].drop_duplicates(subset=['id_uni_tr'])
@@ -237,13 +237,13 @@ class evaluator():
         id_gt_mismatches_sum = id_gt_mismatches.sum()
     
     
-        #print(matches_pairs)
-        #print(id_gt_mismatches)
+        #print("Matches pairs: ", "\n", matches_pairs)
+        print("ID GT mismatches: ","\n", id_gt_mismatches)
     
         id_tr_mismatches = matches_pairs.pivot_table(index=['id_tr'], aggfunc='size')-1
         id_tr_mismatches_sum = id_tr_mismatches.sum()
     
-        #print(id_tr_mismatches)
+        print("ID TR mismatches: ","\n",id_tr_mismatches)
     
         self.MM = self.MM + id_gt_mismatches_sum + id_tr_mismatches_sum
 
