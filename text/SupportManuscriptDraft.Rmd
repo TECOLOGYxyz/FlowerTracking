@@ -52,14 +52,22 @@ word_comment <- function(comment, highlight = "") {
 }
 ```
 
-
-
 \newpage
 
-
-**Table S1:** Results of the filtering algorithm for filtering distances 5-500 with a stepsize of 50 for all three series.
-
-![](../figures/FullFilteringDistanceTest.png){ width=100% }
+## Results of the filtering algorithm for filtering distances 5-500 with a stepsize of 50 for the three series.
 
 
+eps = 50: 158 mismatches with 165 tracks kept 
+eps = 100: 103 mismatches with 147 tracks kept 
+eps = 150: 71 mismatches with 124 tracks kept 
+eps = 200: 47 mismatches with 100 tracks kept 
+eps = 250: 30 mismatches with 69 tracks kept 
+eps = 300: 9 mismatches with 49 tracks kept 
+eps = 350: 0 mismatches with 28 tracks kept 
+eps = 400: 0 mismatches with 18 tracks kept 
+eps = 450: 0 mismatches with 16 tracks kept 
+eps = 500: 0 mismatches with 11 tracks kept
 
+
+
+#![](../figures/FullFilteringDistanceTest.png){width="100%"}
