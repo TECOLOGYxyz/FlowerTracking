@@ -56,6 +56,7 @@ class distanceSieve():
     
     def separate(self): # Take next group in tracks dataframe from the generator and split into correct dictionary according to number of points the track contains
         for oid, p in self.gen(): 
+            #print(p)
             if len(p) == 1: # Get single points
                 self.points[oid] = p
                 
@@ -121,7 +122,7 @@ class distanceSieve():
     def run(self):
         self.separate() # Separate the tracks into points, lines, and polygons
         self.convex_hull(self.polygons) # Calcuate the convex hull of the polygons. This will also add colinear points to lines dictionary
-        
+        #print("Got convex hulls")
         df, coords = self.geometries() # Get the geometry dataframe containing the track polygons and the centroid coordinates of which to perform the DBSCAN clustering
         
         #print(df)

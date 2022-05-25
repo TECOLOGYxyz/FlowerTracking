@@ -31,7 +31,7 @@ br = "\n"
 
 # ===================== SETTINGS ==============================================
 
-verbose = False # Set to True if you want tracking process printed to screen and False if not
+verbose = True # Set to True if you want tracking process printed to screen and False if not
 
 class tracker():
     def __init__(self, max_disappeared, max_distance, running_mean_threshold, results_filename, frames, detections, verbose):
@@ -41,8 +41,8 @@ class tracker():
         
         self.disappeared = OrderedDict() # Keeps track of how long an objectID has been lost
 
-        self.detections = detections
-        self.max_disappeared = max_disappeared # store parameters for use in the class
+        self.detections = detections  # store parameters for use in the class
+        self.max_disappeared = max_disappeared
         self.max_distance = max_distance
         self.running_mean_threshold = running_mean_threshold
         self.results_filename = results_filename
@@ -50,7 +50,7 @@ class tracker():
         
         self.tracks = [] # Create a list for storing tracking results as we go
 
-
+        
         with open(self.results_filename, 'a') as resultFile: # Write the header of the output file
             header = 'frame,filename,x_min,x_max,y_min,y_max,x_c,y_c,objectID\n'
             resultFile.write(header)
@@ -122,7 +122,7 @@ class tracker():
             
         if len(self.objects[objectID]) == self.running_mean_threshold:
             if verbose:
-                print("Length is equal to running mean threshold.")
+                print(f'Length {len(self.objects[objectID])} of {self.objects[objectID]} is equal to running mean threshold.')
                 print(f'Deleting first item in {self.objects[objectID]} ({self.objects[objectID][0]}) and appending {centroid}')
             del self.objects[objectID][0]
             self.objects[objectID].append(centroid)
@@ -131,14 +131,16 @@ class tracker():
         for key, value in self.objects.items():
             if len(value) > 1:
                 c_m = [mean([i[0] for i in value]), mean([i[1] for i in value])]
-                self.means[key] = c_m
+            if len(value) == 1:
+                c_m = value[0]
+            self.means[key] = c_m
         if verbose:
             print(f'Updated means dictionary{br}Current mean dict:{br}{self.means}')
         
     def return_tracks_webapp(self):
         return self.tracks
     
-    def track(self, frame):
+    def track(self, frame):        
         frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
         if verbose:
             print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
@@ -172,7 +174,9 @@ class tracker():
         else: # We are already tracking objects, so let's see if we can associate any current frame detections with objects that are being tracked.   
             objectIDs = list(self.means.keys()) # grab the set of object IDs and corresponding centroids
             objectCentroids = list(self.means.values())
-
+            
+            print("Object IDs: ", objectIDs)
+            print("Object centroids: ", objectCentroids)
             D = dist.cdist(objectCentroids, inputCentroids) # compute the distance between each pair of object centroids and input centroids, respectively. Our goal will be to match an input centroid to an existing object centroid 
             if self.max_distance != 0: # If the max_distance has been set to 0, we'll ignore the next step. (Otherwise 0 would force new tracks for each point).
                 D[D > self.max_distance] = np.nan # Set the distance to NA for the pairs that have distance above the threshold we have set. This will force the initiation of new tracks for these points.

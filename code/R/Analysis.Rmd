@@ -243,9 +243,9 @@ all = bind_rows(thul01_meta[,c("flower_start","flower_length", "CameraID")], nar
 
 # Camera codes:
 # 2018 NARS-04: 2018 NARS A
-# 2018 THUL-01: 2018 THUL B
+# 2018 THUL-01: 2018 THUL B v
 # 2019 NARS-13: 2019 NARS C
-# 2019 NARS-17: 2019 NARS D
+# 2019 NARS-17: 2019 NARS D v
 # 2019 NYAA-04: 2019 NYAA E
 
 
@@ -294,6 +294,300 @@ all %>%
 ggplot()+
   geom_point(aes(x = flower_start, y = flower_length, colour = CameraID))
 ```
+
+
+
+
+
+
+####### MMFIX PARAMETER TEST ########
+
+
+# NYAA-04
+```{r fig.height=4}
+NYAA04d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/NYAA-04_parameterTest_Evaluation.csv")
+
+
+NYAA04_p1 = NYAA04d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NYAA04_p2 = NYAA04d1 %>% 
+  arrange(mm, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NYAA04_p1
+NYAA04_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NYAA-04_AllCombinations.png', NYAA04_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NYAA-04_TenLowest.png', NYAA04_p2)
+
+rm(NYAA04_p1)
+rm(NYAA04_p2)
+```
+
+# NARS-13
+```{r fig.height=4}
+NARS13d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/NARS-13_parameterTest_Evaluation.csv")
+
+
+NARS13_p1 = NARS13d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS13_p2 = NARS13d1 %>% 
+  arrange(mm, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS13_p1
+NARS13_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-13_AllCombinations.png', NARS13_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-13_TenLowest.png', NARS13_p2)
+
+rm(NARS13_p1)
+rm(NARS13_p2)
+```
+
+# NARS-04
+```{r fig.height=4}
+NARS04d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/NARS-04_parameterTest_Evaluation.csv")
+
+
+NARS04_p1 = NARS04d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS04_p2 = NARS04d1 %>% 
+  arrange(mm, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS04_p1
+NARS04_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-04_AllCombinations.png', NARS04_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-04_TenLowest.png', NARS04_p2)
+
+rm(NARS04_p1)
+rm(NARS04_p2)
+```
+
+# NARS-17
+```{r fig.height=4}
+NARS17d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/NARS-17_parameterTest_Evaluation.csv")
+
+
+NARS17_p1 = NARS17d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS17_p2 = NARS17d1 %>% 
+  arrange(mm, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS17_p1
+NARS17_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-17_AllCombinations.png', NARS17_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-17_TenLowest.png', NARS17_p2)
+
+rm(NARS17_p1)
+rm(NARS17_p2)
+```
+
+# THUL-01
+```{r fig.height=4}
+THUL01d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/THUL-01_parameterTest_Evaluation.csv")
+
+
+THUL01_p1 = THUL01d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+THUL01_p2 = THUL01d1 %>% 
+  arrange(mm, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+THUL01_p1
+THUL01_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/THUL-01_AllCombinations.png', THUL01_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/THUL-01_TenLowest.png', THUL01_p2)
+
+rm(THUL01_p1)
+rm(THUL01_p2)
+```
+
+
+
+### Explore combinations
+
+# NYAA-04
+```{r echo = FALSE}
+print("NYAA-04")
+nyaa04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(nyaa04_gt$id_gt))
+
+# Minimum mm
+print("Lowest number of mismatches")
+min(NYAA04d1$mm)
+NYAA04Minmm = NYAA04d1[NYAA04d1$mm == min(NYAA04d1$mm),]
+
+# All zero
+NYAA04AllZero = NYAA04d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 0)
+
+# Correct number of flowers and minimum mm
+NYAA04CorrectflowerMinmm = NYAA04d1 %>% 
+  filter(number_of_objects == length(unique(nyaa04_gt$id_gt)))
+NYAA04CorrectflowerMinmm = NYAA04CorrectflowerMinmm[NYAA04CorrectflowerMinmm$mm == min(NYAA04CorrectflowerMinmm$mm),]
+```
+
+# NARS-13
+```{r echo = FALSE}
+print("NARS-13")
+nars13_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(nars13_gt$id_gt))
+
+# Minimum mm
+print("Lowest number of mismatches")
+min(NARS13d1$mm)
+NARS13Minmm = NARS13d1[NARS13d1$mm == min(NARS13d1$mm),]
+
+# All zero
+NARS13AllZero = NARS13d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 0)
+
+# Correct number of flowers and minimum mm
+NARS13CorrectflowerMinmm = NARS13d1 %>% 
+  filter(number_of_objects == length(unique(nars13_gt$id_gt)))
+NARS13CorrectflowerMinmm = NARS13CorrectflowerMinmm[NARS13CorrectflowerMinmm$mm == min(NARS13CorrectflowerMinmm$mm),]
+```
+
+# NARS-04
+```{r echo = FALSE}
+print("NARS-04")
+nars04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(nars04_gt$id_gt))
+
+# Minimum mm
+print("Lowest number of mismatches")
+min(NARS04d1$mm)
+NARS04Minmm = NARS04d1[NARS04d1$mm == min(NARS04d1$mm),]
+
+# All zero
+NARS04AllZero = NARS04d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 0)
+
+# Correct number of flowers and minimum mm
+NARS04CorrectflowerMinmm = NARS04d1 %>% 
+  filter(number_of_objects == length(unique(nars04_gt$id_gt)))
+NARS04CorrectflowerMinmm = NARS04CorrectflowerMinmm[NARS04CorrectflowerMinmm$mm == min(NARS04CorrectflowerMinmm$mm),]
+```
+
+# NARS-17
+```{r echo = FALSE}
+print("NARS-17")
+nars17_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2021_12_30_NorwayAnnotations_NARS-17_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(nars17_gt$id_gt))
+
+# Minimum mm
+print("Lowest number of mismatches")
+min(NARS17d1$mm)
+NARS17Minmm = NARS17d1[NARS17d1$mm == min(NARS17d1$mm),]
+
+# All zero
+NARS17AllZero = NARS17d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 0)
+
+# Correct number of flowers and minimum mm
+NARS17CorrectflowerMinmm = NARS17d1 %>% 
+  filter(number_of_objects == length(unique(nars17_gt$id_gt)))
+NARS17CorrectflowerMinmm = NARS17CorrectflowerMinmm[NARS17CorrectflowerMinmm$mm == min(NARS17CorrectflowerMinmm$mm),]
+```
+
+# THUL-01
+```{r echo = FALSE}
+print("THUL-01")
+thul01_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(thul01_gt$id_gt))
+
+# Minimum mm
+print("Lowest number of mismatches")
+min(THUL01d1$mm)
+THUL01Minmm = THUL01d1[THUL01d1$mm == min(THUL01d1$mm),]
+
+# All zero
+THUL01AllZero = THUL01d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 0)
+
+# Correct number of flowers and minimum mm
+THUL01CorrectflowerMinmm = THUL01d1 %>% 
+  filter(number_of_objects == length(unique(thul01_gt$id_gt)))
+THUL01CorrectflowerMinmm = THUL01CorrectflowerMinmm[THUL01CorrectflowerMinmm$mm == min(THUL01CorrectflowerMinmm$mm),]
+```
+
+
+
+
+
+
+
+
+####### /MMFIX PARAMETER TEST ########
+
+
+
 
 
 
@@ -399,8 +693,9 @@ nyaa04 %>%
 
 ## THUL 01
 
+# After MMFix
 ```{r fig.height=4}
-d2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_THUL-01_Evaluate.csv")
+d2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/THUL-01_parameterTest_Evaluation.csv")
 
 
 THUL01_p1 = d2 %>% 
@@ -408,7 +703,6 @@ THUL01_p1 = d2 %>%
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
   ggtitle("THUL-01 Parameter combination") +
   facet_wrap(vars(as.factor(maxDist)))
-
 
 THUL01_p2 = d2 %>% 
   arrange(mm, ascending = T) %>% 
@@ -426,13 +720,41 @@ ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/THUL-01_AllCombi
 ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/THUL-01_AllZero.png', THUL01_p2)
 ```
 
+```{r fig.height=4}
+# d2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_THUL-01_Evaluate.csv")
+# 
+# 
+# THUL01_p1 = d2 %>% 
+#   ggplot() +
+#   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
+#   ggtitle("THUL-01 Parameter combination") +
+#   facet_wrap(vars(as.factor(maxDist)))
+# 
+# 
+# THUL01_p2 = d2 %>% 
+#   arrange(mm, ascending = T) %>% 
+#   filter(mm == 0) %>% 
+#   ggplot() +
+#   geom_point(aes(x=runMean, y = maxDisap, size = mm)) + 
+#   ggtitle("THUL-01 All zero mismatches") +
+#   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+# 
+# 
+# THUL01_p1
+# THUL01_p2
+# 
+# ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/THUL-01_AllCombinations.png', THUL01_p1)
+# ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/THUL-01_AllZero.png', THUL01_p2)
+```
+
 ```{r}
-# NYAA-04 gt:
+# THUL-01 gt:
 thul01_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
 
 length(unique(thul01_gt$id_gt))
 
 ```
+
 ```{r}
 # Minimum mm: 0-160, 0 + 200-1000, 10, 0, 1, 6
 # All zero: 0, 0, 0, 8, 0.9885551, 6
@@ -553,7 +875,7 @@ nars04 %>%
 d4 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/parameterTest_3_NARS-13_Evaluate.csv")
 
 
-NARS13_p1 = d4 %>% 
+NARS04_p1 = d4 %>% 
   ggplot() +
   geom_point(aes(x=runMean, y = maxDisap, size = mm, colour = mm)) + 
   ggtitle("NARS-13 Parameter combination") +
@@ -561,7 +883,7 @@ NARS13_p1 = d4 %>%
   scale_color_gradient(low="blue", high="red")
 
 
-NARS13_p2 = d4 %>% 
+NARS04_p2 = d4 %>% 
   arrange(mm, ascending = T) %>% 
   slice_head(n = 10) %>% 
   ggplot() +
@@ -569,11 +891,11 @@ NARS13_p2 = d4 %>%
   ggtitle("NARS-13 Ten lowest mismatches") +
   facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
 
-NARS13_p1
-NARS13_p2
+NARS04_p1
+NARS04_p2
 
-ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-13_AllCombinations.png', NARS13_p1)
-ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-13_TenLowest.png', NARS13_p2)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-13_AllCombinations.png', NARS04_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/figures/NARS-13_TenLowest.png', NARS04_p2)
 
 
 ```

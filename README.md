@@ -34,7 +34,6 @@
     <li>
       <a href="#getting-started">Getting Started</a>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -45,14 +44,14 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This repository supports the paper X.
+This repository supports the paper *Towards individual-based pollination ecology: Automatic tracking of life histories of individual flowers*.
 
 The paper present a tracking algorithm developed for fast and accurate tracking of individual flowers in time-lapse image series.
 
-The algorithm includes a set of user-defined parameters for optimizing tracking performance.
+The algorithm includes a set of user-defined parameters for optimizing tracking performance:
 
-The maximum number of frames a detection can be lost before new points are forced into a new track is set by **max_disappeared**.
-The number of frames for calculating the running mean of the position of an object is set by **running_mean_threshold**. If there are less than this number of frames currently in the track, a mean over what is in the track will be used.
+The maximum number of frames a detection can be lost before new points are forced into a new track is set by **max gap**.
+The number of frames for calculating the running mean of the position of an object is set by **running mean**. If there are less than this number of frames currently in the track, a mean over what is in the track will be used.
 Simple centroid tracking algortihms will associate any two points between the current and the previus frame, disregarding the absolute distance between them, as long as they are the closest. In our algorithm, points that have a distance to tracked objects higher than **max_distance_threshold** will be forced into new tracks. If set to 0, this parameter will be ignored.
 
 The tracking algorithm can be applied to any objects and can be used both offline (on detection output already produced) or online (in realtime, frame by frame, as detections are made).
@@ -73,16 +72,11 @@ To use the tracking algorithm and associated tools, follow the steps below.
    ```sh
    pip install -a requirements.txt
    ```
-3. Run tracking on object detection output
+3. Run tracking on object detection output with 
    ```sh
-   python track.py
+   run.py
    ```
 
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 
 

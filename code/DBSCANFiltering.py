@@ -116,14 +116,14 @@ class DBSCANsieve():
         labels = pd.Series(clusters.labels_).rename('clusterID') # Grab the clustering labels and concatenate to df
         df = pd.concat([df, labels], axis=1)
         
-        print(df)
+        #print(df)
         grouped_df = df.groupby("clusterID") # Group by the clusterID and count the number of tracks within each cluster
         grouped_df = grouped_df.agg({"objectID": "nunique"}).reset_index()
         sub = grouped_df.loc[grouped_df['objectID'] == 1] # Make a list of clusterIDs that contain only one track
         l = sub['clusterID'].tolist()
 
         dfSub = df[df['clusterID'].isin(l)] # Subset the  df on the list so that it only includes only the isolated tracks (clusters containing a single track)
-        print("Passed DBSCAN ", l)
+        #print("Passed DBSCAN ", l)
 
         keepTracks = map(int, dfSub['objectID'].tolist()) # List of objectIDs we want to keep (map used to convert from str object to integer)
         tracksSub = self.tracks[self.tracks['objectID'].isin(keepTracks)] # Subset the tracks that passed the filtering. We'll return this dataframe from the filtering
