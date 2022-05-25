@@ -1,0 +1,156 @@
+---
+title: "TableGenerator"
+author: "Hjalte Mann"
+date: '2022-05-02'
+#output: pdf
+pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(GGally)
+library(plotly)
+library(kableExtra)
+library(gt)
+```
+
+
+
+```{r echo = F}
+
+trackScores = read.csv2("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/trackScores.csv", header = F)
+
+colnames(trackScores) = c('Site','Type', 'Flowers','Points', 'Max gap', 'Max distance', 'Running mean', 'Mismatches', 'MOTA', '>80% Accuracy','Tracks')
+
+
+trackScores$MOTA = signif(as.numeric(trackScores$MOTA), digits = 3)
+
+trackScores %>% 
+  gt() %>%
+  tab_spanner(
+    label = "Tracking parameters",
+    columns = c('Max gap', 'Max distance', 'Running mean'
+    )
+  )%>%
+  tab_spanner(
+    label = "Result",
+    columns = c('Mismatches', 'MOTA', '>80% Accuracy', 'Tracks'
+    )
+  ) %>% 
+   cols_align(
+    align = "left"
+  ) %>%
+  tab_row_group(
+    label = "2018 THUL B",
+    rows = Site == "2018 THUL B"
+  )  %>%
+  tab_row_group(
+    label = "2019 NARS D",
+    rows = Site == "2019 NARS D"
+  ) %>%
+  tab_row_group(
+    label = "2018 NARS A",
+    rows = Site == "2018 NARS A"
+  ) %>%
+  tab_row_group(
+    label = "2019 NYAA E",
+    rows = Site == "2019 NYAA E"
+  ) %>%
+  tab_row_group(
+    label = "2019 NARS C",
+    rows = Site == "2019 NARS C"
+  ) %>% tab_style(
+    style = list(
+      cell_fill(color = "#FFFFFF"),
+      cell_text(color = "#FFFFFF")
+      ),
+    locations = cells_body(
+      columns = Site
+    )
+  ) %>% 
+  row_group_order(groups = c("2018 THUL B","2019 NARS D","2018 NARS A","2019 NYAA E", "2019 NARS C" )) %>%
+  fmt_missing(
+    columns = 1:11,
+    missing_text = "-"
+  ) %>%
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = Tracks,
+      rows = c(1,2,4,6,9,11,12,15)
+    )
+  )%>% 
+  text_transform(locations = cells_body(columns = Tracks), 
+                 fn = function(x) {
+                   x <- gsub("7 - 13", "7 - <span style=\"font-weight:bold;\">13</span>", x)
+                 }) %>% 
+  gtsave("tab_1_2.png", expand = 10)
+
+
+
+
+
+```
+
+
+```{r}
+
+
+filterScores = read.csv2("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/FilterScoresForTable.csv", header = T)
+
+
+
+colnames(filterScores) = c('Image series','Flowers', 'Tracks','Mismatches', 'MOTA', 'Tracks ', 'Mismatches ', 'MOTA ')
+
+
+filterScores$MOTA = signif(as.numeric(filterScores$MOTA), digits = 3)
+
+filterScores %>% 
+  gt() %>%
+  tab_spanner(
+    label = "Before filtering",
+    columns = c('Tracks','Mismatches', 'MOTA'
+    )
+  )%>%
+  tab_spanner(
+    label = "After filtering",
+    columns = c('Tracks ','Mismatches ', 'MOTA '
+    )
+  ) %>% 
+   cols_align(
+    align = "left"
+  ) %>% 
+  fmt_missing(
+  columns = everything(),
+  rows = everything(),
+  missing_text = ""
+) %>% tab_style(
+    style = cell_borders(
+      sides = c("top", "bottom"),
+      color = "lightgrey",
+      weight = px(2),
+      style = "solid"
+    ),
+    locations = cells_body(
+      columns = everything(),
+      rows = 4
+    )
+  ) %>%
+  tab_style(
+    style = list(
+      cell_text(weight = "bold")
+      ),
+    locations = cells_body(
+      columns = everything(),
+      rows = 4
+    )
+  ) %>% 
+  gtsave("tableFilterscores.png", expand = 10)
+```
+
+
