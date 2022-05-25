@@ -1,0 +1,212 @@
+---
+title: "VisualizeTracks"
+author: "Hjalte Mann"
+date: '2022-05-12'
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(GGally)
+library(plotly)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+meta_2018 = read.csv("../../data/annotations/DetectionPhenology_2018_Meta_Clean_Prepped.csv")
+
+meta_2018 = meta_2018 %>% 
+  select(FileName, DOY, DateTime)
+
+colnames(meta_2018) = c("filename", "DOY", "time")
+
+```
+
+
+```{r}
+THUL01Anno = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv", header = T)
+
+THUL01Tracked = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_20_maxDist_500.csv")
+
+m = merge(THUL01Anno, THUL01Tracked, by = c("filename","x_min", "y_min", "x_max", "y_max"))
+
+
+m = merge(m, meta_2018, by = "filename")
+
+m %>% 
+  filter(id_gt == "Flower_15" | id_gt == "Flower_28"| id_gt == "Flower_25") %>% 
+ggplot() + 
+  geom_point(aes(x = frame, y = id_gt, colour = as.factor(objectID)), size = 4, shape = 15)
+
+
+mp = m %>% 
+  filter(id_gt == "Flower_15" | id_gt == "Flower_28"| id_gt == "Flower_25") %>% 
+  ggplot() +
+   geom_line(mapping = aes(DOY,id_gt, group=id_gt, colour = as.factor(objectID)), size = 4) +
+  ylab("") +
+  ggtitle("Max gap = 10 Running mean = 1 Max distance = 0") +
+   theme_bw() +
+   theme(legend.position = "none",
+         panel.grid.minor.y = element_blank(),
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.x = element_blank(),
+         panel.grid.major.x = element_blank()) #,
+         #text = element_text(size=30))#,
+         #axis.text.y=element_blank(),
+         #axis.ticks.y=element_blank(),
+         #axis.text=element_text(colour="black"),
+         #panel.spacing.y = unit(0.7, "lines"))# +
+  #theme(plot.margin = margin(0.5,1,0.5,0.5, "cm"))
+  
+
+```
+
+```{r}
+THUL01Anno2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv", header = T)
+
+THUL01Tracked2 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/_parameterTest_NARS-04_3/parameterTest_NARS-04_maxDisap_10_runMean_1_maxDist_0.csv")
+
+m2 = merge(THUL01Anno2, THUL01Tracked2, by = c("filename","x_min", "y_min", "x_max", "y_max"))
+
+m2 = merge(m2, meta_2018, by = "filename")
+
+m2 %>% 
+  filter(id_gt == "Flower_15" | id_gt == "Flower_28"| id_gt == "Flower_25") %>% 
+ggplot() + 
+  geom_point(aes(x = frame, y = id_gt, colour = as.factor(objectID)), size = 4, shape = 15)
+
+m2p = m2 %>% 
+  filter(id_gt == "Flower_15" | id_gt == "Flower_28"| id_gt == "Flower_25") %>% 
+  ggplot() +
+   geom_line(mapping = aes(DOY,id_gt, group=id_gt, colour = as.factor(objectID)), size = 4) +
+  ylab("") +
+  ggtitle("Max gap = 10 Running mean = 1 Max distance = 0") +
+   theme_bw() +
+   theme(legend.position = "none",
+         panel.grid.minor.y = element_blank(),
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.x = element_blank(),
+         panel.grid.major.x = element_blank())#,
+         #text = element_text(size=30))#,
+         #axis.text.y=element_blank(),
+         #axis.ticks.y=element_blank(),
+         #axis.text=element_text(colour="black"),
+         #panel.spacing.y = unit(0.7, "lines"))# +
+  #theme(plot.margin = margin(0.5,1,0.5,0.5, "cm"))
+
+
+
+```
+
+```{r}
+
+m$type = "Max gap = 10, Running mean = 20, Max distance = 500"
+m2$type = "Max gap = 10, Running mean = 1, Max distance = 0"
+
+m3 = bind_rows(m, m2)
+
+m$c = "NA"
+
+m3$c[m3$objectID == "17"] = "0"
+m3$c[m3$objectID == "15"] = "0"
+
+m3$c[m3$objectID == "13"] = "1"
+m3$c[m3$objectID == "10"] = "2"
+
+m3$c[m3$objectID == "12"] = "1"
+m3$c[m3$objectID == "9"] = "2"
+
+m3$c[m3$objectID == "27"] = "3"
+m3$c[m3$objectID == "15"] = "0"
+
+
+
+errorPlot = m3 %>% 
+  filter(id_gt == "Flower_15" | id_gt == "Flower_28"| id_gt == "Flower_25") %>% 
+  ggplot() +
+   geom_line(mapping = aes(DOY,id_gt, group=id_gt, colour = c), size = 4) +
+  ylab("Ground truth flower ID") +
+  facet_wrap(vars(type), ncol = 1) +
+  #ggtitle("B") +
+   theme_bw() +
+   theme(legend.position = "none",
+         panel.grid.minor.y = element_blank(),
+         panel.grid.major.y = element_blank(),
+         panel.grid.minor.x = element_blank(),
+         panel.grid.major.x = element_blank(),
+         text = element_text(size=18))
+
+errorPlot
+
+ggsave("aplot.png", errorPlot, height = 4, width = 10, dpi = 800)
+
+```
+
+
+
+```{r}
+#unique(m$objectID[m$id_gt == "Flower_32"])
+#unique(m$id_gt[m$objectID == "9"])
+
+
+#m %>% 
+#ggplot() + 
+#  geom_point(aes(x = x_c, y = y_c, colour = as.factor(id_gt)), size = 1)
+
+#m %>% 
+#ggplot() + 
+#  geom_point(aes(x = x_c, y = y_c, colour = as.factor(objectID)), size = 1)
+
+
+
+#m %>% 
+  #group_by(id_gt, objectID) %>% 
+  #mutate(gr = n()) %>% 
+#ggplot() + 
+#  geom_point(aes(x = frame, y = id_gt, colour = as.factor(objectID)), size = 4, shape = 15)
+
+#m %>% 
+# ggplot() + 
+ #  geom_point(aes(x = frame, y = as.factor(objectID), colour = id_gt), size = 4, shape = 15)
+
+
+
+
+#m %>% 
+#  filter(id_gt == "Flower_15" | id_gt == "Flower_28"| id_gt == "Flower_25") %>% 
+#ggplot() + 
+#  geom_point(aes(x = frame, y = as.factor(objectID), colour = id_gt), size = 4, shape = #15)
+
+
+```
+
+
+```{r}
+NARS13Anno = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv", header = T)
+
+
+nars13points = NARS13Anno %>% 
+  mutate(x_c = (x_min + x_max)/2, y_c = (y_min + y_max)/2) %>% 
+ggplot() + 
+  geom_point(aes(x = x_c, y = y_c, colour = as.factor(id_gt)), size = 1, shape = 4, stroke = 1) +
+  labs(x = NULL, y = NULL, title = NULL) +
+  scale_x_continuous(limits = c(0,6080), expand = c(0, 0)) + 
+  scale_y_reverse(limits = c(3420, 0), expand = c(0, 0)) +
+   theme_bw() +
+   theme(legend.position = "none",
+    axis.ticks.length=unit(0, "pt"),
+    #panel.background = element_rect(fill = "transparent", colour = NA),
+    #plot.background = element_rect(fill = "transparent", colour = NA),
+    panel.grid = element_blank())#,
+    #panel.border = element_blank())
+
+
+nars13points
+ggsave("nars13points.png", nars13points, width = 10, height = 5.64, dpi = 800)
+
+
+```
+
