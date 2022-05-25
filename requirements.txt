@@ -2,3 +2,5 @@ scipy
 matplotlib
 pillow
 shapely
+motmetrics
+geopandas
