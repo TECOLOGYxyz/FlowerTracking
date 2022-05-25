@@ -97,7 +97,7 @@ Any contributions you make are **greatly appreciated**.
 <!-- CONTACT -->
 ## Contact
 
-[@HjalteMann](https://twitter.com/@HjalteMann) - mann@bios.au.dk - http://tecology.xyz/
+[@HjalteMann](https://twitter.com/@HjalteMann) - mann@ecos.au.dk - http://tecology.xyz/
 
 [https://github.com/TECOLOGYxyz/TrackingFlowers](https://github.com/TECOLOGYxyz/TrackingFlowers)
 
