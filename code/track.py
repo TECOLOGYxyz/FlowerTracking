@@ -13,6 +13,8 @@ Max distance: Threshold for maximum distance between point and track before init
 Max dissapeared: Max number of frames a track can be disappeared before the track is terminated and a new point in that area are considered new tracks
 Running mean: Number of previous frame on which to calculate track position (to calculate distance between point and track). If set to one, position is centroid of previous track, if above one, means of x and y are calculated.
 
+The centroid tracking approach was based on: https://pyimagesearch.com/2018/07/23/simple-object-tracking-with-opencv/ (Accessed on 2022-06-10)
+
 
 ### Pseudocode of tracking algorithm: ###
 
@@ -64,7 +66,7 @@ class tracker():
         
         self.disappeared = OrderedDict() # Keeps track of how long an objectID has been lost
 
-        self.detections = detections  # store parameters for use in the class
+        self.detections = detections  # Store parameters for use in the class
         self.max_disappeared = max_disappeared
         self.max_distance = max_distance
         self.running_mean_threshold = running_mean_threshold
@@ -164,7 +166,7 @@ class tracker():
     
     ### Tracking algorithm ###
     def track(self, frame): # Start tracking     
-        frame_detections = self.get_frame_detections(frame)#  Get the detections for the current frame
+        frame_detections = self.get_frame_detections(frame) # Get the detections for the current frame
         if verbose:
             print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
          
@@ -174,10 +176,10 @@ class tracker():
                 #print("Object id in disappeared: ", objectID)
                 self.disappeared[objectID] += 1
 
-                if self.disappeared[objectID] > self.max_disappeared: # if we have reached a maximum number of consecutive frames where a given object has been marked as missing, deregister it
+                if self.disappeared[objectID] > self.max_disappeared: # Deregister points that have been disappeared longer than max disappeared threshold
                     self.deregister(objectID)
             
-            return self.objects # return early as there are no centroids or tracking info to update
+            return self.objects # Return since there is nothing to update
 
 
         # If the frame has detections
@@ -195,12 +197,12 @@ class tracker():
                 print(f'Current objects:{br}{self.objects}')
            
         else: # We are already tracking objects, so let's see if we can associate any current frame detections with objects that are being tracked.   
-            objectIDs = list(self.means.keys()) # grab the set of object IDs and corresponding centroids
+            objectIDs = list(self.means.keys()) # Store the object IDs and their centroids
             objectCentroids = list(self.means.values())
             
             print("Object IDs: ", objectIDs)
             print("Object centroids: ", objectCentroids)
-            D = dist.cdist(objectCentroids, inputCentroids) # compute the distance between each pair of object centroids and input centroids, respectively. Our goal will be to match an input centroid to an existing object centroid 
+            D = dist.cdist(objectCentroids, inputCentroids) # Calculate distances between new points and existing tracks.
             if self.max_distance != 0: # If the max_distance has been set to 0, we'll ignore the next step. (Otherwise 0 would force new tracks for each point).
                 D[D > self.max_distance] = np.nan # Set the distance to NA for the pairs that have distance above the threshold we have set. This will force the initiation of new tracks for these points.
             
@@ -233,10 +235,10 @@ class tracker():
             
             self.update_means() # Update the dictionary containing the running means of the points
 
-            for o in objectIndexes: # We'll add 1 for the objects that were not associated with a point in the current frame (in dictionary (disappeared) containing the number of frames the tracks have been lost)).
+            for o in objectIndexes: # We'll add 1 for the objects that were not associated with a point in the current frame (in dictionary (disappeared) containing the number of frames the tracks have been lost).
                 objectID = objectIDs[o]
                 self.disappeared[objectID] += 1
-                if self.disappeared[objectID] > self.max_disappeared: # if we have reached a maximum number of consecutive frames where a given object has been marked as missing, deregister it.
+                if self.disappeared[objectID] > self.max_disappeared: # Deregister any tracks that have been disappeared for more frames than the max disappeared threshold.
                     self.deregister(objectID)
                     if verbose:
                         print(f'Deregistering object {objectID}')
@@ -246,17 +248,17 @@ class tracker():
                     print(f'Registering point {i} with the centroid {inputCentroids[i]}')
                 self.register(frame, inputCentroids[i])
 
+
 # ===================== RUN ===================================================
 
 # currentTime = datetime.now() # Use this if you need to time-stamp result file
 # currentTime=('%02d-%02d-%02d'%(currentTime.hour,currentTime.minute,currentTime.second))
 
 
-
 # ===================== Run a single round of tracking ========================
 # t = tracker(4, 500, 5, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
 # starttime = time.time()
-# for f in frames:
+# for f in frames: # Loop over frames and track
 #     t.track(f)
 # endtime = time.time()
 # print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
@@ -264,17 +266,15 @@ class tracker():
 # =============================================================================
 
 
-
 # ===================== Plot stuff ============================================
 #plt.scatter(detections['x_c'], detections['y_c'], c = detections['frame'])
 #plt.plot(detections['x_c'],detections['y_c'])
 
-# tracks = pd.read_csv(resultFilename) # Careful!
+# tracks = pd.read_csv(resultFilename) # Careful not to write several times to same file!
 # print(tracks)
 # print(tracks.objectID.unique())
 # print(f'Number of tracks found: {len(tracks.objectID.unique())}')
 
-#tracks['hello'] = tracks['objectID'].astype(float).astype(int)
-#plt.scatter(tracks['x_c'], tracks['y_c'], c = tracks['objectID'])
-#detections.groupby('').plot(kind='kde', ax=plt.gca())
+# =============================================================================
 
+### END OF SCRIPT ###
