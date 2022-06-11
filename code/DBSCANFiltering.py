@@ -10,7 +10,7 @@ import pandas as pd
 from shapely.geometry import Polygon, LineString, Point
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
-from filtering import sieve
+#from filtering import sieve
 import numpy as np
 from scipy.spatial import ConvexHull
 from datetime import datetime
@@ -147,17 +147,27 @@ class DBSCANsieve():
         ax2.axes.get_xaxis().set_visible(False)  
         ax0.axes.get_xaxis().set_visible(False)
 
-        # ax0.set_aspect(1)
+        ax0.set_aspect(1)
         # ax1.set_aspect('auto')
         # ax2.set_aspect('auto')
 
-        # ax0.set_aspect(6080, 3420)
+        #ax0.set_aspect(6080, 3420)
         # ax1.set_aspect(6080, 3420)
         # ax2.set_aspect(6080, 3420)
-
+        
+        ax0.set_xlim((0,6080))
+        ax0.set_ylim((3420,0))
+        
+        #ax1.set_xlim((0,6080))
+        #ax1.set_ylim((3420,0))
+        
+        #ax2.set_xlim((0,6080))
+        #ax2.set_ylim((3420,0))
+        
+        print(self.tracks)
         scatter = ax0.scatter(self.tracks['x_c'], self.tracks['y_c'], c = self.tracks['objectID'], s = 0.2)
         ax0 = scatter.axes
-        ax0.invert_yaxis()
+        #ax0.invert_yaxis()
 
         df.plot(ax=ax1, column = 'clusterID', marker = ".", markersize = 0.2)
         dfSub.plot(ax=ax2, column = 'clusterID', marker = ".", markersize=0.2)
