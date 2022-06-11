@@ -278,14 +278,41 @@ ggplot()+
 
 f1
 
-ggsave("U:/BITCue/Projekter/TrackingFlowers/figures/OnsetVSLength.png", f1, width = 15, height = 10)
+#ggsave("U:/BITCue/Projekter/TrackingFlowers/figures/OnsetVSLength.png", f1, width = 15, height = 10)
 
-all %>% 
+
+f2 = all %>% 
 ggplot()+
-  geom_point(aes(x = flower_start, y = flower_length, colour = CameraID))# +
-#geom_smooth(aes(x = flower_start, y = flower_length), method=lm)
- 
-t.test(nyaa04_meta$flower_length, nars13_meta$flower_length)
+  geom_boxplot(aes(x = flower_start, y = flower_length, fill = camCode, shape = camCode), size = 1) + 
+  xlab("Onset of flowering (DOY)") + 
+  ylab("Number of days flowering") +
+    theme_bw()  +
+  scale_fill_manual(name = "Camera ID",
+                      values = c("gray26", "brown3", "dodgerblue3", "darkorange2", "chartreuse3"), aesthetics = c("colour", "fill")) + 
+  scale_shape_manual(name = "Camera ID",
+                      values = c(21,22,23,24,25)) + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        legend.title = element_text(size = legendTitleSize),
+        text = element_text(size = axisSize),
+        legend.text = element_text(size = legendTextSize),
+        axis.line = element_line(),
+        axis.text=element_text(colour="black"),
+        panel.spacing = unit(0.7, "lines"))
+
+
+ggsave("U:/BITCue/Projekter/TrackingFlowers/figures/OnsetVSLengthBox.png", f2, width = 15, height = 10)
+
+
+
+
+# all %>% 
+# ggplot()+
+#   geom_point(aes(x = flower_start, y = flower_length, colour = CameraID))# +
+# #geom_smooth(aes(x = flower_start, y = flower_length), method=lm)
+#  
+# t.test(nyaa04_meta$flower_length, nars13_meta$flower_length)
 
 ```
 
