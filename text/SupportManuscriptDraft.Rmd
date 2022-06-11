@@ -54,7 +54,9 @@ word_comment <- function(comment, highlight = "") {
 
 \newpage
 
-## Results of the filtering algorithm for filtering distances 5-500 with a stepsize of 50 for the three series.
+# 2
+
+## Results of the filtering algorithm for filtering distances (eps) 50-500 with a stepsize of 50 for the three series.
 
 
 eps = 50: 158 mismatches with 165 tracks kept 
