@@ -9,7 +9,7 @@ import pandas as pd
 from track import tracker
 #from filtering import sieve
 from DBSCANFiltering import DBSCANsieve
-from distanceFiltering import distanceSieve
+#from distanceFiltering import distanceSieve
 #from evaluate import evaluator
 #import os
 import time
@@ -269,8 +269,8 @@ def MOTMetrics(dt, gt,  site):
 
 #Find a good value for eps
 
-epslist = [50,100,150,200,250,300,350,400,450,500] # [350]
-#epslist = [350]
+#epslist = [50,100,150,200,250,300,350,400,450,500] # [350]
+epslist = [350]
 results_filename = '../testResults/MMFix/temp_epstest.csv'
 
 temppath = '../testResults/MMFix/temp_epsExperiment_maxDisap_10_runMean_10_maxDist_300.csv'
