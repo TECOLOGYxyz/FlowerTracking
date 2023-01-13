@@ -1,0 +1,502 @@
+---
+title: "MOTMetrics"
+author: "Hjalte Mann"
+date: '2022-05-02'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(GGally)
+library(plotly)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+####### MOTMETRICS MMFix PARAMETER TEST ########
+
+# NYAA-04
+```{r fig.height=4}
+NYAA04d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/NYAA-04_parameterTest_Evaluation_20220513.csv")
+
+
+NYAA04_p1 = NYAA04d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NYAA04_p2 = NYAA04d1 %>% 
+  arrange(num_switches, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NYAA04_p1
+NYAA04_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NYAA-04_AllCombinations.png', NYAA04_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NYAA-04_TenLowest.png', NYAA04_p2)
+
+rm(NYAA04_p1)
+rm(NYAA04_p2)
+```
+
+# NARS-13
+
+```{r fig.height=4}
+NARS13d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/NARS-13_parameterTest_Evaluation_20220513.csv")
+
+
+NARS13_p1 = NARS13d1 %>%
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) +
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS13_p2 = NARS13d1 %>%
+  arrange(num_switches, ascending = T) %>%
+  slice_head(n = 10) %>%
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) +
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS13_p1
+NARS13_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-13_AllCombinations.png', NARS13_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-13_TenLowest.png', NARS13_p2)
+
+rm(NARS13_p1)
+rm(NARS13_p2)
+```
+
+# NARS-04
+```{r fig.height=4}
+NARS04d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/NARS-04_parameterTest_Evaluation_20220513.csv")
+
+
+NARS04_p1 = NARS04d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS04_p2 = NARS04d1 %>% 
+  arrange(num_switches, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS04_p1
+NARS04_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-04_AllCombinations.png', NARS04_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-04_TenLowest.png', NARS04_p2)
+
+rm(NARS04_p1)
+rm(NARS04_p2)
+```
+
+# NARS-17
+```{r fig.height=4}
+NARS17d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/NARS-17_parameterTest_Evaluation_20220513.csv")
+
+
+NARS17_p1 = NARS17d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS17_p2 = NARS17d1 %>% 
+  arrange(num_switches, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+NARS17_p1
+NARS17_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-17_AllCombinations.png', NARS17_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/NARS-17_TenLowest.png', NARS17_p2)
+
+rm(NARS17_p1)
+rm(NARS17_p2)
+```
+
+# THUL-01
+```{r fig.height=4}
+THUL01d1 = read.csv("U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/THUL-01_parameterTest_Evaluation_20220513.csv")
+
+
+THUL01_p1 = THUL01d1 %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) + 
+  ggtitle("NYAA-04 Parameter combination") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+THUL01_p2 = THUL01d1 %>% 
+  arrange(num_switches, ascending = T) %>% 
+  slice_head(n = 10) %>% 
+  ggplot() +
+  geom_point(aes(x=runMean, y = maxDisap, size = num_switches, colour = num_switches)) + 
+  ggtitle("NYAA-04 Ten Lowest Mismatches") +
+  facet_wrap(vars(maxDist))+scale_color_gradient(low="blue", high="red")
+
+
+THUL01_p1
+THUL01_p2
+
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/THUL-01_AllCombinations.png', THUL01_p1)
+ggsave('U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/figures/THUL-01_TenLowest.png', THUL01_p2)
+
+rm(THUL01_p1)
+rm(THUL01_p2)
+```
+
+
+
+### Explore combinations
+
+# NYAA-04
+```{r echo = FALSE}
+print("NYAA-04")
+nyaa04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(nyaa04_gt$id_gt))
+
+# Minimum num_switches
+print("Lowest number of mismatches")
+min(NYAA04d1$num_switches)
+NYAA04Minnum_switches = NYAA04d1[NYAA04d1$num_switches == min(NYAA04d1$num_switches),]
+
+# All zero
+NYAA04AllZero = NYAA04d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 1)
+
+# Correct number of flowers and minimum num_switches
+NYAA04CorrectflowerMinnum_switches = NYAA04d1 %>% 
+  filter(num_tracks == length(unique(nyaa04_gt$id_gt)))
+
+
+
+NYAA04CorrectflowerMinnum_switches = NYAA04CorrectflowerMinnum_switches[NYAA04CorrectflowerMinnum_switches$num_switches == min(NYAA04CorrectflowerMinnum_switches$num_switches),]
+
+
+
+```
+
+
+```{r echo = FALSE}
+print("NARS-13")
+nars13_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(nars13_gt$id_gt))
+
+# Minimum num_switches
+print("Lowest number of mismatches")
+min(NARS13d1$num_switches)
+NARS13Minnum_switches = NARS13d1[NARS13d1$num_switches == min(NARS13d1$num_switches),]
+
+# All zero
+NARS13AllZero = NARS13d1 %>%
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 1)
+
+# Correct number of flowers and minimum num_switches
+NARS13CorrectflowerMinnum_switches = NARS13d1 %>%
+  filter(num_tracks == length(unique(nars13_gt$id_gt)))
+NARS13CorrectflowerMinnum_switches = NARS13CorrectflowerMinnum_switches[NARS13CorrectflowerMinnum_switches$num_switches == min(NARS13CorrectflowerMinnum_switches$num_switches),]
+```
+
+# NARS-04
+```{r echo = FALSE}
+print("NARS-04")
+nars04_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(nars04_gt$id_gt))
+
+# Minimum num_switches
+print("Lowest number of mismatches")
+min(NARS04d1$num_switches)
+NARS04Minnum_switches = NARS04d1[NARS04d1$num_switches == min(NARS04d1$num_switches),]
+
+# All zero
+NARS04AllZero = NARS04d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 1)
+
+# Correct number of flowers and minimum num_switches
+NARS04CorrectflowerMinnum_switches = NARS04d1 %>% 
+  filter(num_tracks == length(unique(nars04_gt$id_gt)))
+NARS04CorrectflowerMinnum_switches = NARS04CorrectflowerMinnum_switches[NARS04CorrectflowerMinnum_switches$num_switches == min(NARS04CorrectflowerMinnum_switches$num_switches),]
+```
+
+# NARS-17
+```{r echo = FALSE}
+print("NARS-17")
+nars17_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2021_12_30_NorwayAnnotations_NARS-17_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(nars17_gt$id_gt))
+
+# Minimum num_switches
+print("Lowest number of mismatches")
+min(NARS17d1$num_switches)
+NARS17Minnum_switches = NARS17d1[NARS17d1$num_switches == min(NARS17d1$num_switches),]
+
+# All zero
+NARS17AllZero = NARS17d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 1)
+
+# Correct number of flowers and minimum num_switches
+NARS17CorrectflowerMinnum_switches = NARS17d1 %>% 
+  filter(num_tracks == length(unique(nars17_gt$id_gt)))
+NARS17CorrectflowerMinnum_switches = NARS17CorrectflowerMinnum_switches[NARS17CorrectflowerMinnum_switches$num_switches == min(NARS17CorrectflowerMinnum_switches$num_switches),]
+```
+
+# THUL-01
+```{r echo = FALSE}
+print("THUL-01")
+thul01_gt = read.csv("U:/BITCue/Projekter/TrackingFlowers/data/annotations/2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv")
+
+print('True number of flowers')
+length(unique(thul01_gt$id_gt))
+
+# Minimum num_switches
+print("Lowest number of mismatches")
+min(THUL01d1$num_switches)
+THUL01Minnum_switches = THUL01d1[THUL01d1$num_switches == min(THUL01d1$num_switches),]
+
+# All zero
+THUL01AllZero = THUL01d1 %>% 
+  filter(maxDisap == 0 & maxDist == 0 & runMean == 1)
+
+# Correct number of flowers and minimum num_switches
+THUL01CorrectflowerMinnum_switches = THUL01d1 %>% 
+  filter(num_tracks == length(unique(thul01_gt$id_gt)))
+THUL01CorrectflowerMinnum_switches = THUL01CorrectflowerMinnum_switches[THUL01CorrectflowerMinnum_switches$num_switches == min(THUL01CorrectflowerMinnum_switches$num_switches),]
+```
+
+
+
+
+
+
+
+
+
+# Table dataframe
+
+
+```{r}
+trackScores = setNames(data.frame(matrix(ncol = 11, nrow = 0)), c('Site', 'Type', 'Flowers','Points', 'Max gap', 'Max distance', 'Running mean', 'Mismatches', 'MOTA', '>80% Accuracy','Tracks'))
+
+# Add THUL-01 to table
+# All zero
+THUL01AllZero$Site = "2018 THUL B"
+THUL01AllZero$Type = "PZ"
+
+THUL01AllZeroTable = THUL01AllZero %>% 
+  select(Site,Type,num_unique_objects, num_detections, maxDisap, maxDist, runMean,num_switches, mota, mostly_tracked, num_tracks)
+
+trackScores[nrow(trackScores) + 1,] = c(THUL01AllZeroTable[1,])
+
+# Minimum mismatches
+THUL01Minnum_switches
+
+THUL01Minnum_switchesTable = c("2018 THUL B","MM", "6", "699", "0 - 160", "0, 200 - 1000", "1, 10", "0", "1.00", "6", "6")
+
+trackScores[nrow(trackScores) + 1,] = c(THUL01Minnum_switchesTable)
+
+
+# Correct flower, minimum mismatches
+THUL01CorrectflowerMinnum_switchesTable = c("2018 THUL B","CF MM", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA")
+trackScores[nrow(trackScores) + 1,] = c(THUL01CorrectflowerMinnum_switchesTable)
+
+
+
+
+
+# Add NARS-17 to table
+# All zero
+NARS17AllZero$Site = "2019 NARS D"
+NARS17AllZero$Type = "PZ"
+
+NARS17AllZeroTable = NARS17AllZero %>%
+  select(Site,Type, num_unique_objects, num_detections, maxDisap, maxDist, runMean,num_switches, mota, mostly_tracked, num_tracks)
+
+trackScores[nrow(trackScores) + 1,] = c(NARS17AllZeroTable[1,])
+
+# Minimum mismatches
+NARS17Minnum_switches
+
+NARS17Minnum_switchesTable = c("2019 NARS D","MM", "13", "748", "0 - 160", "0, 300 - 1000", "1 - 160", "0", "1.00", "13", "7 - 13")
+
+trackScores[nrow(trackScores) + 1,] = c(NARS17Minnum_switchesTable)
+
+
+
+# Correct flower, minimum mismatches
+NARS17CorrectflowerMinnum_switches = NARS17d1 %>% 
+  filter(num_tracks == length(unique(nars17_gt$id_gt)))
+NARS17CorrectflowerMinnum_switches = NARS17CorrectflowerMinnum_switches[NARS17CorrectflowerMinnum_switches$num_switches == min(NARS17CorrectflowerMinnum_switches$num_switches),]
+
+NARS17CorrectflowerMinnum_switchesTable = c("2019 NARS D","CF MM", "13", "748", "0 - 60", "0, 300 - 1000", "1 - 160", "0", "1.00", "13", "13")
+
+
+trackScores[nrow(trackScores) + 1,] = c(NARS17CorrectflowerMinnum_switchesTable)
+
+
+
+
+
+# Add NARS-04 to table
+# All zero
+NARS04AllZero$Site = "2018 NARS A"
+NARS04AllZero$Type = "PZ"
+
+NARS04AllZeroTable = NARS04AllZero %>%
+  select(Site,Type,num_unique_objects, num_detections, maxDisap, maxDist, runMean,num_switches, mota, mostly_tracked, num_tracks)
+
+trackScores[nrow(trackScores) + 1,] = c(NARS04AllZeroTable[1,])
+
+
+# Minimum mismatches
+NARS04Minnum_switches$Site = "2018 NARS A"
+NARS04Minnum_switches$Type = "MM"
+NARS04Minnum_switchesTable = NARS04Minnum_switches %>%
+  select(Site,Type,num_unique_objects, num_detections, maxDisap, maxDist, runMean,num_switches, mota, mostly_tracked, num_tracks)
+
+
+trackScores[nrow(trackScores) + 1,] = c(NARS04Minnum_switchesTable[1,])
+
+
+# Correct flower, minimum mismatches
+NARS04CorrectflowerMinnum_switchesTable = c("2018 NARS A","CF MM", "32", "1724", "10", "500", "10", "19", "0.98898", "32", "32")
+trackScores[nrow(trackScores) + 1,] = c(NARS04CorrectflowerMinnum_switchesTable)
+
+
+
+
+
+
+# Add NYAA-04 to table
+# All zero
+NYAA04AllZero$Site = "2019 NYAA E"
+NYAA04AllZero$Type = "PZ"
+
+NYAA04AllZeroTable = NYAA04AllZero %>%
+  select(Site,Type,num_unique_objects, num_detections, maxDisap, maxDist, runMean,num_switches, mota, mostly_tracked, num_tracks)
+
+trackScores[nrow(trackScores) + 1,] = c(NYAA04AllZeroTable[1,])
+
+
+# Minimum mismatches
+NYAA04Minnum_switches
+
+NYAA04Minnum_switchesTable = c("2019 NYAA E","MM", "21", "1762", "70 - 160", "600", "1", "17", "0.99035", "21", "21")
+
+trackScores[nrow(trackScores) + 1,] = c(NYAA04Minnum_switchesTable)
+
+
+# Correct flower, minimum mismatches
+NYAA04CorrectflowerMinnum_switchesTable = c("2019 NYAA E","CF MM","NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA")
+
+trackScores[nrow(trackScores) + 1,] = c(NYAA04CorrectflowerMinnum_switchesTable)
+
+
+
+
+
+# Add NARS-13 to table
+# All zero
+NARS13AllZero$Site = "2019 NARS C"
+NARS13AllZero$Type = "PZ"
+
+NARS13AllZeroTable = NARS13AllZero %>%
+  select(Site,Type,num_unique_objects, num_detections, maxDisap, maxDist, runMean,num_switches, mota, mostly_tracked, num_tracks)
+
+trackScores[nrow(trackScores) + 1,] = c(NARS13AllZeroTable[1,])
+
+
+# Minimum mismatches
+NARS13Minnum_switches$Site = "2019 NARS C"
+NARS13Minnum_switches$Type = "MM"
+NARS13Minnum_switchesTable = NARS13Minnum_switches %>%
+  select(Site,Type,num_unique_objects, num_detections, maxDisap, maxDist, runMean,num_switches, mota, mostly_tracked, num_tracks)
+
+
+trackScores[nrow(trackScores) + 1,] = c(NARS13Minnum_switchesTable[1,])
+
+
+# Correct flower, minimum mismatches
+NARS13CorrectflowerMinnum_switchesTable = c("2019 NARS C","CF MM", "85", "4887", "10", "400", "10", "91", "0.98138", "85", "85")
+trackScores[nrow(trackScores) + 1,] = c(NARS13CorrectflowerMinnum_switchesTable)
+
+```
+
+
+
+
+```{r}
+write.table(trackScores, "U:/BITCue/Projekter/TrackingFlowers/testResults/MMFix/trackScores.csv", row.names = F, col.names = F, quote = F, sep=";")
+```
+
+
+```{r}
+
+percDiff <- function(val1, val2) {
+  pdiff = abs(val1-val2) / (abs((val1+val2)/2))
+  
+  return(pdiff*100)
+}
+
+
+
+trackScoresFig = trackScores %>% 
+  select(Site, Tracks, Flowers, MOTA)
+
+trackScoresFig$flowerError = percDiff(trackScores$Tracks, trackScores$Flowers)
+
+
+
+
+```
+
+
+
+# Camera codes:
+# 2018 NARS-04: 2018 NARS A
+# 2018 THUL-01: 2018 THUL B
+# 2019 NARS-13: 2019 NARS C
+# 2019 NARS-17: 2019 NARS D
+# 2019 NYAA-04: 2019 NYAA E
+
+
+
+
+
+
+####### /MMFix PARAMETER TEST ########

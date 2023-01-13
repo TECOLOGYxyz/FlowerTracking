@@ -16,8 +16,6 @@
     <a href="https://github.com/TECOLOGYxyz/TrackingFlowers"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://share.streamlit.io/tecologyxyz/flowertracking/main/webapp.py">Try it out</a>
-    ·
     <a href="https://github.com/TECOLOGYxyz/TrackingFlowers/issues">Report Bug</a>
   </p>
 </p>
