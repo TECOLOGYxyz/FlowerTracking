@@ -61,7 +61,7 @@ verbose = True # Set to True if you want tracking process printed to screen and 
 # ===================== PROGRAM ===============================================
 
 class tracker():
-    def __init__(self, max_disappeared, max_distance, running_mean_threshold, results_filename, detections, verbose):
+    def __init__(self, max_gap, max_distance, running_mean_threshold, results_filename, detections, verbose):
         self.nextObjectID = 0 # Counter for object ids
         self.objects = OrderedDict() # Dictionary. objectID is the key, centroid is the content
         self.means = OrderedDict() # Dictionary to keep track of running means of object coordinates
@@ -69,7 +69,7 @@ class tracker():
         self.disappeared = OrderedDict() # Keeps track of how long an objectID has been lost
 
         self.detections = detections  # Store parameters for use in the class
-        self.max_disappeared = max_disappeared
+        self.max_gap = max_gap
         self.max_distance = max_distance
         self.running_mean_threshold = running_mean_threshold
         self.results_filename = results_filename
@@ -176,7 +176,8 @@ class tracker():
         print(frames)
         frameRange = list(range(frames[0], frames[len(frames) - 1]+1))
         print("Frame range: ", frameRange)
-        for frame in frameRange:
+        #for frame in frameRange:
+        for frame in frames:
             print("Getting detections for frame ", frame)
             frame_detections = self.get_frame_detections(frame)#.dropna() # Get the detections for the current frame
 
@@ -184,15 +185,16 @@ class tracker():
                 print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
             
             # If the frame has no detections
-            if frame_detections.empty: # we will add 1 to disappeared for all objects that are being tracked.
-                print("Empty frame encountered. Adding 1 to disappeared for current objects.")
-                for objectID in list(self.disappeared.keys()): # loop over any existing tracked objects and mark them as +1 in disappeared
-                    #print("Object id in disappeared: ", objectID)
-                    self.disappeared[objectID] += 1
+            # if frame_detections.empty: # we will add 1 to disappeared for all objects that are being tracked.
+            #     continue
+                # print("Empty frame encountered. Adding 1 to disappeared for current objects.")
+                # for objectID in list(self.disappeared.keys()): # loop over any existing tracked objects and mark them as +1 in disappeared
+                #     #print("Object id in disappeared: ", objectID)
+                #     self.disappeared[objectID] += 1
 
-                    if self.disappeared[objectID] > self.max_disappeared: # Deregister points that have been disappeared longer than max disappeared threshold
-                        self.deregister(objectID)
-                continue
+                #     if self.disappeared[objectID] > self.max_gap: # Deregister points that have been disappeared longer than max disappeared threshold
+                #         self.deregister(objectID)
+                # continue
 
             # If the frame has detections
             inputCentroids = frame_detections[['x_c', 'y_c']].values.tolist() # we'll grab the centroid coordinates and convert to a list
@@ -250,7 +252,7 @@ class tracker():
                 for o in objectIndexes: # We'll add 1 for the objects that were not associated with a point in the current frame (in dictionary (disappeared) containing the number of frames the tracks have been lost).
                     objectID = objectIDs[o]
                     self.disappeared[objectID] += 1
-                    if self.disappeared[objectID] > self.max_disappeared: # Deregister any tracks that have been disappeared for more frames than the max disappeared threshold.
+                    if self.disappeared[objectID] > self.max_gap: # Deregister any tracks that have been disappeared for more frames than the max disappeared threshold.
                         self.deregister(objectID)
                         if verbose:
                             print(f'Deregistering object {objectID}')
@@ -271,7 +273,7 @@ class tracker():
 
 
 # ===================== Run a single round of tracking ========================
-# t = tracker(4, 500, 5, frames) # Instantiate the class instance and pass in the threshold for max_disappeared and the list of frames.
+# t = tracker(4, 500, 5, frames) # Instantiate the class instance and pass in the threshold for max_gap and the list of frames.
 # starttime = time.time()
 # for f in frames: # Loop over frames and track
 #     t.track(f)
