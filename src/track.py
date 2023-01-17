@@ -39,23 +39,20 @@ The centroid tracking approach was based on: https://pyimagesearch.com/2018/07/2
             -For tracks that exceed disappeared threshold, remove from active tracking storage
 """
 
-import pandas as pd
+# Import global packages
 from collections import OrderedDict
 import numpy as np
 from scipy.spatial import distance as dist
-import matplotlib.pyplot as plt
 import time
 from statistics import mean
-from datetime import datetime
 import sys
-import math
 
 br = "\n" # Line break for use in code
 
 
 # ===================== SETTINGS ==============================================
 
-verbose = True # Set to True if you want tracking process printed to screen and False if not
+#verbose = True # Set to True if you want tracking process printed to screen and False if not
 
 
 # ===================== PROGRAM ===============================================
@@ -76,6 +73,8 @@ class tracker():
         
         self.tracks = [] # Create a list for storing tracking results as we go
         
+        self.verbose = verbose
+
         if self.running_mean_threshold == 0:
             print("Running mean set to zero. Please set to minimum 1.")
             print("Tracking aborted.")
@@ -91,7 +90,7 @@ class tracker():
    ### Functions for tracking ### 
     def store_tracking_results(self, frame, centroid, objectID):
         self.tracks.append([frame, centroid[0], centroid[1], objectID])
-        if verbose:
+        if self.verbose:
             print(f'Object ID {objectID} with centroid {centroid} in frame {frame} stored.')
         
     def write_tracks_file(self): # Write tracking data to the final result file
@@ -108,7 +107,8 @@ class tracker():
                 
                 resultFile.write(f'{frame},{filename},{x_min},{x_max},{y_min},{y_max},{x_c},{y_c},{objectID}{br}')
         endtime = time.time()
-        print(f'Writing done. That took {round(endtime-starttime, 4)} seconds. {br}File saved as: {self.results_filename}{br}')
+        if self.verbose:
+            print(f'Writing done. That took {round(endtime-starttime, 4)} seconds. {br}File saved as: {self.results_filename}{br}')
 
     def get_frame_detections(self, frame): # Get the detections from the current frame
         block = self.detections.loc[self.detections['frame'] == frame]
@@ -116,7 +116,7 @@ class tracker():
         return frame_detections
 
     def register(self, frame, centroid): # Initiate a new track
-        if verbose:    
+        if self.verbose:    
             print(f'Registering point with centroid {centroid} in frame {frame}')
         self.objects[self.nextObjectID] = [centroid] # Set the new centroid as content for the new objectID in the Objects dictionary
         self.means[self.nextObjectID] = centroid
@@ -129,7 +129,7 @@ class tracker():
         
         self.nextObjectID += 1 # Add 1 to the objectID counter so it's ready for the next point
         
-        if verbose:
+        if self.verbose:
             print(f'Current objects: {br}{self.objects}')
         
     def deregister(self, objectID): # Deregister object by deleting it from the objects dict and removing the associated counter from the disappeared dict.
@@ -139,17 +139,17 @@ class tracker():
     
     def update_object(self, objectID, centroid): # Updating the dictionary storing the object centroids
         
-        if verbose:
+        if self.verbose:
             print(f'Received in update {br} Object id: {objectID} {br}Centroid: {centroid}{br}')
 
         if len(self.objects[objectID]) < self.running_mean_threshold:
-            if verbose:
+            if self.verbose:
                 print(f'Length ({len(self.objects[objectID])}) is less than running mean threshold ({self.running_mean_threshold})')
                 print(f'Appending {[centroid]} to {self.objects[objectID]}')
             self.objects[objectID].append(centroid)
             
         if len(self.objects[objectID]) == self.running_mean_threshold:
-            if verbose:
+            if self.verbose:
                 print(f'Length {len(self.objects[objectID])} of {self.objects[objectID]} is equal to running mean threshold.')
                 print(f'Deleting first item in {self.objects[objectID]} ({self.objects[objectID][0]}) and appending {centroid}')
             del self.objects[objectID][0]
@@ -162,51 +162,61 @@ class tracker():
             if len(value) == 1:
                 c_m = value[0]
             self.means[key] = c_m
-        if verbose:
+        if self.verbose:
             print(f'Updated means dictionary{br}Current mean dict:{br}{self.means}')
-        
-    def return_tracks_webapp(self): # Only for webapp that is not currently active
-        return self.tracks
     
 
     ### Tracking algorithm ###
     def track(self): # Start tracking
-        frames = list(sorted(set(self.detections['frame'].to_list())))
-        print("Self frames: ")
-        print(frames)
-        frameRange = list(range(frames[0], frames[len(frames) - 1]+1))
-        print("Frame range: ", frameRange)
-        #for frame in frameRange:
-        for frame in frames:
-            print("Getting detections for frame ", frame)
-            frame_detections = self.get_frame_detections(frame)#.dropna() # Get the detections for the current frame
 
-            if verbose:
-                print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
+        #####   If the data set is continous and may have frames without objects present, use code below.
+        # If the frame has no detections
+        #frameRange = list(range(frames[0], frames[len(frames) - 1]+1))  
+        #for frame in frameRange:
+            #if self.verbose:
+                #print("Getting detections for frame ", frame)
+            #frame_detections = self.get_frame_detections(frame)#.dropna() # Get the detections for the current frame
+
+            # if self.verbose:
+            #     print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
             
-            # If the frame has no detections
             # if frame_detections.empty: # we will add 1 to disappeared for all objects that are being tracked.
-            #     continue
-                # print("Empty frame encountered. Adding 1 to disappeared for current objects.")
+                #if self.verbose:
+                #   print("Empty frame encountered. Adding 1 to disappeared for current objects.")
                 # for objectID in list(self.disappeared.keys()): # loop over any existing tracked objects and mark them as +1 in disappeared
-                #     #print("Object id in disappeared: ", objectID)
+                #     if self.verbose:
+                #       #print("Object id in disappeared: ", objectID)
                 #     self.disappeared[objectID] += 1
 
                 #     if self.disappeared[objectID] > self.max_gap: # Deregister points that have been disappeared longer than max disappeared threshold
                 #         self.deregister(objectID)
                 # continue
+        #####
+        #####
+        
+        #####
+        frames = list(sorted(set(self.detections['frame'].to_list())))
+        for frame in frames:
+            if self.verbose:
+                print("Getting detections for frame ", frame)
+            frame_detections = self.get_frame_detections(frame)#.dropna() # Get the detections for the current frame
+
+            if self.verbose:
+                print(f'FRAME {frame}. Contains {len(frame_detections)} points.')
+        #####
+
 
             # If the frame has detections
             inputCentroids = frame_detections[['x_c', 'y_c']].values.tolist() # we'll grab the centroid coordinates and convert to a list
             
-            if verbose:
+            if self.verbose:
                 print(f'Input centroids: {br}{inputCentroids}')
             
             if not self.objects: # if Objects is empty, we are currently not tracking any objects, so we'll take the input centroids and register each of them
                 for i in range(0, len(inputCentroids)):
                     self.register(frame, inputCentroids[i])
                 
-                if verbose:    
+                if self.verbose:    
                     print("Not tracking objects. Initiated tracking on the current points")
                     print(f'Current objects:{br}{self.objects}')
             
@@ -214,13 +224,14 @@ class tracker():
                 objectIDs = list(self.means.keys()) # Store the object IDs and their centroids
                 objectCentroids = list(self.means.values())
                 
-                print("Object IDs: ", objectIDs)
-                print("Object centroids: ", objectCentroids)
+                if self.verbose:
+                    print("Object IDs: ", objectIDs)
+                    print("Object centroids: ", objectCentroids)
                 D = dist.cdist(objectCentroids, inputCentroids) # Calculate distances between new points and existing tracks.
                 if self.max_distance != 0: # If the max_distance has been set to 0, we'll ignore the next step. (Otherwise 0 would force new tracks for each point).
                     D[D > self.max_distance] = np.nan # Set the distance to NA for the pairs that have distance above the threshold we have set. This will force the initiation of new tracks for these points.
                 
-                if verbose:
+                if self.verbose:
                     print("We are tracking existing objects.") 
                     print(f'Current object ids: {objectIDs}')
                     print(f' Current object centroids:{br}{objectCentroids}')
@@ -243,7 +254,7 @@ class tracker():
                         self.store_tracking_results(frame, inputCentroids[result[1]], objectIDs[result[0]]) # And store the tracking information
                 
                     else: # All elements in the distance matrix are NA.
-                        if verbose:
+                        if self.verbose:
                             print("Association based on distance done. Now dealing with points that were not associated.")
                         pass
                 
@@ -254,44 +265,17 @@ class tracker():
                     self.disappeared[objectID] += 1
                     if self.disappeared[objectID] > self.max_gap: # Deregister any tracks that have been disappeared for more frames than the max disappeared threshold.
                         self.deregister(objectID)
-                        if verbose:
+                        if self.verbose:
                             print(f'Deregistering object {objectID}')
                 
                 for i in inputIndexes: # And we'll initiate new tracks for the points in the current frame that were not associated with an existing track.
-                    if verbose:
+                    if self.verbose:
                         print(f'Registering point {i} with the centroid {inputCentroids[i]}')
                     self.register(frame, inputCentroids[i])
         self.write_tracks_file()
 
-
-
-
-# ===================== HOW TO RUN ===================================================
-
-# currentTime = datetime.now() # Use this if you need to time-stamp result file
-# currentTime=('%02d-%02d-%02d'%(currentTime.hour,currentTime.minute,currentTime.second))
-
-
-# ===================== Run a single round of tracking ========================
-# t = tracker(4, 500, 5, frames) # Instantiate the class instance and pass in the threshold for max_gap and the list of frames.
-# starttime = time.time()
-# for f in frames: # Loop over frames and track
-#     t.track(f)
-# endtime = time.time()
-# print(f'Tracking done. That took {round(endtime-starttime, 3)} seconds. That is {round((endtime-starttime)/len(frames), 3)} seconds per frame.')
-# t.write_tracks_file()
-# =============================================================================
-
-
-# ===================== Plot stuff ============================================
-#plt.scatter(detections['x_c'], detections['y_c'], c = detections['frame'])
-#plt.plot(detections['x_c'],detections['y_c'])
-
-# tracks = pd.read_csv(resultFilename) # Careful not to write several times to same file!
-# print(tracks)
-# print(tracks.objectID.unique())
-# print(f'Number of tracks found: {len(tracks.objectID.unique())}')
-
-# =============================================================================
+        finalTracks = self.tracks
+        
+        return finalTracks
 
 ### END OF SCRIPT ###

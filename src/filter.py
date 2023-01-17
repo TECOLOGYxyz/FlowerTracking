@@ -1,34 +1,18 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Jan 31 12:56:11 2022
 
-@author: au309263
-"""
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Dec 21 13:28:48 2021
-
-@author: au309263
-"""
-
+# Import global packages
 import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Polygon, LineString, Point
-from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
-#from filtering import sieve
 import numpy as np
 from scipy.spatial import ConvexHull
 from datetime import datetime
-from itertools import combinations
-
 
 # Note, EPS_DISTANCE needs to be smaller than the gap between any two polygons we want to keep and large enough to cluster polygons that we want to discard together
 # EPS_DISTANCE = 281 is the highest value that keeps all tracks in THUL-01
 
-#tracks = pd.read_csv(r'U:\BITCue\Projekter\TrackingFlowers\testResults\_parameterTest_NARS-04_3\parameterTest_NARS-04_maxDisap_10_runMean_10_maxDist_500.csv')
-
-class distanceSieve():
+class filterer():
     def __init__(self, tracks, eps_distance):
         if not isinstance(tracks, pd.DataFrame):
             self.tracks = pd.read_csv(tracks, sep=",", header = 0)
@@ -78,16 +62,17 @@ class distanceSieve():
         
         for oid in self.points:
             p = self.points[oid]
-            df = df.append({'points': p, 'objectID': str(oid), 'geometry': Point(p[0])}, ignore_index=True)
-        
+            #df = df.append({'points': p, 'objectID': str(oid), 'geometry': Point(p[0])}, ignore_index=True)
+            df = pd.concat([df, gpd.GeoDataFrame.from_records([{'points': p, 'objectID': str(oid), 'geometry': Point(p[0])}])])
         for oid in self.lines:
             l = self.lines[oid]
-            df = df.append({'points': l, 'objectID': str(oid), 'geometry': LineString(l)}, ignore_index=True)
-            
+            #df = df.append({'points': l, 'objectID': str(oid), 'geometry': LineString(l)}, ignore_index=True)
+            df = pd.concat([df, gpd.GeoDataFrame.from_records([{'points': l, 'objectID': str(oid), 'geometry': LineString(l)}])])
             
         for oid in self.polyHulls:
             points = self.polyHulls[oid]
-            df = df.append({'points': points, 'objectID': str(oid), 'geometry': Polygon(points)}, ignore_index=True)
+            #df = df.append({'points': points, 'objectID': str(oid), 'geometry': Polygon(points)}, ignore_index=True)
+            df = pd.concat([df, gpd.GeoDataFrame.from_records([{'points': points, 'objectID': str(oid), 'geometry': Polygon(points)}])])
         
         df['x'] = df['geometry'].centroid.x
         df['y'] = df['geometry'].centroid.y
@@ -168,46 +153,45 @@ class distanceSieve():
         keepTracks = map(int, dfSub['objectID'].tolist()) # List of objectIDs we want to keep (map used to convert from str object to integer)
         tracksSub = self.tracks[self.tracks['objectID'].isin(keepTracks)] # Subset the tracks that passed the filtering. We'll return this dataframe from the filtering
 
-        ### PLOTTING ###
-        fig, (ax0, ax1, ax2) = plt.subplots(ncols=3, sharex=True, sharey=True, figsize=(18, 6))   
+        # ### PLOTTING ###
+        # fig, (ax0, ax1, ax2) = plt.subplots(ncols=3, sharex=True, sharey=True, figsize=(18, 6))   
         
-        left  = 0.125  # the left side of the subplots of the figure
-        right = 0.9    # the right side of the subplots of the figure
-        bottom = 0.1   # the bottom of the subplots of the figure
-        top = 0.9      # the top of the subplots of the figure
-        wspace = 0.02   # the amount of width reserved for blank space between subplots
-        hspace = 0.2   # the amount of height reserved for white space between subplots
-        fig.subplots_adjust(left = left, bottom=bottom, right=right, top=top, wspace = wspace , hspace=hspace)
+        # left  = 0.125  # the left side of the subplots of the figure
+        # right = 0.9    # the right side of the subplots of the figure
+        # bottom = 0.1   # the bottom of the subplots of the figure
+        # top = 0.9      # the top of the subplots of the figure
+        # wspace = 0.02   # the amount of width reserved for blank space between subplots
+        # hspace = 0.2   # the amount of height reserved for white space between subplots
+        # fig.subplots_adjust(left = left, bottom=bottom, right=right, top=top, wspace = wspace , hspace=hspace)
         
-        ax1.axes.get_yaxis().set_visible(False)
-        ax2.axes.get_yaxis().set_visible(False)
-        ax0.axes.get_yaxis().set_visible(False)
+        # ax1.axes.get_yaxis().set_visible(False)
+        # ax2.axes.get_yaxis().set_visible(False)
+        # ax0.axes.get_yaxis().set_visible(False)
       
-        ax1.axes.get_xaxis().set_visible(False)
-        ax2.axes.get_xaxis().set_visible(False)  
-        ax0.axes.get_xaxis().set_visible(False)
+        # ax1.axes.get_xaxis().set_visible(False)
+        # ax2.axes.get_xaxis().set_visible(False)  
+        # ax0.axes.get_xaxis().set_visible(False)
 
         # ax0.set_aspect(1)
         # ax1.set_aspect('auto')
         # ax2.set_aspect('auto')
 
-        # ax0.set_aspect(6080, 3420)
-        # ax1.set_aspect(6080, 3420)
-        # ax2.set_aspect(6080, 3420)
+        # scatter = ax0.scatter(self.tracks['x_c'], self.tracks['y_c'], c = self.tracks['objectID'], s = 0.2)
+        # ax0 = scatter.axes
+        # ax0.invert_yaxis()
 
-        scatter = ax0.scatter(self.tracks['x_c'], self.tracks['y_c'], c = self.tracks['objectID'], s = 0.2)
-        ax0 = scatter.axes
-        ax0.invert_yaxis()
-
-        df.plot(ax=ax1, column = 'objectID', marker = ".", markersize = 0.2)
-        dfSub.plot(ax=ax2, column = 'objectID', marker = ".", markersize=0.2)
+        # df.plot(ax=ax1, column = 'objectID', marker = ".", markersize = 0.2)
+        # dfSub.plot(ax=ax2, column = 'objectID', marker = ".", markersize=0.2)
         
-        currentTime = datetime.now() # Use this if you need to time-stamp result file
-        currentTime=('%02d-%02d-%02d'%(currentTime.hour,currentTime.minute,currentTime.second))
-        fig.savefig(f'../testResults/{currentTime}_BeforeAndAfterFiltering_eps_{self.eps_distance}.png', dpi=600)
+        # currentTime = datetime.now() # Use this if you need to time-stamp result file
+        # currentTime=('%02d-%02d-%02d'%(currentTime.hour,currentTime.minute,currentTime.second))  
+        # figName = f'BeforeAndAfterFiltering_eps_{self.eps_distance}_{currentTime}.png'
+        # fig.savefig(figName, dpi=600)
+        # print("Figure saved at ", figName)
         # ####
         
         return tracksSub
 
 
 
+### END OF SCRIPT ###

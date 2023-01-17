@@ -1,2 +1,0 @@
-num_frames,num_detections,num_objects,num_predictions,num_unique_objects,num_tracks,num_matches,num_switches,num_misses,num_false_positives,precision,recall,mota,motp,mostly_tracked,partially_tracked,mostly_lost
-189,1724,1724,1724,32,19,1713,11,0,0,1.0,1.0,0.9936194895591647,0.0,32,0,0

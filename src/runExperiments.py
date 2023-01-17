@@ -1,43 +1,41 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Dec 14 12:50:10 2021
 
-@author: au309263
-"""
-
-import pandas as pd
+# Import local packages
 from track import tracker
-#from filtering import sieve
-#from DBSCANFiltering import DBSCANsieve
-from distanceFiltering import distanceSieve
+from filter import filterer
 from evaluate import evaluator
+
+# Import global packages
+import pandas as pd
+
+
 #import os
-import time
-import os
-from scipy.spatial import distance as dist
-import os
-import re
-import numpy as np
+#import time
+#import os
+#from scipy.spatial import distance as dist
+#import os
+#import re
+#import numpy as np
 br = '\n'
 
 
 ###################
 
 ### Function for importing data
-def impdata(camID):
-    if camID == "NARS-04":
-        gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv"
-    if camID == "NARS-13":
-        gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv"
-    if camID == "THUL-01":
-        gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv"
-    if camID == "NYAA-04":
-        gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv"
-    if camID == "NARS-17":
-        gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2021_12_30_NorwayAnnotations_NARS-17_IndividualAnnotations_FRCNN_Metrics.csv"
-    if camID == "debug":
-        gt = r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\debugGT.csv"
-    return gt
+# def impdata(camID):
+#     if camID == "NARS-04":
+#         gt = r".\data\annotations\2020_05_17_NorwayAnnotations_NARS-04_IndividualAnnotations_FRCNN_Metrics.csv"
+#     if camID == "NARS-13":
+#         gt = r".\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv"
+#     if camID == "THUL-01":
+#         gt = r".\data\annotations\2020_05_15_NorwayAnnotations_THUL-01_IndividualAnnotations_FRCNN_Metrics.csv"
+#     if camID == "NYAA-04":
+#         gt = r".\data\annotations\2021_12_13_NorwayAnnotations_NYAA-04_IndividualAnnotations_FRCNN_Metrics.csv"
+#     if camID == "NARS-17":
+#         gt = r".\data\annotations\2021_12_30_NorwayAnnotations_NARS-17_IndividualAnnotations_FRCNN_Metrics.csv"
+#     if camID == "debug":
+#         gt = r".\data\annotations\debugGT.csv"
+#     return gt
         
 
 
@@ -57,20 +55,74 @@ def impdata(camID):
 
 
 # #Get the ground truth annotations on the format [filename, x_min, y_min, x_max, y_max, id_gt]
-gt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation\maxgapExample.csv")
-dt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers/maxgapExample_tracked_delete.csv")
+# gt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation\maxgapExample.csv")
+# dt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers/maxgapExample_tracked_delete.csv")
 
-results_filename = "U:\BITCue\Projekter\TrackingFlowers\delete_evaluate.csv"
+# results_filename = "U:\BITCue\Projekter\TrackingFlowers\delete_evaluate.csv"
 
-e = evaluator(dt, gt, results_filename, verbose = True)
-e.run()
+# e = evaluator(dt, gt, results_filename, verbose = True)
+# e.run()
 
 
 
 
 
 # ===================== Run evaluator on all files for the parameter test ====
+# path = r"U:\BITCue\Projekter\TrackingFlowers\testResults\MMFix\_parameterTest_NARS-13_3"
+# files = [os.path.join(path,i) for i in os.listdir(path)]
 
+# gt = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\annotations\2020_04_30_NorwayAnnotations_NARS-13_IndividualAnnotations_FRCNN_Metrics.csv")
+# gt['frame'] = gt.filename.str.extract('(\d{6})').astype(int)
+
+# # Bounding boxes are given as coordinates for top left, bottom right corner. We need center x and y.
+# gt['x_c'] = (gt['x_min'] + gt['x_max']) / 2
+# gt['y_c'] = (gt['y_min'] + gt['y_max']) / 2
+
+
+
+# gt['object'] = gt['id_gt']
+
+# gt['object'] = gt.apply(lambda x: int(''.join(filter(str.isdigit, x['object']))), axis=1)
+
+
+# i = 0
+
+# overviewFile = r'U:\BITCue\Projekter\TrackingFlowers/NARS-13_parameterTest_EvaluateOverview.csv'
+
+
+# with open(overviewFile, 'a') as resultFile: # Write the header of the output file
+#     header = f'maxDisap,maxDist,runMean,mismatches,mota,numberOfObjects,mostlyTracked{br}'
+#     resultFile.write(header)
+
+
+# for f in files:
+#     basename = os.path.basename(f)
+#     dt = pd.read_csv(f)
+
+  
+#     runMeanSearch = re.search('runMean_(.+?)_max', basename)
+#     maxDistSearch = re.search('maxDist_(.+?).csv', basename)
+#     maxDisapSearch = re.search('maxDisap_(.+?)_run', basename)
+
+
+#     runMeanValue = runMeanSearch.group(1)
+#     maxDistValue = maxDistSearch.group(1)
+#     maxDisapValue = maxDisapSearch.group(1)
+
+#     results_filename = f'U:/BITCue/Projekter/TrackingFlowers/testResultsResubmission/NARS-13_parameterTestEvaluation_maxgap_{maxDisapValue}_runmean_{runMeanValue}_maxdist_{maxDistValue}.csv'
+
+#     e = evaluator(dt, gt, results_filename, verbose = True)
+#     num_switches, mota, num_tracks, mostly_tracked = e.run()
+#     i += 1
+#     print("Files processed: ", i)
+#     with open(overviewFile, 'a') as resultFile:
+#         resultFile.write(f'{maxDisapValue},{maxDistValue},{runMeanValue},{num_switches},{mota},{num_tracks},{mostly_tracked}{br}')
+
+
+
+
+
+######
 
 
 
