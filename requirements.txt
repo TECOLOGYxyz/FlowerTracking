@@ -1,6 +1,7 @@
-scipy
-matplotlib
-pillow
-shapely
-motmetrics
-geopandas
+geopandas==0.12.2
+matplotlib==3.6.2
+motmetrics==1.2.0
+pandas==1.5.1
+scipy==1.9.3
+numpy==1.23.4
+shapely==2.0.0
