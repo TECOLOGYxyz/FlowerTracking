@@ -1,5 +1,6 @@
 from matplotlib.markers import MarkerStyle
 import matplotlib.pyplot as plt
+import matplotlib.patches as pat
 from matplotlib.lines import Line2D
 from matplotlib.transforms import Affine2D
 from matplotlib.markers import JoinStyle, CapStyle
@@ -131,7 +132,7 @@ ax1, ax2, ax3, ax4, ax5 = axes.flatten()
 # # # Frame 1
 frame1_x = [50, 235, 243]
 frame1_y = [150,125, 40]
-frame1_z = [1,5,2]
+frame1_z = [1,2,3]
 
 ax1.scatter(frame1_x, frame1_y, s = 1)
 ax1.set_xlim([0, 300])
@@ -143,7 +144,7 @@ ax1.axes.get_xaxis().set_visible(False)
 # # # Frame 2
 frame2_x = [65,30, 255]
 frame2_y = [165,34, 126]
-frame2_z = [1,3,5]
+frame2_z = [1,4,2]
 
 ax2.scatter(frame2_x, frame2_y, s = 1)
 #ax2.set_title('Frame 2', loc = "left")
@@ -157,7 +158,7 @@ ax2.axes.get_xaxis().set_visible(False)
 
 frame3_x = [30,45,229, 265]
 frame3_y = [145,54, 110, 46]
-frame3_z = [1,3,5,2]
+frame3_z = [1,4,2,3]
 
 ax3.scatter(frame3_x, frame3_y, s = 1)
 ax3.set_xlim([0, 300])
@@ -169,7 +170,7 @@ ax3.axes.get_xaxis().set_visible(False)
 # # # Frame 4
 frame4_x = [66,132, 17,275]
 frame4_y = [144,101,17, 30]
-frame4_z = [1,4,3,2]
+frame4_z = [1,5,4,3]
 
 ax4.scatter(frame4_x, frame4_y, s = 1)
 ax4.set_xlim([0, 300])
@@ -182,7 +183,7 @@ ax4.axes.get_xaxis().set_visible(False)
 # # # Frame 5
 frame5_x = [29,125, 219]
 frame5_y = [166,83, 122]
-frame5_z = [1,4, 5]
+frame5_z = [1,5,2]
 
 ax5.scatter(frame5_x, frame5_y, s = 1)
 ax5.set_xlim([0, 300])
@@ -212,8 +213,7 @@ plt.show()
 
 
 
-
-colors=["#FF4F00", "#0040A9", "#000000", "#008507", "#850080"]
+colors=["#FF4F00","#850080","#0040A9", "#000000", "#008507"]
 
 fig, axFull = plt.subplots(1, 1, sharex=False)
 
@@ -222,7 +222,7 @@ ys = frame1_y + frame2_y + frame3_y + frame4_y + frame5_y
 zs = frame1_z + frame2_z + frame3_z + frame4_z + frame5_z 
 
 coly = [colors[i-1] for i in zs]
-
+print("Coly: ", coly)
 axFull.scatter(xs, ys, s = 80, c = coly)
 
 axFull.set_xlim([0, 300])
@@ -234,12 +234,24 @@ axFull.set_xticks([])
 axFull.set_yticks([])
 axFull.set_ylabel('Y', labelpad=-0.5)
 axFull.set_xlabel('X', labelpad=-0.5)
-# plt.savefig("sum.svg", bbox_inches='tight', pad_inches=0.01)
+
+circle1 = pat.Ellipse((47, 154), width = 63, height = 45, angle = 0, color='black', fill = 0, lw = 0.5)
+circle2 = pat.Ellipse((261, 37), width = 32, height = 50, angle = 75, color='black', fill = 0, lw = 0.5)
+circle3 = pat.Ellipse((235, 120), width = 56, height = 30, angle = 15, color='black', fill = 0, lw = 0.5)
+circle4 = pat.Ellipse((129, 92), width = 15, height = 40, angle = 158, color='black', fill = 0, lw = 0.5)
+circle5 = pat.Ellipse((31, 35), width = 18, height = 70, angle = 142, color='black', fill = 0, lw = 0.5)
+
+
+
+axFull.add_patch(circle1)
+axFull.add_patch(circle2)
+axFull.add_patch(circle3)
+axFull.add_patch(circle4)
+axFull.add_patch(circle5)
+
+#plt.savefig("sum.svg", bbox_inches='tight', pad_inches=0.01)
 plt.show()
 
-
-
-colors=["#FF4F00", "#0040A9", "#000000", "#008507", "#850080"]
 
 fig, axFrames = plt.subplots(1, 1, sharex=False)
 axFrames.set_yticks([1,2,3,4,5], minor=False)
@@ -248,9 +260,8 @@ plt.grid(visible=None, which='both', axis='y')
 axFrames.set_axisbelow(True)
 on = frame1_z + frame2_z + frame3_z + frame4_z + frame5_z
 print("ON ", on)
-#fn = [1,1,2,2,2,2,3,3,3,3,3,4,4,4,5,5]
 fn = [1]*len(frame1_z) + [2]*len(frame2_z) +[3]*len(frame3_z) + [4]*len(frame4_z) + [5]*len(frame5_z)
-print(fn)
+print("fn: ", fn)
 
 letters = {1: "a", 2: "b", 3: "c", 4: "d", 5: "e"}
 
@@ -268,6 +279,8 @@ axFrames.set_ylabel('Flower', labelpad=-0.5)
 axFrames.set_xlabel('Frame', labelpad=-0.5)
 plt.margins(y = 0.2)
 letterOn = [letters[i] for i in on]
+print(letterOn)
+print("hello")
 plt.yticks(on, letterOn)
 plt.savefig("time.svg", bbox_inches='tight', pad_inches=0.01)
 plt.show()

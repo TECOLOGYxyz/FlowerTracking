@@ -31,7 +31,7 @@ ax2.scatter(maxgap["frame"], maxgap["objectLetter"], c = maxgap['object'])
 ax2.xaxis.set_ticks(np.arange(0, 10, 1))
 ax2.set_box_aspect(1/4)
 ax2.invert_yaxis()
-plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxgapPlot.pdf", bbox_inches='tight')
+#plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxgapPlot.pdf", bbox_inches='tight')
 plt.show()
 
 
@@ -45,6 +45,7 @@ f, (ax1, ax2) = plt.subplots(2, 1, sharex=False, height_ratios=[4, 1])
 
 ax1.set_xlim([0, 1000])
 ax1.set_ylim([0, 1000])
+ax1.set_xlabel("hello")
 ax2.margins(y = 0.2)
 
 ax1.scatter(maxdist["x_c"], maxdist["y_c"], c = maxdist['object'])
@@ -62,8 +63,11 @@ arrowYend = maxdist['y_c'][(maxdist['frame'] == min(maxdist['frame'][maxdist['ob
 
 ax1.annotate("", xy = (arrowX,arrowY), xytext = (arrowXend, arrowYend), arrowprops=dict(arrowstyle="<->"))
 
-plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxdistPlot.pdf", bbox_inches='tight')
-# plt.show()
+
+
+
+#plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxdistPlot.pdf", bbox_inches='tight')
+plt.show()
 
 
 
@@ -86,8 +90,8 @@ ax2.xaxis.set_ticks(np.arange(0, 501, 100))
 ax2.set_box_aspect(1/4)
 ax2.invert_yaxis()
 
-plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/runmeanPlot.pdf", bbox_inches='tight')
-#plt.show()
+#plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/runmeanPlot.pdf", bbox_inches='tight')
+plt.show()
 
 ### FRAME RATE ###
 
@@ -109,7 +113,7 @@ ax2.xaxis.set_ticks(np.arange(0, 10001, 2000))
 ax2.set_box_aspect(1/4)
 ax2.invert_yaxis()
 
-plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/frameratePlot.pdf", bbox_inches='tight')
+#plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/frameratePlot.pdf", bbox_inches='tight')
 plt.show()
 
 
