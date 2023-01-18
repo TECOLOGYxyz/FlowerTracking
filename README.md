@@ -60,7 +60,7 @@ The speed of the tracking algorithm depends on the computational power available
 <!-- GETTING STARTED -->
 ## Getting Started
 
-The code was written in Python ```3.10.4.``` It requires the packages pandas, geopandas, matplotlib, motmetrics, scipy, numoy, and shapely as listed in the requirements.txt file. 
+The code was written in ```Python 3.10.4.``` It requires the packages ```pandas, geopandas, matplotlib, motmetrics, scipy, numpy, and shapely``` as listed in the requirements.txt file.
 
 To use the tracking algorithm and associated tools, follow the steps below.
 
