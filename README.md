@@ -70,9 +70,13 @@ To use the tracking algorithm and associated tools, follow the steps below.
    ```sh
    pip install -a requirements.txt
    ```
-3. Run tracking on object detection output with 
+3. Run a test to check if the tracking, filtering, and evaluation algorithms are giving the expected outputs
    ```sh
-   run.py
+   src/test.py
+   ```
+4. Find some examples of how to apply the tracking, filtering, and evaluation algorithms 
+   ```sh
+   src/run.py
    ```
 
 

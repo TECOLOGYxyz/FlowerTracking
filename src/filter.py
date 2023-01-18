@@ -62,16 +62,13 @@ class filterer():
         
         for oid in self.points:
             p = self.points[oid]
-            #df = df.append({'points': p, 'objectID': str(oid), 'geometry': Point(p[0])}, ignore_index=True)
             df = pd.concat([df, gpd.GeoDataFrame.from_records([{'points': p, 'objectID': str(oid), 'geometry': Point(p[0])}])])
         for oid in self.lines:
             l = self.lines[oid]
-            #df = df.append({'points': l, 'objectID': str(oid), 'geometry': LineString(l)}, ignore_index=True)
             df = pd.concat([df, gpd.GeoDataFrame.from_records([{'points': l, 'objectID': str(oid), 'geometry': LineString(l)}])])
             
         for oid in self.polyHulls:
             points = self.polyHulls[oid]
-            #df = df.append({'points': points, 'objectID': str(oid), 'geometry': Polygon(points)}, ignore_index=True)
             df = pd.concat([df, gpd.GeoDataFrame.from_records([{'points': points, 'objectID': str(oid), 'geometry': Polygon(points)}])])
         
         df['x'] = df['geometry'].centroid.x
@@ -107,16 +104,13 @@ class filterer():
     def run(self):
         self.separate() # Separate the tracks into points, lines, and polygons
         self.convex_hull(self.polygons) # Calcuate the convex hull of the polygons. This will also add colinear points to lines dictionary
-        #print("Got convex hulls")
         df, coords = self.geometries() # Get the geometry dataframe containing the track polygons and the centroid coordinates of which to perform the DBSCAN clustering
         
-        #print(df)
         x = df.loc[df['objectID'] == '0']        
-        #print(x)
+
         y = self.tracks
         y = y.loc[y['objectID'] == 0]
-        #print(self.ave(y['x_c']))
-        #print(self.ave(y['y_c']))
+
         ids = list(df['objectID'])
         passed = []
         
@@ -145,7 +139,7 @@ class filterer():
         
         #print("Passed distance ", passed)
 
-        l = passed #sub['clusterID'].tolist()
+        l = passed
 
         dfSub = df[df['objectID'].isin(l)] # Subset the  df on the list so that it only includes only the isolated tracks (clusters containing a single track)
         
@@ -191,7 +185,5 @@ class filterer():
         # ####
         
         return tracksSub
-
-
 
 ### END OF SCRIPT ###
