@@ -33,7 +33,6 @@ csl: ./journal-of-ecology.csl
 
 ```{r eval = FALSE, echo=FALSE}
 library(knitr)
-
 knit('ManuscriptDraft.Rmd')
 rmarkdown::render("ManuscriptDraft.Rmd", output_file = "ManuscriptDraft_Resubmission.docx")
 system2("open","ManuscriptDraft_Resubmission.docx")
