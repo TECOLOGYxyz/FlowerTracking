@@ -19,19 +19,28 @@ maxgap = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxga
 maxgap['objectLetter'] = maxgap['object'].map(lambda x: tran[x])
 
 f, (ax1, ax2) = plt.subplots(2, 1, sharex=False, height_ratios=[4, 1])
+plt.subplots_adjust(hspace=0.25)
+
 
 ax1.set_xlim([0, 1000])
 ax1.set_ylim([0, 1000])
+ax1.xaxis.set_ticks([0, 1000])
+ax1.yaxis.set_ticks([0, 1000])
+ax1.set_xlabel("X", labelpad=-12)
+ax1.set_ylabel("Y", labelpad=-20)
 ax2.margins(y = 0.2)
 
 ax1.scatter(maxgap["x_c"], maxgap["y_c"], c=maxgap['object'])
 ax1.set_box_aspect(1)
-ax1.set_title('Max gap')
+ax1.set_title('Max gap', fontweight="bold")
+
 ax2.scatter(maxgap["frame"], maxgap["objectLetter"], c = maxgap['object'])
 ax2.xaxis.set_ticks(np.arange(0, 10, 1))
 ax2.set_box_aspect(1/4)
 ax2.invert_yaxis()
-#plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxgapPlot.pdf", bbox_inches='tight')
+ax2.set_xlabel("Frame number", labelpad=0)
+ax2.set_ylabel("Object ID", labelpad=0)
+plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxgapPlot.pdf", bbox_inches='tight')
 plt.show()
 
 
@@ -42,19 +51,25 @@ maxdist = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxd
 maxdist['objectLetter'] = maxdist['object'].map(lambda x: tran[x])
 print(maxdist)
 f, (ax1, ax2) = plt.subplots(2, 1, sharex=False, height_ratios=[4, 1])
+plt.subplots_adjust(hspace=0.25)
 
 ax1.set_xlim([0, 1000])
 ax1.set_ylim([0, 1000])
-ax1.set_xlabel("hello")
+ax1.xaxis.set_ticks([0, 1000])
+ax1.yaxis.set_ticks([0, 1000])
+ax1.set_xlabel("X", labelpad=-12)
+ax1.set_ylabel("Y", labelpad=-20)
 ax2.margins(y = 0.2)
 
 ax1.scatter(maxdist["x_c"], maxdist["y_c"], c = maxdist['object'])
 ax1.set_box_aspect(1)
-ax1.set_title('Max distance')
+ax1.set_title('Max distance', fontweight="bold")
 ax2.scatter(maxdist["frame"], maxdist["objectLetter"], c = maxdist['object'])
 ax2.xaxis.set_ticks(np.arange(0, 20, 2))
 ax2.set_box_aspect(1/4)
 ax2.invert_yaxis()
+ax2.set_xlabel("Frame number", labelpad=0)
+ax2.set_ylabel("Object ID", labelpad=0)
 
 arrowX = maxdist['x_c'][(maxdist['frame'] == max(maxdist['frame'][maxdist['object'] == min(maxdist['object'])]))]
 arrowY = maxdist['y_c'][(maxdist['frame'] == max(maxdist['frame'][maxdist['object'] == min(maxdist['object'])]))]
@@ -66,7 +81,7 @@ ax1.annotate("", xy = (arrowX,arrowY), xytext = (arrowXend, arrowYend), arrowpro
 
 
 
-#plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxdistPlot.pdf", bbox_inches='tight')
+plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/maxdistPlot.pdf", bbox_inches='tight')
 plt.show()
 
 
@@ -77,20 +92,27 @@ runmean = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/runm
 runmean['objectLetter'] = runmean['object'].map(lambda x: tran[x])
 
 f, (ax1, ax2) = plt.subplots(2, 1, sharex=False, height_ratios=[4, 1])
+plt.subplots_adjust(hspace=0.25)
 
 ax1.set_xlim([0, 1000])
 ax1.set_ylim([0, 1000])
+ax1.xaxis.set_ticks([0, 1000])
+ax1.yaxis.set_ticks([0, 1000])
+ax1.set_xlabel("X", labelpad=-12)
+ax1.set_ylabel("Y", labelpad=-20)
 ax2.margins(y = 0.2)
 
 ax1.scatter(runmean["x_c"], runmean["y_c"], c = runmean['object'], s = 10)
 ax1.set_box_aspect(1)
-ax1.set_title('Running mean')
+ax1.set_title('Running mean',  fontweight="bold")
 ax2.scatter(runmean["frame"], runmean["objectLetter"], c = runmean['object'], s = 10)
 ax2.xaxis.set_ticks(np.arange(0, 501, 100))
 ax2.set_box_aspect(1/4)
 ax2.invert_yaxis()
+ax2.set_xlabel("Frame number", labelpad=0)
+ax2.set_ylabel("Object ID", labelpad=0)
 
-#plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/runmeanPlot.pdf", bbox_inches='tight')
+plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/runmeanPlot.pdf", bbox_inches='tight')
 plt.show()
 
 ### FRAME RATE ###
@@ -100,20 +122,27 @@ framerate = pd.read_csv(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/fr
 framerate['objectLetter'] = framerate['object'].map(lambda x: tran[x])
 
 f, (ax1, ax2) = plt.subplots(2, 1, sharex=False, height_ratios=[4, 1])
+plt.subplots_adjust(hspace=0.25)
 
 ax1.set_xlim([0, 210])
 ax1.set_ylim([0, 210])
+ax1.xaxis.set_ticks([0, 200])
+ax1.yaxis.set_ticks([0, 200])
+ax1.set_xlabel("X", labelpad=-12)
+ax1.set_ylabel("Y", labelpad=-20)
 ax2.margins(y = 0.2)
 
 ax1.scatter(framerate["x_c"], framerate["y_c"], c = framerate['object'], s = 10)
 ax1.set_box_aspect(1)
-ax1.set_title('Frame rate')
+ax1.set_title('Frame rate', fontweight="bold")
 ax2.scatter(framerate["frame"], framerate["objectLetter"], c = framerate['object'], s = 10)
 ax2.xaxis.set_ticks(np.arange(0, 10001, 2000))
 ax2.set_box_aspect(1/4)
 ax2.invert_yaxis()
+ax2.set_xlabel("Frame number", labelpad=0)
+ax2.set_ylabel("Object ID", labelpad=0)
 
-#plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/frameratePlot.pdf", bbox_inches='tight')
+plt.savefig(r"U:\BITCue\Projekter\TrackingFlowers\data\simulation/frameratePlot.pdf", bbox_inches='tight')
 plt.show()
 
 
