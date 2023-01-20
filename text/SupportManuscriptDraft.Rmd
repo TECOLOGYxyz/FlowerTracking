@@ -1,7 +1,7 @@
 ---
 new_session: FALSE
 title: |
-  **Supporting Information: Towards individual-based pollination ecology: Automatic tracking of life histories of individual flowers**
+  **Towards individual-based floral biology: Automatic tracking of life histories of individual flowers**
 author:
 - Hjalte M. R. Mann
 - Alexandros Iosifidis
@@ -59,12 +59,12 @@ word_comment <- function(comment, highlight = "") {
 ## Results of the filtering algorithm for filtering distances (eps) 50-500 with a stepsize of 50 for the three series.
 
 
-eps = 50: 158 mismatches with 165 tracks kept 
-eps = 100: 103 mismatches with 147 tracks kept 
-eps = 150: 71 mismatches with 124 tracks kept 
-eps = 200: 47 mismatches with 100 tracks kept 
-eps = 250: 30 mismatches with 69 tracks kept 
-eps = 300: 9 mismatches with 49 tracks kept 
+eps = 50: 158 mismatches with 171 tracks kept 
+eps = 100: 103 mismatches with 153 tracks kept 
+eps = 150: 71 mismatches with 130 tracks kept 
+eps = 200: 47 mismatches with 106 tracks kept 
+eps = 250: 30 mismatches with 75 tracks kept 
+eps = 300: 9 mismatches with 51 tracks kept 
 eps = 350: 0 mismatches with 28 tracks kept 
 eps = 400: 0 mismatches with 18 tracks kept 
 eps = 450: 0 mismatches with 16 tracks kept 

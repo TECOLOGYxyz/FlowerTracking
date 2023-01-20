@@ -15,6 +15,9 @@ library(GGally)
 library(plotly)
 library(kableExtra)
 library(gt)
+install.packages("webshot2")
+library(webshot2)
+
 ```
 
 
@@ -153,4 +156,18 @@ filterScores %>%
   gtsave("tableFilterscores.png", expand = 10)
 ```
 
+```{r}
+
+seriesOverview = read.csv2("U:/BITCue/Projekter/TrackingFlowers/data/annotations/seriesOverview.csv", header = T)
+colnames(seriesOverview) = c('Image series','Number of images', 'Number of flowers')
+seriesOverview
+
+seriesOverview  %>% 
+  gt() %>%
+  cols_align(
+    align = "left") %>% 
+    gtsave("U:/BITCue/Projekter/TrackingFlowers/src/R/seriesOverview.png", expand = 10)
+
+
+```
 
